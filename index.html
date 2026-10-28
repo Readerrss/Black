@@ -296,10 +296,10 @@
     </div>
 
     <!-- =========================================================================
-         VOID AI (ADAS BOT) MODAL — REDESIGNED SEPARATE MOBILE & DESKTOP LAYOUT
+         VOID AI (ADAS BOT) MODAL — SEPARATE MOBILE & BALANCED PC STUDIO LAYOUT
          ========================================================================= -->
     <div id="aiAgentModal" style="display: none;" class="fixed inset-0 bg-black/90 z-40 flex items-center justify-center p-2 sm:p-5 backdrop-blur-md">
-        <div class="hardware-panel w-full max-w-[460px] md:max-w-5xl h-[93dvh] max-h-[93dvh] rounded-2xl flex flex-col overflow-hidden border border-[#2d364a] shadow-2xl">
+        <div class="hardware-panel w-full max-w-[460px] md:max-w-5xl h-[93dvh] max-h-[93dvh] md:h-[540px] md:max-h-[85dvh] rounded-2xl flex flex-col overflow-hidden border border-[#2d364a] shadow-2xl">
             
             <!-- 1. TOP HEADER BAR (ZERO OVERLAP ON ALL PHONES & PC) -->
             <div class="px-3.5 py-2.5 bg-[#0d0f14] border-b border-[#232836] flex items-center justify-between gap-2 shrink-0">
@@ -350,42 +350,44 @@
             <!-- 3. MAIN BODY: SEPARATE MOBILE TAB VIEWS & DESKTOP 2-COLUMN STUDIO -->
             <div class="flex-1 flex flex-col md:flex-row min-h-0 overflow-hidden relative">
 
-                <!-- DESKTOP LEFT SIDEBAR (HIDDEN ON MOBILE) -->
-                <div class="hidden md:flex md:w-64 bg-[#090b0f] border-r border-[#232836] p-3 overflow-y-auto shrink-0 flex-col gap-1">
-                    <div class="flex items-center justify-between px-1 pb-2 mb-1 border-b border-[#1b202b]">
+                <!-- DESKTOP LEFT SIDEBAR (FITS FULL HEIGHT WITH ZERO DEAD SPACE) -->
+                <div class="hidden md:flex md:w-64 bg-[#090b0f] border-r border-[#232836] p-3 overflow-y-auto shrink-0 flex-col justify-between">
+                    <div class="flex items-center justify-between px-1 pb-2 mb-1 border-b border-[#1b202b] shrink-0">
                         <span class="text-[10px] font-bold text-gray-400 uppercase tracking-wider">Question Bank</span>
                         <span id="sidebarTotalCount" class="px-1.5 py-0.5 text-[9px] mono-num font-bold bg-sky-500/15 text-sky-300 border border-sky-500/30 rounded">36 Q&amp;As</span>
                     </div>
-                    <button type="button" onclick="filterCategory('All')" class="cat-btn active text-left px-3 py-2 rounded-lg text-[11px] font-semibold text-white bg-sky-500/20 border border-sky-500/40 transition truncate cursor-pointer">
-                        🌐 All Questions (<span id="countAll">36</span>)
-                    </button>
-                    <button type="button" onclick="filterCategory('Architecture & Hardware')" class="cat-btn text-left px-3 py-2 rounded-lg text-[11px] font-semibold text-gray-400 hover:text-white transition truncate cursor-pointer">
-                        ⚙️ Core &amp; Hardware
-                    </button>
-                    <button type="button" onclick="filterCategory('Depth & Geometry')" class="cat-btn text-left px-3 py-2 rounded-lg text-[11px] font-semibold text-gray-400 hover:text-white transition truncate cursor-pointer">
-                        📐 Depth &amp; Geometry
-                    </button>
-                    <button type="button" onclick="filterCategory('DGC & DGI Consistency')" class="cat-btn text-left px-3 py-2 rounded-lg text-[11px] font-semibold text-gray-400 hover:text-white transition truncate cursor-pointer">
-                        🔬 DGC &amp; DGI Math
-                    </button>
-                    <button type="button" onclick="filterCategory('IEEE Risk & Context')" class="cat-btn text-left px-3 py-2 rounded-lg text-[11px] font-semibold text-gray-400 hover:text-white transition truncate cursor-pointer">
-                        ⚡ IEEE Risk &amp; ASR
-                    </button>
-                    <button type="button" onclick="filterCategory('Arbitration & Warnings')" class="cat-btn text-left px-3 py-2 rounded-lg text-[11px] font-semibold text-gray-400 hover:text-white transition truncate cursor-pointer">
-                        🚨 Arbitration &amp; Alerts
-                    </button>
-                    <button type="button" onclick="filterCategory('Disambiguation & Pruning')" class="cat-btn text-left px-3 py-2 rounded-lg text-[11px] font-semibold text-gray-400 hover:text-white transition truncate cursor-pointer">
-                        🛺 Rickshaw &amp; Riders
-                    </button>
-                    <button type="button" onclick="filterCategory('Streaming & Tunnels')" class="cat-btn text-left px-3 py-2 rounded-lg text-[11px] font-semibold text-gray-400 hover:text-white transition truncate cursor-pointer">
-                        📡 Streaming &amp; Tunnels
-                    </button>
-                    <button type="button" onclick="filterCategory('Cockpit UI & Radar')" class="cat-btn text-left px-3 py-2 rounded-lg text-[11px] font-semibold text-gray-400 hover:text-white transition truncate cursor-pointer">
-                        📡 Cockpit UI &amp; Radar
-                    </button>
-                    <button type="button" onclick="filterCategory('Easter Eggs')" class="cat-btn text-left px-3 py-2 rounded-lg text-[11px] font-semibold text-gray-400 hover:text-white transition truncate cursor-pointer">
-                        🕳️ 3 Easter Eggs
-                    </button>
+                    <div class="flex-1 flex flex-col justify-between gap-1">
+                        <button type="button" onclick="filterCategory('All')" class="cat-btn active text-left px-3 py-1.5 rounded-lg text-[11px] font-semibold text-white bg-sky-500/20 border border-sky-500/40 transition truncate cursor-pointer">
+                            🌐 All Questions (<span id="countAll">36</span>)
+                        </button>
+                        <button type="button" onclick="filterCategory('Architecture & Hardware')" class="cat-btn text-left px-3 py-1.5 rounded-lg text-[11px] font-semibold text-gray-400 hover:text-white transition truncate cursor-pointer">
+                            ⚙️ Core &amp; Hardware
+                        </button>
+                        <button type="button" onclick="filterCategory('Depth & Geometry')" class="cat-btn text-left px-3 py-1.5 rounded-lg text-[11px] font-semibold text-gray-400 hover:text-white transition truncate cursor-pointer">
+                            📐 Depth &amp; Geometry
+                        </button>
+                        <button type="button" onclick="filterCategory('DGC & DGI Consistency')" class="cat-btn text-left px-3 py-1.5 rounded-lg text-[11px] font-semibold text-gray-400 hover:text-white transition truncate cursor-pointer">
+                            🔬 DGC &amp; DGI Math
+                        </button>
+                        <button type="button" onclick="filterCategory('IEEE Risk & Context')" class="cat-btn text-left px-3 py-1.5 rounded-lg text-[11px] font-semibold text-gray-400 hover:text-white transition truncate cursor-pointer">
+                            ⚡ IEEE Risk &amp; ASR
+                        </button>
+                        <button type="button" onclick="filterCategory('Arbitration & Warnings')" class="cat-btn text-left px-3 py-1.5 rounded-lg text-[11px] font-semibold text-gray-400 hover:text-white transition truncate cursor-pointer">
+                            🚨 Arbitration &amp; Alerts
+                        </button>
+                        <button type="button" onclick="filterCategory('Disambiguation & Pruning')" class="cat-btn text-left px-3 py-1.5 rounded-lg text-[11px] font-semibold text-gray-400 hover:text-white transition truncate cursor-pointer">
+                            🛺 Rickshaw &amp; Riders
+                        </button>
+                        <button type="button" onclick="filterCategory('Streaming & Tunnels')" class="cat-btn text-left px-3 py-1.5 rounded-lg text-[11px] font-semibold text-gray-400 hover:text-white transition truncate cursor-pointer">
+                            📡 Streaming &amp; Tunnels
+                        </button>
+                        <button type="button" onclick="filterCategory('Cockpit UI & Radar')" class="cat-btn text-left px-3 py-1.5 rounded-lg text-[11px] font-semibold text-gray-400 hover:text-white transition truncate cursor-pointer">
+                            📡 Cockpit UI &amp; Radar
+                        </button>
+                        <button type="button" onclick="filterCategory('Easter Eggs')" class="cat-btn text-left px-3 py-1.5 rounded-lg text-[11px] font-semibold text-gray-400 hover:text-white transition truncate cursor-pointer">
+                            🕳️ 3 Easter Eggs
+                        </button>
+                    </div>
                 </div>
 
                 <!-- MOBILE DEDICATED QUESTION BANK DRAWER VIEW (FULL HEIGHT ON MOBILE WHEN TAB 2 IS ACTIVE) -->
@@ -429,31 +431,11 @@
                     <div id="mobileBankList" class="flex-1 p-3 overflow-y-auto space-y-2.5"></div>
                 </div>
 
-                <!-- MAIN CHAT COLUMN (FULL HEIGHT ON MOBILE & DESKTOP) -->
+                <!-- MAIN CHAT COLUMN (SINGLE QUICK ASK, NO EXTRA EMPTY SPACE ON PC) -->
                 <div id="mainChatColumn" class="flex-1 flex flex-col min-h-0 bg-[#0c0e14]">
-                    
-                    <!-- Desktop Quick Ask Ribbon (Hidden on Mobile so it never crowds the screen) -->
-                    <div class="hidden md:flex p-2.5 bg-[#10131b] border-b border-[#232836] flex-wrap items-center gap-1.5 shrink-0">
-                        <span class="text-[10px] font-bold text-gray-400 uppercase tracking-wider mr-1">Quick Ask:</span>
-                        <button type="button" onclick="submitQuickPrompt('What are all 3 Easter eggs in RoadSense ADAS and how do I unlock them?')" class="px-2.5 py-1 bg-[#181d28] hover:bg-sky-500/20 border border-[#252c3d] text-[#bae6fd] rounded-md text-[10px] transition cursor-pointer">
-                            🕳️ All 3 Easter Eggs
-                        </button>
-                        <button type="button" onclick="submitQuickPrompt('How does the IEEE 5-Factor Base Risk equation work and what are all the weights?')" class="px-2.5 py-1 bg-[#181d28] hover:bg-sky-500/20 border border-[#252c3d] text-[#bae6fd] rounded-md text-[10px] transition cursor-pointer">
-                            ⚡ IEEE 5-Factor Math
-                        </button>
-                        <button type="button" onclick="submitQuickPrompt('What is the Dual-Geometry Consistency (DGC) module and how is DGI calculated?')" class="px-2.5 py-1 bg-[#181d28] hover:bg-sky-500/20 border border-[#252c3d] text-[#bae6fd] rounded-md text-[10px] transition cursor-pointer">
-                            🔬 DGC &amp; DGI Explained
-                        </button>
-                        <button type="button" onclick="submitQuickPrompt('How does the Phone Camera pipeline achieve full-bleed framing and zero lag?')" class="px-2.5 py-1 bg-[#181d28] hover:bg-sky-500/20 border border-[#252c3d] text-[#bae6fd] rounded-md text-[10px] transition cursor-pointer">
-                            📱 Phone Camera Engine
-                        </button>
-                        <button type="button" onclick="submitQuickPrompt('How does Rider Pruning stop people on motorcycles from triggering false pedestrian alerts?')" class="px-2.5 py-1 bg-[#181d28] hover:bg-sky-500/20 border border-[#252c3d] text-[#bae6fd] rounded-md text-[10px] transition cursor-pointer">
-                            🏍️ Rider Pruning
-                        </button>
-                    </div>
 
-                    <!-- Conversation Stream (Gets 80%+ of Mobile Screen Height!) -->
-                    <div id="aiChatStream" class="flex-1 p-3.5 sm:p-4 overflow-y-auto space-y-3.5 font-normal selectable-text"></div>
+                    <!-- Conversation Stream -->
+                    <div id="aiChatStream" class="flex-1 p-3.5 sm:p-4 overflow-y-auto space-y-3 font-normal selectable-text"></div>
 
                     <!-- Question Input Bar + Subtle Disclaimer -->
                     <div class="px-3 pt-2.5 pb-3 bg-[#11141c] border-t border-[#232836] shrink-0">
@@ -1523,6 +1505,18 @@
 
     function getWelcomeCardHtml() {
         const total = AI_KNOWLEDGE_BASE.length;
+        const desktopQuestionGrid = AI_KNOWLEDGE_BASE.map(item => `
+            <div onclick="submitQuickPrompt('${escapeHtml(item.question)}')" class="recessed-well p-3 rounded-xl space-y-1 border border-[#1d222f] hover:border-sky-500/40 transition cursor-pointer flex flex-col justify-between">
+                <div class="flex items-center justify-between gap-1">
+                    <span class="px-2 py-0.5 text-[9px] mono-num font-bold uppercase bg-sky-500/15 text-sky-300 border border-sky-500/30 rounded truncate">
+                        #${item.id} // ${escapeHtml(item.category)}
+                    </span>
+                    <span class="text-[10px] text-sky-400 font-semibold shrink-0">Ask →</span>
+                </div>
+                <div class="text-xs font-bold text-white leading-snug">${escapeHtml(item.question)}</div>
+            </div>
+        `).join('');
+
         return `
             <div class="recessed-well p-4 rounded-2xl space-y-3 border border-[#1e2433]">
                 <div class="flex items-center justify-between gap-2 flex-wrap">
@@ -1555,6 +1549,10 @@
                         </button>
                     </div>
                 </div>
+            </div>
+            <!-- Desktop Question Grid (Fills PC View With Zero Empty Space; Hidden on Mobile) -->
+            <div class="hidden md:grid md:grid-cols-2 gap-2.5 pt-1">
+                ${desktopQuestionGrid}
             </div>`;
     }
 
@@ -1655,36 +1653,40 @@
         currentCategoryFilter = catName;
         document.querySelectorAll('.cat-btn').forEach(btn => {
             if (btn.innerText.includes(catName) || (catName === 'All' && btn.innerText.includes('All Questions'))) {
-                btn.className = "cat-btn active text-left px-3 py-2 rounded-lg text-[11px] font-semibold text-white bg-sky-500/20 border border-sky-500/40 transition truncate cursor-pointer";
+                btn.className = "cat-btn active text-left px-3 py-1.5 rounded-lg text-[11px] font-semibold text-white bg-sky-500/20 border border-sky-500/40 transition truncate cursor-pointer";
             } else {
-                btn.className = "cat-btn text-left px-3 py-2 rounded-lg text-[11px] font-semibold text-gray-400 hover:text-white transition truncate cursor-pointer";
+                btn.className = "cat-btn text-left px-3 py-1.5 rounded-lg text-[11px] font-semibold text-gray-400 hover:text-white transition truncate cursor-pointer";
             }
         });
 
         const chatStream = document.getElementById('aiChatStream');
         if (!chatStream) return;
 
-        let filtered = AI_KNOWLEDGE_BASE;
-        if (catName !== 'All') {
-            filtered = filtered.filter(item => item.category === catName);
+        if (catName === 'All') {
+            chatStream.innerHTML = getWelcomeCardHtml();
+            return;
         }
+
+        const filtered = AI_KNOWLEDGE_BASE.filter(item => item.category === catName);
 
         chatStream.innerHTML = `
             <div class="recessed-well p-3 rounded-xl border border-[#1d2332] text-xs text-gray-300 flex items-center justify-between">
                 <span>Topic Filter: <strong class="text-white">${escapeHtml(catName)}</strong> (${filtered.length} questions)</span>
                 <span class="text-[10px] text-sky-400 mono-num">Tap any question to ask Void AI</span>
             </div>
-            ${filtered.map(item => `
-                <div onclick="submitQuickPrompt('${escapeHtml(item.question)}')" class="recessed-well p-3 rounded-xl space-y-1 border border-[#1d222f] hover:border-sky-500/40 transition cursor-pointer">
-                    <div class="flex items-center justify-between">
-                        <span class="px-2 py-0.5 text-[9px] mono-num font-bold uppercase bg-sky-500/15 text-sky-300 border border-sky-500/30 rounded">
-                            #${item.id} // ${escapeHtml(item.category)}
-                        </span>
-                        <span class="text-[10px] text-sky-400 font-semibold">Ask Void AI →</span>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-2.5">
+                ${filtered.map(item => `
+                    <div onclick="submitQuickPrompt('${escapeHtml(item.question)}')" class="recessed-well p-3 rounded-xl space-y-1 border border-[#1d222f] hover:border-sky-500/40 transition cursor-pointer flex flex-col justify-between">
+                        <div class="flex items-center justify-between gap-1">
+                            <span class="px-2 py-0.5 text-[9px] mono-num font-bold uppercase bg-sky-500/15 text-sky-300 border border-sky-500/30 rounded truncate">
+                                #${item.id} // ${escapeHtml(item.category)}
+                            </span>
+                            <span class="text-[10px] text-sky-400 font-semibold shrink-0">Ask Void AI →</span>
+                        </div>
+                        <div class="text-xs font-bold text-white leading-snug">${escapeHtml(item.question)}</div>
                     </div>
-                    <div class="text-xs font-bold text-white">${escapeHtml(item.question)}</div>
-                </div>
-            `).join('')}
+                `).join('')}
+            </div>
         `;
     }
 
