@@ -52,7 +52,6 @@
             position: fixed;
             inset: 0;
             z-index: 1;
-            transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
         }
 
         /* Smoked-Optic Tactile Hardware Panels */
@@ -83,6 +82,29 @@
             box-shadow: 0 10px 28px rgba(56, 189, 248, 0.45);
         }
 
+        /* =========================================================
+           AUTOMATIC MOBILE LANDSCAPE FOR SPACE VIEW & PORTRAIT FOR AI
+           ========================================================= */
+        #spaceViewportWrapper {
+            position: fixed;
+            inset: 0;
+            width: 100vw;
+            height: 100dvh;
+            z-index: 30;
+            pointer-events: none;
+        }
+
+        @media screen and (max-width: 920px) and (orientation: portrait) {
+            body.mode-space #spaceViewportWrapper {
+                top: 0;
+                left: 100vw;
+                width: 100dvh;
+                height: 100vw;
+                transform-origin: top left;
+                transform: rotate(90deg);
+            }
+        }
+
         /* Equalizer Audio Visualizer */
         @keyframes eqBounce {
             0%, 100% { height: 4px; }
@@ -99,12 +121,12 @@
         .hud-hidden-top {
             opacity: 0;
             transform: translate3d(0, -32px, 0);
-            pointer-events: none;
+            pointer-events: none !important;
         }
         .hud-hidden-bottom {
             opacity: 0;
             transform: translate3d(0, 32px, 0);
-            pointer-events: none;
+            pointer-events: none !important;
         }
 
         .no-scrollbar::-webkit-scrollbar { display: none; }
@@ -124,82 +146,214 @@
         }
     </style>
 </head>
-<body>
+<body class="mode-space">
 
     <!-- WEBGL DEEP SPACE CANVAS -->
     <canvas id="glcanvas"></canvas>
 
-    <!-- START / BOOT OVERLAY -->
-    <div id="startOverlay" style="display: flex;" onclick="launchExperience()" class="fixed inset-0 bg-[#04060a]/95 z-50 flex flex-col items-center justify-center p-5 text-center cursor-pointer backdrop-blur-md transition-opacity duration-500">
-        <div class="hardware-panel p-6 sm:p-9 rounded-2xl max-w-lg w-full space-y-4 border border-[#2d364a] shadow-2xl">
-            <div class="w-14 h-14 mx-auto rounded-2xl bg-sky-500/10 border border-sky-500/30 flex items-center justify-center text-2xl shadow-[0_0_30px_rgba(56,189,248,0.2)]">
-                🌌
-            </div>
-            <span class="inline-block px-3 py-1 text-[10px] mono-num font-bold uppercase bg-sky-500/15 text-sky-300 border border-sky-500/30 rounded-full">
-                ROADSENSE ADAS // DEEP SPACE &amp; VOID AI
-            </span>
-            <h1 class="title-cinzel text-xl sm:text-3xl font-bold text-white tracking-wide">
-                COSMIC WARP &amp; VOID AI
-            </h1>
-            <p class="text-xs sm:text-sm text-gray-300 leading-relaxed">
-                Welcome to the <strong class="text-white">Deep Space Room</strong>. Experience the 8-spectrum relativistic hyperspace visualizer or open <strong class="text-sky-300">Void AI (ADAS Bot)</strong> to explore our neural perception architecture, depth geometry, and risk models.
-            </p>
-            <div class="recessed-well p-3.5 rounded-xl text-[11px] mono-num text-gray-400 space-y-1.5 text-left">
-                <div class="flex items-center justify-between"><span>• Space Engine:</span> <strong class="text-gray-200">8-Spectrum Landscape Warp</strong></div>
-                <div class="flex items-center justify-between"><span>• Intelligence:</span> <strong class="text-sky-300">Void AI // ADAS Bot</strong></div>
-                <div class="flex items-center justify-between"><span>• Acoustic Loop:</span> <strong class="text-gray-200">Seamless Space Ambient OST</strong></div>
-            </div>
-            <button type="button" class="btn-launch w-full py-3.5 rounded-xl text-xs uppercase tracking-widest cursor-pointer">
-                ▶ Enter Deep Space &amp; Void AI
-            </button>
-        </div>
-    </div>
+    <!-- SPACE VIEWPORT WRAPPER (AUTOMATICALLY LANDSCAPE ON PHONES, FULLSCREEN ON PC) -->
+    <div id="spaceViewportWrapper">
 
-    <!-- VOID AI (ADAS BOT) MODAL — PORTRAIT-OPTIMIZED ON MOBILE, DUAL-PANE ON PC, WITH DYNAMIC FIELD NOTE INSIDE -->
-    <div id="aiAgentModal" style="display: none;" class="fixed inset-0 bg-black/85 z-40 flex items-center justify-center p-2 sm:p-5 backdrop-blur-md">
-        <div class="hardware-panel w-full max-w-[440px] md:max-w-5xl h-[94dvh] max-h-[94dvh] rounded-2xl flex flex-col overflow-hidden border border-[#2d364a] shadow-2xl">
-            <!-- Header -->
-            <div class="px-3.5 py-2.5 bg-[#0d0f14] border-b border-[#232836] flex items-center justify-between gap-2 shrink-0">
-                <div class="flex items-center gap-2.5 min-w-0">
-                    <div class="w-8 h-8 rounded-lg bg-gradient-to-tr from-sky-500 to-indigo-500 border border-sky-400/40 flex items-center justify-center text-white font-bold text-sm shrink-0 shadow-[0_0_15px_rgba(56,189,248,0.4)]">
-                        🤖
+        <!-- START / BOOT OVERLAY -->
+        <div id="startOverlay" style="display: flex;" onclick="launchExperience()" class="absolute inset-0 bg-[#04060a]/95 z-50 flex flex-col items-center justify-center p-4 sm:p-6 text-center cursor-pointer backdrop-blur-md transition-opacity duration-500 pointer-events-auto">
+            <div class="hardware-panel p-5 sm:p-8 rounded-2xl max-w-lg w-full space-y-3.5 border border-[#2d364a] shadow-2xl">
+                <div class="w-12 h-12 sm:w-14 sm:h-14 mx-auto rounded-2xl bg-sky-500/10 border border-sky-500/30 flex items-center justify-center text-2xl shadow-[0_0_30px_rgba(56,189,248,0.2)]">
+                    🌌
+                </div>
+                <span class="inline-block px-3 py-1 text-[10px] mono-num font-bold uppercase bg-sky-500/15 text-sky-300 border border-sky-500/30 rounded-full">
+                    ROADSENSE ADAS // DEEP SPACE &amp; VOID AI
+                </span>
+                <h1 class="title-cinzel text-lg sm:text-2xl font-bold text-white tracking-wide">
+                    COSMIC WARP &amp; VOID AI
+                </h1>
+                <p class="text-xs text-gray-300 leading-relaxed">
+                    Welcome to the <strong class="text-white">Deep Space Room</strong>. Experience the 8-spectrum relativistic hyperspace visualizer or open <strong class="text-sky-300">Void AI (ADAS Bot)</strong> to explore our neural perception architecture, depth geometry, and risk models.
+                </p>
+                <div class="recessed-well p-3 rounded-xl text-[11px] mono-num text-gray-400 space-y-1 text-left">
+                    <div class="flex items-center justify-between"><span>• Space Engine:</span> <strong class="text-gray-200">8-Spectrum Landscape Warp</strong></div>
+                    <div class="flex items-center justify-between"><span>• Intelligence:</span> <strong class="text-sky-300">Void AI // ADAS Bot</strong></div>
+                    <div class="flex items-center justify-between"><span>• Acoustic Loop:</span> <strong class="text-gray-200">Seamless Space Ambient OST</strong></div>
+                </div>
+                <button type="button" class="btn-launch w-full py-3 rounded-xl text-xs uppercase tracking-widest cursor-pointer">
+                    ▶ Enter Deep Space &amp; Void AI
+                </button>
+            </div>
+        </div>
+
+        <!-- TOP SPACE HUD BAR (CLEAN SINGLE-ROW LANDSCAPE BAR, NO LANDSCAPE BUTTON) -->
+        <header id="topHudBar" class="absolute top-0 inset-x-0 z-30 p-2 sm:p-3.5 pointer-events-none hud-transition">
+            <div class="max-w-6xl mx-auto flex items-center justify-between gap-2">
+                
+                <!-- Left Pill: Mode Switcher + Status -->
+                <div class="hardware-panel px-2.5 py-1.5 rounded-2xl flex items-center gap-2 pointer-events-auto">
+                    <span id="sceneDot" class="w-2 h-2 rounded-full bg-sky-400 animate-pulse shrink-0"></span>
+                    <span id="sceneTitleLabel" class="hidden md:inline-block text-xs font-bold text-white tracking-tight whitespace-nowrap">
+                        DEEP SPACE // WARP
+                    </span>
+
+                    <div class="flex items-center bg-[#07090d] p-0.5 rounded-xl border border-white/10">
+                        <button type="button" id="sceneBtnSpace" onclick="switchView('space')" class="px-2.5 py-1 rounded-lg text-[11px] font-bold bg-sky-500 text-black transition cursor-pointer whitespace-nowrap shadow-md">
+                            🚀 Space Warp
+                        </button>
+                        <button type="button" id="sceneBtnAi" onclick="toggleAiAgentModal()" class="px-2.5 py-1 rounded-lg text-[11px] font-semibold text-gray-300 hover:text-white transition cursor-pointer whitespace-nowrap">
+                            🤖 Void AI
+                        </button>
                     </div>
-                    <div class="min-w-0">
-                        <div class="flex items-center gap-2">
-                            <h2 class="text-xs sm:text-sm font-bold text-white tracking-wide uppercase truncate">
-                                Void AI // ADAS Bot
-                            </h2>
-                            <span class="px-1.5 py-0.5 text-[9px] mono-num font-bold uppercase bg-emerald-500/15 text-emerald-400 border border-emerald-500/30 rounded shrink-0">
-                                Neural Intelligence
-                            </span>
-                        </div>
-                        <p class="text-[10px] text-gray-400 mono-num truncate">RoadSense ADAS &amp; Spatial Perception Engine</p>
+
+                    <div class="px-2 py-1 text-[10px] mono-num font-semibold bg-[#0d0f14] text-gray-300 border border-[#232836] rounded-lg shrink-0 whitespace-nowrap">
+                        <span>Session:</span> <span id="sessionTimer" class="text-sky-300">00:00</span>
+                    </div>
+
+                    <div class="hidden sm:flex items-center px-2 py-1 text-[10px] mono-num font-semibold bg-emerald-500/15 text-emerald-400 border border-emerald-500/30 rounded-lg shrink-0 whitespace-nowrap">
+                        <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 mr-1.5"></span><span>Space Online</span>
                     </div>
                 </div>
-                <div class="flex items-center gap-1.5 shrink-0">
-                    <!-- Dynamic Field Note Button Inside Void AI Only -->
-                    <button type="button" id="aiFieldNoteBtn" onclick="renderFieldNoteInAi()" class="px-2.5 py-1.5 bg-[#1b202c] hover:bg-[#252c3d] text-amber-300 border border-amber-500/30 rounded-lg text-[11px] font-semibold transition cursor-pointer">
-                        📋 Field Note
+
+                <!-- Right Pill: Audio Controls + Hide HUD + Exit -->
+                <div class="hardware-panel px-2.5 py-1.5 rounded-2xl flex items-center gap-2 pointer-events-auto">
+                    <span class="hidden lg:inline-block px-2 py-1 text-[10px] mono-num font-semibold bg-sky-500/15 text-sky-300 border border-sky-500/30 rounded-lg whitespace-nowrap">
+                        OST: SPACE.MP3
+                    </span>
+
+                    <div class="flex items-center gap-2 px-2.5 py-1 rounded-xl recessed-well">
+                        <div class="flex items-end gap-0.5 h-3.5">
+                            <span id="eqBar1" class="eq-bar w-1 bg-sky-400 eq-1 eq-paused rounded-full"></span>
+                            <span id="eqBar2" class="eq-bar w-1 bg-amber-400 eq-2 eq-paused rounded-full"></span>
+                            <span id="eqBar3" class="eq-bar w-1 bg-sky-400 eq-3 eq-paused rounded-full"></span>
+                        </div>
+                        <span id="audioClock" class="mono-num text-[11px] text-gray-200">00:00</span>
+                        <button type="button" id="muteBtn" onclick="toggleAudioMute()" class="text-[11px] text-sky-300 hover:text-sky-200 font-semibold cursor-pointer">
+                            Mute
+                        </button>
+                    </div>
+
+                    <button type="button" onclick="toggleHudVisibility()" class="px-2.5 py-1 rounded-xl recessed-well hover:border-gray-500 text-[11px] font-semibold text-gray-200 transition cursor-pointer whitespace-nowrap" title="Toggle HUD (H)">
+                        👁️ Hide HUD
                     </button>
-                    <button type="button" onclick="clearChatStream()" class="px-2.5 py-1.5 bg-[#171b26] hover:bg-[#202636] text-gray-300 hover:text-white rounded-lg text-[11px] font-medium transition border border-[#2d364a] cursor-pointer">
-                        Reset
+
+                    <button type="button" onclick="exitSpaceRoom()" class="px-2.5 py-1 rounded-xl bg-red-600/85 hover:bg-red-500 text-white border border-red-400/40 text-[11px] font-bold transition cursor-pointer whitespace-nowrap shadow-md" title="Exit Space Room & Close Tab">
+                        🚪 Exit
                     </button>
-                    <button type="button" onclick="toggleAiAgentModal()" class="px-3 py-1.5 bg-red-600/80 hover:bg-red-500 text-white rounded-lg text-[11px] font-bold transition cursor-pointer">
+                </div>
+
+            </div>
+        </header>
+
+        <button id="restoreHudBtn" type="button" onclick="toggleHudVisibility()" class="hidden absolute top-3 right-3 z-40 hardware-panel px-3.5 py-1.5 rounded-xl text-xs font-semibold text-sky-300 border border-sky-500/40 hover:bg-sky-500/20 transition cursor-pointer shadow-lg pointer-events-auto">
+            👁️ Show HUD
+        </button>
+
+        <!-- BOTTOM INTERACTIVE 8-SPECTRUM PALETTE DOCK (FULL LANDSCAPE WIDTH = ZERO TRUNCATION) -->
+        <footer id="bottomHudBar" class="absolute bottom-0 inset-x-0 z-30 p-2 sm:p-3.5 pointer-events-none hud-transition">
+            <div class="max-w-5xl mx-auto hardware-panel p-2 sm:p-2.5 rounded-2xl flex flex-col gap-1.5 pointer-events-auto">
+                
+                <!-- All 8 Cosmic Palettes Visible with Full Names -->
+                <div class="grid grid-cols-4 sm:grid-cols-8 gap-1.5 bg-[#07090d] p-1.5 rounded-xl border border-white/10 w-full">
+                    <button type="button" id="palBtn0" onclick="setColorPalette(0)" class="px-2 py-1.5 rounded-lg text-[11px] font-bold bg-sky-500 text-black transition cursor-pointer whitespace-nowrap text-center shadow">
+                        🌌 Hyper Cyan
+                    </button>
+                    <button type="button" id="palBtn1" onclick="setColorPalette(1)" class="px-2 py-1.5 rounded-lg text-[11px] font-semibold text-gray-300 hover:text-white transition cursor-pointer whitespace-nowrap text-center">
+                        🔥 Solar Gold
+                    </button>
+                    <button type="button" id="palBtn2" onclick="setColorPalette(2)" class="px-2 py-1.5 rounded-lg text-[11px] font-semibold text-gray-300 hover:text-white transition cursor-pointer whitespace-nowrap text-center">
+                        🔮 Nebula Rose
+                    </button>
+                    <button type="button" id="palBtn3" onclick="setColorPalette(3)" class="px-2 py-1.5 rounded-lg text-[11px] font-semibold text-gray-300 hover:text-white transition cursor-pointer whitespace-nowrap text-center">
+                        🟢 Emerald
+                    </button>
+                    <button type="button" id="palBtn4" onclick="setColorPalette(4)" class="px-2 py-1.5 rounded-lg text-[11px] font-semibold text-gray-300 hover:text-white transition cursor-pointer whitespace-nowrap text-center">
+                        🔴 Supernova
+                    </button>
+                    <button type="button" id="palBtn5" onclick="setColorPalette(5)" class="px-2 py-1.5 rounded-lg text-[11px] font-semibold text-gray-300 hover:text-white transition cursor-pointer whitespace-nowrap text-center">
+                        ⚡ UV Pulsar
+                    </button>
+                    <button type="button" id="palBtn6" onclick="setColorPalette(6)" class="px-2 py-1.5 rounded-lg text-[11px] font-semibold text-gray-300 hover:text-white transition cursor-pointer whitespace-nowrap text-center">
+                        🌊 Abyssal Ice
+                    </button>
+                    <button type="button" id="palBtn7" onclick="setColorPalette(7)" class="px-2 py-1.5 rounded-lg text-[11px] font-semibold text-gray-300 hover:text-white transition cursor-pointer whitespace-nowrap text-center">
+                        🔲 Deep Void
+                    </button>
+                </div>
+
+                <!-- Warp Speed, Streaks & Reset Row -->
+                <div class="grid grid-cols-3 gap-2 w-full">
+                    <button type="button" id="primaryActionBtn" onclick="cyclePrimaryParameter()" class="px-3 py-1.5 rounded-xl recessed-well border border-sky-500/40 text-[11px] mono-num font-bold text-sky-300 hover:bg-sky-500/20 transition cursor-pointer text-center whitespace-nowrap">
+                        ⚡ WARP: 1.5x
+                    </button>
+
+                    <button type="button" id="secondaryActionBtn" onclick="cycleSecondaryParameter()" class="px-3 py-1.5 rounded-xl recessed-well border border-sky-500/40 text-[11px] mono-num font-bold text-sky-300 hover:bg-sky-500/20 transition cursor-pointer text-center whitespace-nowrap">
+                        ✨ STREAKS: HIGH
+                    </button>
+
+                    <button type="button" onclick="resetSceneView()" class="px-3 py-1.5 rounded-xl recessed-well hover:text-white text-[11px] text-gray-300 font-semibold transition cursor-pointer text-center whitespace-nowrap">
+                        ↺ Reset View
+                    </button>
+                </div>
+
+            </div>
+        </footer>
+
+    </div>
+
+    <!-- VOID AI (ADAS BOT) MODAL — UPRIGHT PORTRAIT ON MOBILE, DUAL-PANE ON PC, ZERO OVERLAP -->
+    <div id="aiAgentModal" style="display: none;" class="fixed inset-0 bg-black/85 z-40 flex items-center justify-center p-2 sm:p-5 backdrop-blur-md">
+        <div class="hardware-panel w-full max-w-[460px] md:max-w-5xl h-[92dvh] max-h-[92dvh] rounded-2xl flex flex-col overflow-hidden border border-[#2d364a] shadow-2xl">
+            
+            <!-- Clean Two-Row Mobile / Single-Row Desktop Header (Never Crushes Title) -->
+            <div class="px-3.5 py-2.5 bg-[#0d0f14] border-b border-[#232836] flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 shrink-0">
+                <div class="flex items-center justify-between gap-2">
+                    <div class="flex items-center gap-2.5 min-w-0">
+                        <div class="w-8 h-8 rounded-lg bg-gradient-to-tr from-sky-500 to-indigo-500 border border-sky-400/40 flex items-center justify-center text-white font-bold text-sm shrink-0 shadow-[0_0_15px_rgba(56,189,248,0.4)]">
+                            🤖
+                        </div>
+                        <div class="min-w-0">
+                            <div class="flex items-center gap-2">
+                                <h2 class="text-xs sm:text-sm font-bold text-white tracking-wide uppercase whitespace-nowrap">
+                                    Void AI // ADAS Bot
+                                </h2>
+                                <span class="px-1.5 py-0.5 text-[9px] mono-num font-bold uppercase bg-emerald-500/15 text-emerald-400 border border-emerald-500/30 rounded shrink-0">
+                                    Neural Intelligence
+                                </span>
+                            </div>
+                            <p class="text-[10px] text-gray-400 mono-num truncate">RoadSense ADAS &amp; Spatial Perception Engine</p>
+                        </div>
+                    </div>
+
+                    <!-- Mobile Close Button in Top-Right Corner -->
+                    <button type="button" onclick="toggleAiAgentModal()" class="sm:hidden px-2.5 py-1 bg-red-600/85 hover:bg-red-500 text-white rounded-lg text-[11px] font-bold transition cursor-pointer shrink-0">
                         ✕ Close
                     </button>
+                </div>
+
+                <!-- Action Toolbar (Field Note, Topic Drawer Toggle on Mobile, Reset, Desktop Close) -->
+                <div class="flex items-center justify-between sm:justify-end gap-1.5 shrink-0 pt-1 sm:pt-0 border-t sm:border-t-0 border-[#1b202b]">
+                    <button type="button" id="mobileTopicToggleBtn" onclick="toggleMobileTopics()" class="md:hidden px-2.5 py-1 bg-[#171b26] text-sky-300 border border-sky-500/30 rounded-lg text-[11px] font-semibold transition cursor-pointer">
+                        📂 Hide Topics
+                    </button>
+                    <div class="flex items-center gap-1.5 ml-auto">
+                        <button type="button" id="aiFieldNoteBtn" onclick="renderFieldNoteInAi()" class="px-2.5 py-1 bg-[#1b202c] hover:bg-[#252c3d] text-amber-300 border border-amber-500/30 rounded-lg text-[11px] font-semibold transition cursor-pointer">
+                            📋 Field Note
+                        </button>
+                        <button type="button" onclick="clearChatStream()" class="px-2.5 py-1 bg-[#171b26] hover:bg-[#202636] text-gray-300 hover:text-white rounded-lg text-[11px] font-medium transition border border-[#2d364a] cursor-pointer">
+                            Reset
+                        </button>
+                        <button type="button" onclick="toggleAiAgentModal()" class="hidden sm:inline-block px-3 py-1 bg-red-600/85 hover:bg-red-500 text-white rounded-lg text-[11px] font-bold transition cursor-pointer">
+                            ✕ Close
+                        </button>
+                    </div>
                 </div>
             </div>
 
             <!-- Content Area: Portrait-First on Mobile, Sidebar + Chat on Desktop -->
             <div class="flex-1 flex flex-col md:flex-row min-h-0 overflow-hidden">
-                <!-- Category & Question Bank Explorer (Shows Question Count Here) -->
-                <div class="w-full md:w-64 bg-[#090b0f] border-b md:border-b-0 md:border-r border-[#232836] p-2 overflow-y-auto shrink-0 max-h-[128px] md:max-h-none">
-                    <div class="flex items-center justify-between px-1.5 pb-1.5 mb-1.5 border-b border-[#1b202b]">
+                <!-- Question Bank Explorer (All 10 Categories Visible, Zero Cutoff) -->
+                <div id="questionBankPanel" class="w-full md:w-64 bg-[#090b0f] border-b md:border-b-0 md:border-r border-[#232836] p-2.5 overflow-y-auto shrink-0">
+                    <div class="flex items-center justify-between px-1 pb-1.5 mb-1.5 border-b border-[#1b202b]">
                         <span class="text-[10px] font-bold text-gray-400 uppercase tracking-wider">Question Bank</span>
                         <span id="sidebarTotalCount" class="px-1.5 py-0.5 text-[9px] mono-num font-bold bg-sky-500/15 text-sky-300 border border-sky-500/30 rounded"></span>
                     </div>
-                    <!-- All Category Buttons Visible in Wrap Grid on Mobile, Vertical Stack on Desktop -->
-                    <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-1 gap-1">
+                    <!-- All 10 Category Buttons Visible in 2x5 Grid on Mobile, Vertical Stack on Desktop -->
+                    <div class="grid grid-cols-2 md:grid-cols-1 gap-1">
                         <button type="button" onclick="filterCategory('All')" class="cat-btn active text-left px-2.5 py-1.5 rounded-lg text-[11px] font-semibold text-white bg-sky-500/20 border border-sky-500/40 transition truncate">
                             🌐 All Questions (<span id="countAll">0</span>)
                         </button>
@@ -235,7 +389,7 @@
 
                 <!-- Chat View -->
                 <div class="flex-1 flex flex-col min-h-0 bg-[#0c0e14]">
-                    <!-- Quick Prompts (Wrapped so all are visible without sliding) -->
+                    <!-- Quick Prompts -->
                     <div class="p-2 bg-[#10131b] border-b border-[#232836] flex flex-wrap items-center gap-1.5 shrink-0">
                         <span class="text-[10px] font-bold text-gray-400 uppercase tracking-wider mr-0.5">Quick Ask:</span>
                         <button type="button" onclick="submitQuickPrompt('What are all 3 Easter eggs in RoadSense ADAS and how do I unlock them?')" class="px-2 py-1 bg-[#181d28] hover:bg-sky-500/20 border border-[#252c3d] text-[#bae6fd] rounded-md text-[10px] transition cursor-pointer">
@@ -258,9 +412,9 @@
                     <!-- Conversation & Dynamic Field Note Stream -->
                     <div id="aiChatStream" class="flex-1 p-3.5 overflow-y-auto space-y-3.5 font-normal selectable-text">
                         <div class="recessed-well p-3.5 rounded-2xl space-y-1.5 border border-[#1e2433]">
-                            <div class="flex items-center justify-between">
+                            <div class="flex items-center justify-between gap-2 flex-wrap">
                                 <div class="flex items-center gap-2">
-                                    <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+                                    <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse shrink-0"></span>
                                     <h3 class="text-xs font-bold text-white uppercase tracking-wider">Void AI // ADAS Bot Online</h3>
                                 </div>
                                 <span id="welcomeQuestionBadge" class="text-[10px] mono-num text-sky-400 font-semibold"></span>
@@ -272,15 +426,15 @@
                     </div>
 
                     <!-- Question Input Box + Subtle AI Disclaimer -->
-                    <div class="px-3 pt-2 pb-1.5 bg-[#11141c] border-t border-[#232836] shrink-0">
+                    <div class="px-3 pt-2.5 pb-3 bg-[#11141c] border-t border-[#232836] shrink-0">
                         <form onsubmit="handleChatSubmit(event)" class="flex items-center gap-2">
-                            <input type="text" id="aiSearchInput" placeholder="Ask Void AI a question (e.g. 'How does Piecewise Dual-Regime Depth work?')..." class="flex-1 bg-[#08090d] border border-[#252b3b] focus:border-sky-500 rounded-xl px-3.5 py-2 text-xs text-white focus:outline-none font-medium selectable-text">
+                            <input type="text" id="aiSearchInput" placeholder="Ask Void AI a question..." class="flex-1 bg-[#08090d] border border-[#252b3b] focus:border-sky-500 rounded-xl px-3.5 py-2 text-xs text-white focus:outline-none font-medium selectable-text">
                             <button type="submit" class="px-4 py-2 bg-sky-500 hover:bg-sky-400 text-black font-bold text-xs rounded-xl transition cursor-pointer flex items-center gap-1 shrink-0 shadow-md">
                                 <span>Ask</span> 🤖
                             </button>
                         </form>
-                        <div class="text-center pt-1">
-                            <p class="text-[10px] text-gray-500 tracking-tight">
+                        <div class="text-center pt-1.5 px-2">
+                            <p class="text-[10px] text-gray-500 tracking-tight leading-snug">
                                 Void AI can make mistakes. Always verify critical ADAS telemetry and kinematic thresholds.
                             </p>
                         </div>
@@ -289,129 +443,6 @@
             </div>
         </div>
     </div>
-
-    <!-- TOP SPACE HUD BAR (NO FIELD NOTE HERE; HAS DYNAMIC EXIT BUTTON TO CLOSE TAB) -->
-    <header id="topHudBar" class="fixed top-0 inset-x-0 z-30 p-2.5 sm:p-4 pointer-events-none hud-transition">
-        <div class="max-w-6xl mx-auto flex flex-col lg:flex-row items-stretch lg:items-center justify-between gap-2">
-            
-            <div class="hardware-panel px-2.5 py-2 rounded-2xl flex flex-wrap items-center justify-between gap-2 pointer-events-auto">
-                <div class="flex items-center gap-2 min-w-0">
-                    <span id="sceneDot" class="w-2 h-2 rounded-full bg-sky-400 animate-pulse shrink-0"></span>
-                    <span id="sceneTitleLabel" class="hidden sm:inline-block text-xs font-bold text-white tracking-tight truncate">
-                        DEEP SPACE // WARP
-                    </span>
-
-                    <div class="flex items-center bg-[#07090d] p-1 rounded-xl border border-white/10">
-                        <button type="button" id="sceneBtnSpace" onclick="switchView('space')" class="px-2.5 py-1 rounded-lg text-[11px] font-bold bg-sky-500 text-black transition cursor-pointer whitespace-nowrap shadow-md">
-                            🚀 Space Warp
-                        </button>
-                        <button type="button" id="sceneBtnAi" onclick="toggleAiAgentModal()" class="px-2.5 py-1 rounded-lg text-[11px] font-semibold text-gray-300 hover:text-white transition cursor-pointer whitespace-nowrap">
-                            🤖 Void AI
-                        </button>
-                    </div>
-                </div>
-
-                <div class="flex items-center gap-1.5">
-                    <div class="px-2 py-1 text-[10px] mono-num font-semibold bg-[#0d0f14] text-gray-300 border border-[#232836] rounded-lg shrink-0">
-                        <span>Session:</span> <span id="sessionTimer" class="text-sky-300">00:00</span>
-                    </div>
-
-                    <div class="px-2 py-1 text-[10px] mono-num font-semibold bg-emerald-500/15 text-emerald-400 border border-emerald-500/30 rounded-lg shrink-0">
-                        <span class="inline-block w-1.5 h-1.5 rounded-full bg-emerald-400 mr-1"></span><span>Space Online</span>
-                    </div>
-                </div>
-            </div>
-
-            <div class="hardware-panel px-3 py-1.5 rounded-2xl flex items-center justify-between lg:justify-end gap-2 pointer-events-auto">
-                <div class="flex items-center gap-2">
-                    <span class="hidden sm:inline-block px-2 py-1 text-[10px] mono-num font-semibold bg-sky-500/15 text-sky-300 border border-sky-500/30 rounded-lg whitespace-nowrap">
-                        OST: SPACE.MP3
-                    </span>
-
-                    <div class="flex items-center gap-2 px-2.5 py-1 rounded-xl recessed-well">
-                        <div class="flex items-end gap-0.5 h-3.5">
-                            <span id="eqBar1" class="eq-bar w-1 bg-sky-400 eq-1 eq-paused rounded-full"></span>
-                            <span id="eqBar2" class="eq-bar w-1 bg-amber-400 eq-2 eq-paused rounded-full"></span>
-                            <span id="eqBar3" class="eq-bar w-1 bg-sky-400 eq-3 eq-paused rounded-full"></span>
-                        </div>
-                        <span id="audioClock" class="mono-num text-xs text-gray-200">00:00</span>
-                        <button type="button" id="muteBtn" onclick="toggleAudioMute()" class="text-xs text-sky-300 hover:text-sky-200 font-semibold ml-1 cursor-pointer">
-                            Mute
-                        </button>
-                    </div>
-                </div>
-
-                <div class="flex items-center gap-1.5">
-                    <!-- Mobile Landscape Space Toggle -->
-                    <button type="button" id="landscapeBtn" onclick="toggleMobileLandscapeSpace()" class="sm:hidden px-2.5 py-1 rounded-xl recessed-well text-[11px] font-semibold text-sky-300 border border-sky-500/30 transition cursor-pointer">
-                        🔄 Landscape
-                    </button>
-                    <button type="button" onclick="toggleHudVisibility()" class="px-2.5 py-1 rounded-xl recessed-well hover:border-gray-500 text-[11px] font-semibold text-gray-200 transition cursor-pointer" title="Toggle HUD (H)">
-                        👁️ Hide HUD
-                    </button>
-                    <!-- EXIT SPACE & CLOSE TAB BUTTON -->
-                    <button type="button" onclick="exitSpaceRoom()" class="px-2.5 py-1 rounded-xl bg-red-600/85 hover:bg-red-500 text-white border border-red-400/40 text-[11px] font-bold transition cursor-pointer whitespace-nowrap shadow-md" title="Exit Space Room & Close Tab">
-                        🚪 Exit
-                    </button>
-                </div>
-            </div>
-
-        </div>
-    </header>
-
-    <button id="restoreHudBtn" type="button" onclick="toggleHudVisibility()" class="hidden fixed top-4 right-4 z-40 hardware-panel px-3.5 py-2 rounded-xl text-xs font-semibold text-sky-300 border border-sky-500/40 hover:bg-sky-500/20 transition cursor-pointer shadow-lg">
-        👁️ Show HUD
-    </button>
-
-    <!-- BOTTOM INTERACTIVE 8-SPECTRUM PALETTE DOCK (ALL 8 VISIBLE WITHOUT SLIDING ON MOBILE & PC) -->
-    <footer id="bottomHudBar" class="fixed bottom-0 inset-x-0 z-30 p-2.5 sm:p-4 pointer-events-none hud-transition">
-        <div class="max-w-5xl mx-auto hardware-panel p-2.5 sm:p-3 rounded-2xl flex flex-col gap-2 pointer-events-auto">
-            
-            <!-- All 8 Cosmic Palettes in a 4x2 Mobile / 8x1 Desktop Grid (Zero Horizontal Scroll or Clipping) -->
-            <div class="grid grid-cols-4 sm:grid-cols-8 gap-1.5 bg-[#07090d] p-1.5 rounded-xl border border-white/10 w-full">
-                <button type="button" id="palBtn0" onclick="setColorPalette(0)" class="px-1.5 py-1.5 rounded-lg text-[10px] sm:text-[11px] font-bold bg-sky-500 text-black transition cursor-pointer truncate text-center shadow">
-                    🌌 Hyper Cyan
-                </button>
-                <button type="button" id="palBtn1" onclick="setColorPalette(1)" class="px-1.5 py-1.5 rounded-lg text-[10px] sm:text-[11px] font-semibold text-gray-300 hover:text-white transition cursor-pointer truncate text-center">
-                    🔥 Solar Gold
-                </button>
-                <button type="button" id="palBtn2" onclick="setColorPalette(2)" class="px-1.5 py-1.5 rounded-lg text-[10px] sm:text-[11px] font-semibold text-gray-300 hover:text-white transition cursor-pointer truncate text-center">
-                    🔮 Nebula Rose
-                </button>
-                <button type="button" id="palBtn3" onclick="setColorPalette(3)" class="px-1.5 py-1.5 rounded-lg text-[10px] sm:text-[11px] font-semibold text-gray-300 hover:text-white transition cursor-pointer truncate text-center">
-                    🟢 Emerald
-                </button>
-                <button type="button" id="palBtn4" onclick="setColorPalette(4)" class="px-1.5 py-1.5 rounded-lg text-[10px] sm:text-[11px] font-semibold text-gray-300 hover:text-white transition cursor-pointer truncate text-center">
-                    🔴 Supernova
-                </button>
-                <button type="button" id="palBtn5" onclick="setColorPalette(5)" class="px-1.5 py-1.5 rounded-lg text-[10px] sm:text-[11px] font-semibold text-gray-300 hover:text-white transition cursor-pointer truncate text-center">
-                    ⚡ UV Pulsar
-                </button>
-                <button type="button" id="palBtn6" onclick="setColorPalette(6)" class="px-1.5 py-1.5 rounded-lg text-[10px] sm:text-[11px] font-semibold text-gray-300 hover:text-white transition cursor-pointer truncate text-center">
-                    🌊 Abyssal Ice
-                </button>
-                <button type="button" id="palBtn7" onclick="setColorPalette(7)" class="px-1.5 py-1.5 rounded-lg text-[10px] sm:text-[11px] font-semibold text-gray-300 hover:text-white transition cursor-pointer truncate text-center">
-                    🔲 Deep Void
-                </button>
-            </div>
-
-            <!-- Warp Speed, Streaks & Reset Row -->
-            <div class="grid grid-cols-3 gap-2 w-full">
-                <button type="button" id="primaryActionBtn" onclick="cyclePrimaryParameter()" class="px-2.5 py-1.5 rounded-xl recessed-well border border-sky-500/40 text-[11px] mono-num font-bold text-sky-300 hover:bg-sky-500/20 transition cursor-pointer text-center truncate">
-                    ⚡ WARP: 1.5x
-                </button>
-
-                <button type="button" id="secondaryActionBtn" onclick="cycleSecondaryParameter()" class="px-2.5 py-1.5 rounded-xl recessed-well border border-sky-500/40 text-[11px] mono-num font-bold text-sky-300 hover:bg-sky-500/20 transition cursor-pointer text-center truncate">
-                    ✨ STREAKS: HIGH
-                </button>
-
-                <button type="button" onclick="resetSceneView()" class="px-2.5 py-1.5 rounded-xl recessed-well hover:text-white text-[11px] text-gray-300 font-semibold transition cursor-pointer text-center truncate">
-                    ↺ Reset View
-                </button>
-            </div>
-
-        </div>
-    </footer>
 
 <script>
     // =========================================================================
@@ -428,7 +459,7 @@
     }
 
     // =========================================================================
-    // PURE DOMAIN KNOWLEDGE BASE FOR VOID AI (38 DETAILED, EASY-TO-UNDERSTAND Q&As)
+    // PURE DOMAIN KNOWLEDGE BASE FOR VOID AI (36 DETAILED, EASY-TO-UNDERSTAND Q&As)
     // =========================================================================
     const AI_KNOWLEDGE_BASE = [
         // --- 1. ARCHITECTURE & HARDWARE (1–7) ---
@@ -1052,11 +1083,12 @@
     });
 
     // =========================================================================
-    // MODULE 4: CONTROLLERS, EXIT HANDLER & AUDIO SYNC
+    // MODULE 4: AUTOMATIC ORIENTATION, CONTROLLERS, EXIT & AUDIO SYNC
     // =========================================================================
     let isExperienceActive = false;
     let isGlobalMuted = false;
     let isHudHidden = false;
+    let isMobileTopicsVisible = true;
     let audioCtx = null;
     const sessionStartTimestamp = Date.now();
 
@@ -1088,6 +1120,30 @@
         if (clockEl) clockEl.innerText = `${m}:${s}`;
     }, 250);
 
+    async function enforceSpaceLandscapeMode() {
+        document.body.classList.remove('mode-ai');
+        document.body.classList.add('mode-space');
+        engine.rotateLandscape = 1.0;
+        try {
+            if (screen.orientation && screen.orientation.lock) {
+                await screen.orientation.lock('landscape');
+            }
+        } catch (e) {}
+    }
+
+    async function enforceAiPortraitMode() {
+        document.body.classList.remove('mode-space');
+        document.body.classList.add('mode-ai');
+        engine.rotateLandscape = 0.0;
+        try {
+            if (screen.orientation && screen.orientation.lock) {
+                await screen.orientation.lock('portrait');
+            } else if (screen.orientation && screen.orientation.unlock) {
+                screen.orientation.unlock();
+            }
+        } catch (e) {}
+    }
+
     async function launchExperience() {
         isExperienceActive = true;
         const startOverlay = document.getElementById('startOverlay');
@@ -1096,6 +1152,7 @@
 
         spaceLooper.play();
         updateEqBarsState(true);
+        await enforceSpaceLandscapeMode();
     }
 
     function exitSpaceRoom() {
@@ -1133,22 +1190,10 @@
         }, 180);
     }
 
-    async function toggleMobileLandscapeSpace() {
-        engine.rotateLandscape = engine.rotateLandscape > 0.5 ? 0.0 : 1.0;
-        const btn = document.getElementById('landscapeBtn');
-        if (btn) {
-            btn.innerText = engine.rotateLandscape > 0.5 ? "🔄 Landscape: ON" : "🔄 Portrait Space";
-        }
-        try {
-            if (screen.orientation && screen.orientation.lock) {
-                await screen.orientation.lock('landscape');
-            }
-        } catch (e) {}
-    }
-
     function switchView(target) {
         if (target === 'space') {
             document.getElementById('aiAgentModal').style.display = 'none';
+            enforceSpaceLandscapeMode();
         } else if (target === 'ai') {
             toggleAiAgentModal();
         }
@@ -1159,11 +1204,23 @@
         const isHidden = modal.style.display === 'none';
         modal.style.display = isHidden ? 'flex' : 'none';
         if (isHidden) {
-            try {
-                if (screen.orientation && screen.orientation.unlock) {
-                    screen.orientation.unlock();
-                }
-            } catch (e) {}
+            await enforceAiPortraitMode();
+        } else {
+            await enforceSpaceLandscapeMode();
+        }
+    }
+
+    function toggleMobileTopics() {
+        const panel = document.getElementById('questionBankPanel');
+        const btn = document.getElementById('mobileTopicToggleBtn');
+        if (!panel || !btn) return;
+        isMobileTopicsVisible = !isMobileTopicsVisible;
+        if (isMobileTopicsVisible) {
+            panel.classList.remove('hidden');
+            btn.innerText = "📂 Hide Topics";
+        } else {
+            panel.classList.add('hidden');
+            btn.innerText = "📂 Show Topics";
         }
     }
 
@@ -1194,7 +1251,7 @@
                 </div>
                 <div class="flex items-start gap-2">
                     <span class="mono-num text-sky-400 font-bold">02</span>
-                    <span class="text-gray-300"><strong class="text-white">8-Spectrum Space Dock:</strong> All 8 cosmic palettes are visible on the bottom dock without scrolling, paired with widescreen landscape projection on mobile and PC.</span>
+                    <span class="text-gray-300"><strong class="text-white">8-Spectrum Space Dock:</strong> All 8 cosmic palettes are visible on the bottom dock without scrolling, paired with automatic widescreen landscape projection on mobile and PC.</span>
                 </div>
                 <div class="flex items-start gap-2">
                     <span class="mono-num text-sky-400 font-bold">03</span>
@@ -1229,8 +1286,8 @@
             if (!btn) continue;
             btn.innerText = PALETTE_LABELS[i];
             btn.className = (i === activePal)
-                ? "px-1.5 py-1.5 rounded-lg text-[10px] sm:text-[11px] font-bold bg-sky-500 text-black shadow transition cursor-pointer truncate text-center"
-                : "px-1.5 py-1.5 rounded-lg text-[10px] sm:text-[11px] font-semibold text-gray-300 hover:text-white transition cursor-pointer truncate text-center";
+                ? "px-2 py-1.5 rounded-lg text-[11px] font-bold bg-sky-500 text-black shadow transition cursor-pointer whitespace-nowrap text-center"
+                : "px-2 py-1.5 rounded-lg text-[11px] font-semibold text-gray-300 hover:text-white transition cursor-pointer whitespace-nowrap text-center";
         }
 
         document.getElementById('primaryActionBtn').innerText = WARP_SPEED_PRESETS[engine.spaceState.warpIdx].label;
@@ -1388,6 +1445,11 @@
         const chatStream = document.getElementById('aiChatStream');
         if (!chatStream) return;
 
+        // Auto-collapse topics on small phones when a question is asked so the answer has full room
+        if (window.innerWidth < 768 && isMobileTopicsVisible) {
+            toggleMobileTopics();
+        }
+
         const userBubble = document.createElement('div');
         userBubble.className = "flex justify-end chat-bubble-anim";
         userBubble.innerHTML = `
@@ -1486,9 +1548,9 @@
         if (chatStream) {
             chatStream.innerHTML = `
                 <div class="recessed-well p-3.5 rounded-2xl space-y-1.5 border border-[#1e2433]">
-                    <div class="flex items-center justify-between">
+                    <div class="flex items-center justify-between gap-2 flex-wrap">
                         <div class="flex items-center gap-2">
-                            <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+                            <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse shrink-0"></span>
                             <h3 class="text-xs font-bold text-white uppercase tracking-wider">Void AI // ADAS Bot Online</h3>
                         </div>
                         <span class="text-[10px] mono-num text-sky-400 font-semibold">${AI_KNOWLEDGE_BASE.length} Topics in Question Bank</span>
@@ -1507,6 +1569,7 @@
     window.addEventListener('keydown', e => {
         if (e.key === 'Escape') {
             document.getElementById('aiAgentModal').style.display = 'none';
+            enforceSpaceLandscapeMode();
         } else if ((e.key === 'h' || e.key === 'H') && document.activeElement.id !== 'aiSearchInput') {
             toggleHudVisibility();
         }
