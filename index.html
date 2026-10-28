@@ -1,0 +1,1516 @@
+<!DOCTYPE html>
+<html lang="en" class="h-full">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>RoadSense ADAS // Deep Space Room & Void AI</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700&family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700&family=JetBrains+Mono:wght@500;600;700&display=swap');
+
+        :root {
+            --bg-canvas: #06080c;
+            --surface-primary: #12151c;
+            --surface-recessed: #0d0f14;
+            --surface-elevated: #181c26;
+            --border-subtle: #232836;
+            --border-highlight: rgba(255, 255, 255, 0.08);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            user-select: none;
+            -webkit-user-select: none;
+        }
+
+        body, html {
+            width: 100vw;
+            height: 100dvh;
+            overflow: hidden;
+            background: var(--bg-canvas);
+            color: #e2e8f0;
+            font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            touch-action: none;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        .mono-num {
+            font-family: 'JetBrains Mono', monospace;
+            font-variant-numeric: tabular-nums;
+        }
+
+        .title-cinzel {
+            font-family: 'Cinzel Decorative', serif;
+        }
+
+        canvas#glcanvas {
+            display: block;
+            width: 100vw;
+            height: 100dvh;
+            position: fixed;
+            inset: 0;
+            z-index: 1;
+            transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        /* Smoked-Optic Tactile Hardware Panels */
+        .hardware-panel {
+            background-color: var(--surface-primary);
+            border: 1px solid var(--border-subtle);
+            border-top-color: var(--border-highlight);
+            box-shadow: 0 16px 36px -10px rgba(0, 0, 0, 0.85);
+        }
+
+        .recessed-well {
+            background-color: var(--surface-recessed);
+            border: 1px solid #1b202b;
+            box-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.65);
+        }
+
+        .btn-launch {
+            background: linear-gradient(135deg, #0284c7 0%, #38bdf8 50%, #0284c7 100%);
+            color: #ffffff;
+            font-weight: 700;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 6px 20px rgba(56, 189, 248, 0.3);
+            transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .btn-launch:hover {
+            transform: translateY(-1px);
+            filter: brightness(1.1);
+            box-shadow: 0 10px 28px rgba(56, 189, 248, 0.45);
+        }
+
+        /* Equalizer Audio Visualizer */
+        @keyframes eqBounce {
+            0%, 100% { height: 4px; }
+            50% { height: 14px; }
+        }
+        .eq-1 { animation: eqBounce 0.5s ease-in-out infinite; }
+        .eq-2 { animation: eqBounce 0.38s ease-in-out infinite 0.12s; }
+        .eq-3 { animation: eqBounce 0.6s ease-in-out infinite 0.25s; }
+        .eq-paused { animation: none !important; height: 4px !important; }
+
+        .hud-transition {
+            transition: opacity 0.35s cubic-bezier(0.16, 1, 0.3, 1), transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .hud-hidden-top {
+            opacity: 0;
+            transform: translate3d(0, -32px, 0);
+            pointer-events: none;
+        }
+        .hud-hidden-bottom {
+            opacity: 0;
+            transform: translate3d(0, 32px, 0);
+            pointer-events: none;
+        }
+
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+        @keyframes fadeInBubble {
+            from { opacity: 0; transform: translateY(6px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .chat-bubble-anim {
+            animation: fadeInBubble 0.22s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+
+        .selectable-text {
+            user-select: text;
+            -webkit-user-select: text;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- WEBGL DEEP SPACE CANVAS -->
+    <canvas id="glcanvas"></canvas>
+
+    <!-- START / BOOT OVERLAY -->
+    <div id="startOverlay" style="display: flex;" onclick="launchExperience()" class="fixed inset-0 bg-[#04060a]/95 z-50 flex flex-col items-center justify-center p-5 text-center cursor-pointer backdrop-blur-md transition-opacity duration-500">
+        <div class="hardware-panel p-6 sm:p-9 rounded-2xl max-w-lg w-full space-y-4 border border-[#2d364a] shadow-2xl">
+            <div class="w-14 h-14 mx-auto rounded-2xl bg-sky-500/10 border border-sky-500/30 flex items-center justify-center text-2xl shadow-[0_0_30px_rgba(56,189,248,0.2)]">
+                🌌
+            </div>
+            <span class="inline-block px-3 py-1 text-[10px] mono-num font-bold uppercase bg-sky-500/15 text-sky-300 border border-sky-500/30 rounded-full">
+                ROADSENSE ADAS // DEEP SPACE &amp; VOID AI
+            </span>
+            <h1 class="title-cinzel text-xl sm:text-3xl font-bold text-white tracking-wide">
+                COSMIC WARP &amp; VOID AI
+            </h1>
+            <p class="text-xs sm:text-sm text-gray-300 leading-relaxed">
+                Welcome to the <strong class="text-white">Deep Space Room</strong>. Experience the 8-spectrum relativistic hyperspace visualizer or open <strong class="text-sky-300">Void AI (ADAS Bot)</strong> to explore our neural perception architecture, depth geometry, and risk models.
+            </p>
+            <div class="recessed-well p-3.5 rounded-xl text-[11px] mono-num text-gray-400 space-y-1.5 text-left">
+                <div class="flex items-center justify-between"><span>• Space Engine:</span> <strong class="text-gray-200">8-Spectrum Landscape Warp</strong></div>
+                <div class="flex items-center justify-between"><span>• Intelligence:</span> <strong class="text-sky-300">Void AI // ADAS Bot</strong></div>
+                <div class="flex items-center justify-between"><span>• Acoustic Loop:</span> <strong class="text-gray-200">Seamless Space Ambient OST</strong></div>
+            </div>
+            <button type="button" class="btn-launch w-full py-3.5 rounded-xl text-xs uppercase tracking-widest cursor-pointer">
+                ▶ Enter Deep Space &amp; Void AI
+            </button>
+        </div>
+    </div>
+
+    <!-- VOID AI (ADAS BOT) MODAL — PORTRAIT-OPTIMIZED ON MOBILE, DUAL-PANE ON PC, WITH DYNAMIC FIELD NOTE INSIDE -->
+    <div id="aiAgentModal" style="display: none;" class="fixed inset-0 bg-black/85 z-40 flex items-center justify-center p-2 sm:p-5 backdrop-blur-md">
+        <div class="hardware-panel w-full max-w-[440px] md:max-w-5xl h-[94dvh] max-h-[94dvh] rounded-2xl flex flex-col overflow-hidden border border-[#2d364a] shadow-2xl">
+            <!-- Header -->
+            <div class="px-3.5 py-2.5 bg-[#0d0f14] border-b border-[#232836] flex items-center justify-between gap-2 shrink-0">
+                <div class="flex items-center gap-2.5 min-w-0">
+                    <div class="w-8 h-8 rounded-lg bg-gradient-to-tr from-sky-500 to-indigo-500 border border-sky-400/40 flex items-center justify-center text-white font-bold text-sm shrink-0 shadow-[0_0_15px_rgba(56,189,248,0.4)]">
+                        🤖
+                    </div>
+                    <div class="min-w-0">
+                        <div class="flex items-center gap-2">
+                            <h2 class="text-xs sm:text-sm font-bold text-white tracking-wide uppercase truncate">
+                                Void AI // ADAS Bot
+                            </h2>
+                            <span class="px-1.5 py-0.5 text-[9px] mono-num font-bold uppercase bg-emerald-500/15 text-emerald-400 border border-emerald-500/30 rounded shrink-0">
+                                Neural Intelligence
+                            </span>
+                        </div>
+                        <p class="text-[10px] text-gray-400 mono-num truncate">RoadSense ADAS &amp; Spatial Perception Engine</p>
+                    </div>
+                </div>
+                <div class="flex items-center gap-1.5 shrink-0">
+                    <!-- Dynamic Field Note Button Inside Void AI Only -->
+                    <button type="button" id="aiFieldNoteBtn" onclick="renderFieldNoteInAi()" class="px-2.5 py-1.5 bg-[#1b202c] hover:bg-[#252c3d] text-amber-300 border border-amber-500/30 rounded-lg text-[11px] font-semibold transition cursor-pointer">
+                        📋 Field Note
+                    </button>
+                    <button type="button" onclick="clearChatStream()" class="px-2.5 py-1.5 bg-[#171b26] hover:bg-[#202636] text-gray-300 hover:text-white rounded-lg text-[11px] font-medium transition border border-[#2d364a] cursor-pointer">
+                        Reset
+                    </button>
+                    <button type="button" onclick="toggleAiAgentModal()" class="px-3 py-1.5 bg-red-600/80 hover:bg-red-500 text-white rounded-lg text-[11px] font-bold transition cursor-pointer">
+                        ✕ Close
+                    </button>
+                </div>
+            </div>
+
+            <!-- Content Area: Portrait-First on Mobile, Sidebar + Chat on Desktop -->
+            <div class="flex-1 flex flex-col md:flex-row min-h-0 overflow-hidden">
+                <!-- Category & Question Bank Explorer (Shows Question Count Here) -->
+                <div class="w-full md:w-64 bg-[#090b0f] border-b md:border-b-0 md:border-r border-[#232836] p-2 overflow-y-auto shrink-0 max-h-[128px] md:max-h-none">
+                    <div class="flex items-center justify-between px-1.5 pb-1.5 mb-1.5 border-b border-[#1b202b]">
+                        <span class="text-[10px] font-bold text-gray-400 uppercase tracking-wider">Question Bank</span>
+                        <span id="sidebarTotalCount" class="px-1.5 py-0.5 text-[9px] mono-num font-bold bg-sky-500/15 text-sky-300 border border-sky-500/30 rounded"></span>
+                    </div>
+                    <!-- All Category Buttons Visible in Wrap Grid on Mobile, Vertical Stack on Desktop -->
+                    <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-1 gap-1">
+                        <button type="button" onclick="filterCategory('All')" class="cat-btn active text-left px-2.5 py-1.5 rounded-lg text-[11px] font-semibold text-white bg-sky-500/20 border border-sky-500/40 transition truncate">
+                            🌐 All Questions (<span id="countAll">0</span>)
+                        </button>
+                        <button type="button" onclick="filterCategory('Architecture & Hardware')" class="cat-btn text-left px-2.5 py-1.5 rounded-lg text-[11px] font-semibold text-gray-400 hover:text-white transition truncate">
+                            ⚙️ Core &amp; Hardware
+                        </button>
+                        <button type="button" onclick="filterCategory('Depth & Geometry')" class="cat-btn text-left px-2.5 py-1.5 rounded-lg text-[11px] font-semibold text-gray-400 hover:text-white transition truncate">
+                            📐 Depth &amp; Geometry
+                        </button>
+                        <button type="button" onclick="filterCategory('DGC & DGI Consistency')" class="cat-btn text-left px-2.5 py-1.5 rounded-lg text-[11px] font-semibold text-gray-400 hover:text-white transition truncate">
+                            🔬 DGC &amp; DGI Math
+                        </button>
+                        <button type="button" onclick="filterCategory('IEEE Risk & Context')" class="cat-btn text-left px-2.5 py-1.5 rounded-lg text-[11px] font-semibold text-gray-400 hover:text-white transition truncate">
+                            ⚡ IEEE Risk &amp; ASR
+                        </button>
+                        <button type="button" onclick="filterCategory('Arbitration & Warnings')" class="cat-btn text-left px-2.5 py-1.5 rounded-lg text-[11px] font-semibold text-gray-400 hover:text-white transition truncate">
+                            🚨 Arbitration &amp; Alerts
+                        </button>
+                        <button type="button" onclick="filterCategory('Disambiguation & Pruning')" class="cat-btn text-left px-2.5 py-1.5 rounded-lg text-[11px] font-semibold text-gray-400 hover:text-white transition truncate">
+                            🛺 Rickshaw &amp; Riders
+                        </button>
+                        <button type="button" onclick="filterCategory('Streaming & Tunnels')" class="cat-btn text-left px-2.5 py-1.5 rounded-lg text-[11px] font-semibold text-gray-400 hover:text-white transition truncate">
+                            📡 Streaming &amp; Tunnels
+                        </button>
+                        <button type="button" onclick="filterCategory('Cockpit UI & Radar')" class="cat-btn text-left px-2.5 py-1.5 rounded-lg text-[11px] font-semibold text-gray-400 hover:text-white transition truncate">
+                            📡 Cockpit UI &amp; Radar
+                        </button>
+                        <button type="button" onclick="filterCategory('Easter Eggs')" class="cat-btn text-left px-2.5 py-1.5 rounded-lg text-[11px] font-semibold text-gray-400 hover:text-white transition truncate">
+                            🕳️ 3 Easter Eggs
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Chat View -->
+                <div class="flex-1 flex flex-col min-h-0 bg-[#0c0e14]">
+                    <!-- Quick Prompts (Wrapped so all are visible without sliding) -->
+                    <div class="p-2 bg-[#10131b] border-b border-[#232836] flex flex-wrap items-center gap-1.5 shrink-0">
+                        <span class="text-[10px] font-bold text-gray-400 uppercase tracking-wider mr-0.5">Quick Ask:</span>
+                        <button type="button" onclick="submitQuickPrompt('What are all 3 Easter eggs in RoadSense ADAS and how do I unlock them?')" class="px-2 py-1 bg-[#181d28] hover:bg-sky-500/20 border border-[#252c3d] text-[#bae6fd] rounded-md text-[10px] transition cursor-pointer">
+                            🕳️ All 3 Easter Eggs
+                        </button>
+                        <button type="button" onclick="submitQuickPrompt('How does the IEEE 5-Factor Base Risk equation work and what are all the weights?')" class="px-2 py-1 bg-[#181d28] hover:bg-sky-500/20 border border-[#252c3d] text-[#bae6fd] rounded-md text-[10px] transition cursor-pointer">
+                            ⚡ IEEE 5-Factor Math
+                        </button>
+                        <button type="button" onclick="submitQuickPrompt('What is the Dual-Geometry Consistency (DGC) module and how is DGI calculated?')" class="px-2 py-1 bg-[#181d28] hover:bg-sky-500/20 border border-[#252c3d] text-[#bae6fd] rounded-md text-[10px] transition cursor-pointer">
+                            🔬 DGC &amp; DGI Explained
+                        </button>
+                        <button type="button" onclick="submitQuickPrompt('How does the Phone Camera pipeline achieve full-bleed framing and zero lag?')" class="px-2 py-1 bg-[#181d28] hover:bg-sky-500/20 border border-[#252c3d] text-[#bae6fd] rounded-md text-[10px] transition cursor-pointer">
+                            📱 Phone Camera Engine
+                        </button>
+                        <button type="button" onclick="submitQuickPrompt('How does Rider Pruning stop people on motorcycles from triggering false pedestrian alerts?')" class="px-2 py-1 bg-[#181d28] hover:bg-sky-500/20 border border-[#252c3d] text-[#bae6fd] rounded-md text-[10px] transition cursor-pointer">
+                            🏍️ Rider Pruning
+                        </button>
+                    </div>
+
+                    <!-- Conversation & Dynamic Field Note Stream -->
+                    <div id="aiChatStream" class="flex-1 p-3.5 overflow-y-auto space-y-3.5 font-normal selectable-text">
+                        <div class="recessed-well p-3.5 rounded-2xl space-y-1.5 border border-[#1e2433]">
+                            <div class="flex items-center justify-between">
+                                <div class="flex items-center gap-2">
+                                    <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+                                    <h3 class="text-xs font-bold text-white uppercase tracking-wider">Void AI // ADAS Bot Online</h3>
+                                </div>
+                                <span id="welcomeQuestionBadge" class="text-[10px] mono-num text-sky-400 font-semibold"></span>
+                            </div>
+                            <p class="text-xs text-gray-300 leading-relaxed">
+                                Hello! I am <strong class="text-white">Void AI (ADAS Bot)</strong>. Ask me any question about our <strong class="text-sky-300">RoadSense ADAS architecture</strong>, monocular depth fusion, DGC consistency, the IEEE 5-Factor &amp; Context risk engine, real-time camera streaming, or our 3 hidden Easter eggs. You can also tap <strong class="text-amber-300">📋 Field Note</strong> above anytime!
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- Question Input Box + Subtle AI Disclaimer -->
+                    <div class="px-3 pt-2 pb-1.5 bg-[#11141c] border-t border-[#232836] shrink-0">
+                        <form onsubmit="handleChatSubmit(event)" class="flex items-center gap-2">
+                            <input type="text" id="aiSearchInput" placeholder="Ask Void AI a question (e.g. 'How does Piecewise Dual-Regime Depth work?')..." class="flex-1 bg-[#08090d] border border-[#252b3b] focus:border-sky-500 rounded-xl px-3.5 py-2 text-xs text-white focus:outline-none font-medium selectable-text">
+                            <button type="submit" class="px-4 py-2 bg-sky-500 hover:bg-sky-400 text-black font-bold text-xs rounded-xl transition cursor-pointer flex items-center gap-1 shrink-0 shadow-md">
+                                <span>Ask</span> 🤖
+                            </button>
+                        </form>
+                        <div class="text-center pt-1">
+                            <p class="text-[10px] text-gray-500 tracking-tight">
+                                Void AI can make mistakes. Always verify critical ADAS telemetry and kinematic thresholds.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- TOP SPACE HUD BAR (NO FIELD NOTE HERE; HAS DYNAMIC EXIT BUTTON TO CLOSE TAB) -->
+    <header id="topHudBar" class="fixed top-0 inset-x-0 z-30 p-2.5 sm:p-4 pointer-events-none hud-transition">
+        <div class="max-w-6xl mx-auto flex flex-col lg:flex-row items-stretch lg:items-center justify-between gap-2">
+            
+            <div class="hardware-panel px-2.5 py-2 rounded-2xl flex flex-wrap items-center justify-between gap-2 pointer-events-auto">
+                <div class="flex items-center gap-2 min-w-0">
+                    <span id="sceneDot" class="w-2 h-2 rounded-full bg-sky-400 animate-pulse shrink-0"></span>
+                    <span id="sceneTitleLabel" class="hidden sm:inline-block text-xs font-bold text-white tracking-tight truncate">
+                        DEEP SPACE // WARP
+                    </span>
+
+                    <div class="flex items-center bg-[#07090d] p-1 rounded-xl border border-white/10">
+                        <button type="button" id="sceneBtnSpace" onclick="switchView('space')" class="px-2.5 py-1 rounded-lg text-[11px] font-bold bg-sky-500 text-black transition cursor-pointer whitespace-nowrap shadow-md">
+                            🚀 Space Warp
+                        </button>
+                        <button type="button" id="sceneBtnAi" onclick="toggleAiAgentModal()" class="px-2.5 py-1 rounded-lg text-[11px] font-semibold text-gray-300 hover:text-white transition cursor-pointer whitespace-nowrap">
+                            🤖 Void AI
+                        </button>
+                    </div>
+                </div>
+
+                <div class="flex items-center gap-1.5">
+                    <div class="px-2 py-1 text-[10px] mono-num font-semibold bg-[#0d0f14] text-gray-300 border border-[#232836] rounded-lg shrink-0">
+                        <span>Session:</span> <span id="sessionTimer" class="text-sky-300">00:00</span>
+                    </div>
+
+                    <div class="px-2 py-1 text-[10px] mono-num font-semibold bg-emerald-500/15 text-emerald-400 border border-emerald-500/30 rounded-lg shrink-0">
+                        <span class="inline-block w-1.5 h-1.5 rounded-full bg-emerald-400 mr-1"></span><span>Space Online</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="hardware-panel px-3 py-1.5 rounded-2xl flex items-center justify-between lg:justify-end gap-2 pointer-events-auto">
+                <div class="flex items-center gap-2">
+                    <span class="hidden sm:inline-block px-2 py-1 text-[10px] mono-num font-semibold bg-sky-500/15 text-sky-300 border border-sky-500/30 rounded-lg whitespace-nowrap">
+                        OST: SPACE.MP3
+                    </span>
+
+                    <div class="flex items-center gap-2 px-2.5 py-1 rounded-xl recessed-well">
+                        <div class="flex items-end gap-0.5 h-3.5">
+                            <span id="eqBar1" class="eq-bar w-1 bg-sky-400 eq-1 eq-paused rounded-full"></span>
+                            <span id="eqBar2" class="eq-bar w-1 bg-amber-400 eq-2 eq-paused rounded-full"></span>
+                            <span id="eqBar3" class="eq-bar w-1 bg-sky-400 eq-3 eq-paused rounded-full"></span>
+                        </div>
+                        <span id="audioClock" class="mono-num text-xs text-gray-200">00:00</span>
+                        <button type="button" id="muteBtn" onclick="toggleAudioMute()" class="text-xs text-sky-300 hover:text-sky-200 font-semibold ml-1 cursor-pointer">
+                            Mute
+                        </button>
+                    </div>
+                </div>
+
+                <div class="flex items-center gap-1.5">
+                    <!-- Mobile Landscape Space Toggle -->
+                    <button type="button" id="landscapeBtn" onclick="toggleMobileLandscapeSpace()" class="sm:hidden px-2.5 py-1 rounded-xl recessed-well text-[11px] font-semibold text-sky-300 border border-sky-500/30 transition cursor-pointer">
+                        🔄 Landscape
+                    </button>
+                    <button type="button" onclick="toggleHudVisibility()" class="px-2.5 py-1 rounded-xl recessed-well hover:border-gray-500 text-[11px] font-semibold text-gray-200 transition cursor-pointer" title="Toggle HUD (H)">
+                        👁️ Hide HUD
+                    </button>
+                    <!-- EXIT SPACE & CLOSE TAB BUTTON -->
+                    <button type="button" onclick="exitSpaceRoom()" class="px-2.5 py-1 rounded-xl bg-red-600/85 hover:bg-red-500 text-white border border-red-400/40 text-[11px] font-bold transition cursor-pointer whitespace-nowrap shadow-md" title="Exit Space Room & Close Tab">
+                        🚪 Exit
+                    </button>
+                </div>
+            </div>
+
+        </div>
+    </header>
+
+    <button id="restoreHudBtn" type="button" onclick="toggleHudVisibility()" class="hidden fixed top-4 right-4 z-40 hardware-panel px-3.5 py-2 rounded-xl text-xs font-semibold text-sky-300 border border-sky-500/40 hover:bg-sky-500/20 transition cursor-pointer shadow-lg">
+        👁️ Show HUD
+    </button>
+
+    <!-- BOTTOM INTERACTIVE 8-SPECTRUM PALETTE DOCK (ALL 8 VISIBLE WITHOUT SLIDING ON MOBILE & PC) -->
+    <footer id="bottomHudBar" class="fixed bottom-0 inset-x-0 z-30 p-2.5 sm:p-4 pointer-events-none hud-transition">
+        <div class="max-w-5xl mx-auto hardware-panel p-2.5 sm:p-3 rounded-2xl flex flex-col gap-2 pointer-events-auto">
+            
+            <!-- All 8 Cosmic Palettes in a 4x2 Mobile / 8x1 Desktop Grid (Zero Horizontal Scroll or Clipping) -->
+            <div class="grid grid-cols-4 sm:grid-cols-8 gap-1.5 bg-[#07090d] p-1.5 rounded-xl border border-white/10 w-full">
+                <button type="button" id="palBtn0" onclick="setColorPalette(0)" class="px-1.5 py-1.5 rounded-lg text-[10px] sm:text-[11px] font-bold bg-sky-500 text-black transition cursor-pointer truncate text-center shadow">
+                    🌌 Hyper Cyan
+                </button>
+                <button type="button" id="palBtn1" onclick="setColorPalette(1)" class="px-1.5 py-1.5 rounded-lg text-[10px] sm:text-[11px] font-semibold text-gray-300 hover:text-white transition cursor-pointer truncate text-center">
+                    🔥 Solar Gold
+                </button>
+                <button type="button" id="palBtn2" onclick="setColorPalette(2)" class="px-1.5 py-1.5 rounded-lg text-[10px] sm:text-[11px] font-semibold text-gray-300 hover:text-white transition cursor-pointer truncate text-center">
+                    🔮 Nebula Rose
+                </button>
+                <button type="button" id="palBtn3" onclick="setColorPalette(3)" class="px-1.5 py-1.5 rounded-lg text-[10px] sm:text-[11px] font-semibold text-gray-300 hover:text-white transition cursor-pointer truncate text-center">
+                    🟢 Emerald
+                </button>
+                <button type="button" id="palBtn4" onclick="setColorPalette(4)" class="px-1.5 py-1.5 rounded-lg text-[10px] sm:text-[11px] font-semibold text-gray-300 hover:text-white transition cursor-pointer truncate text-center">
+                    🔴 Supernova
+                </button>
+                <button type="button" id="palBtn5" onclick="setColorPalette(5)" class="px-1.5 py-1.5 rounded-lg text-[10px] sm:text-[11px] font-semibold text-gray-300 hover:text-white transition cursor-pointer truncate text-center">
+                    ⚡ UV Pulsar
+                </button>
+                <button type="button" id="palBtn6" onclick="setColorPalette(6)" class="px-1.5 py-1.5 rounded-lg text-[10px] sm:text-[11px] font-semibold text-gray-300 hover:text-white transition cursor-pointer truncate text-center">
+                    🌊 Abyssal Ice
+                </button>
+                <button type="button" id="palBtn7" onclick="setColorPalette(7)" class="px-1.5 py-1.5 rounded-lg text-[10px] sm:text-[11px] font-semibold text-gray-300 hover:text-white transition cursor-pointer truncate text-center">
+                    🔲 Deep Void
+                </button>
+            </div>
+
+            <!-- Warp Speed, Streaks & Reset Row -->
+            <div class="grid grid-cols-3 gap-2 w-full">
+                <button type="button" id="primaryActionBtn" onclick="cyclePrimaryParameter()" class="px-2.5 py-1.5 rounded-xl recessed-well border border-sky-500/40 text-[11px] mono-num font-bold text-sky-300 hover:bg-sky-500/20 transition cursor-pointer text-center truncate">
+                    ⚡ WARP: 1.5x
+                </button>
+
+                <button type="button" id="secondaryActionBtn" onclick="cycleSecondaryParameter()" class="px-2.5 py-1.5 rounded-xl recessed-well border border-sky-500/40 text-[11px] mono-num font-bold text-sky-300 hover:bg-sky-500/20 transition cursor-pointer text-center truncate">
+                    ✨ STREAKS: HIGH
+                </button>
+
+                <button type="button" onclick="resetSceneView()" class="px-2.5 py-1.5 rounded-xl recessed-well hover:text-white text-[11px] text-gray-300 font-semibold transition cursor-pointer text-center truncate">
+                    ↺ Reset View
+                </button>
+            </div>
+
+        </div>
+    </footer>
+
+<script>
+    // =========================================================================
+    // HELPER: MARKDOWN & CODE PARSER FOR VOID AI RESPONSES
+    // =========================================================================
+    function formatMarkdown(str) {
+        if (!str) return '';
+        return str
+            .replace(/`([^`]+)`/g, '<code class="px-1.5 py-0.5 bg-[#080a0f] text-sky-300 border border-[#1f2637] rounded mono-num text-[11px]">$1</code>')
+            .replace(/\*\*(.*?)\*\*/g, '<strong class="text-white font-semibold">$1</strong>')
+            .replace(/\*(.*?)\*/g, '<em class="text-sky-200">$1</em>')
+            .replace(/\n\n/g, '<br><br>')
+            .replace(/\n/g, '<br>');
+    }
+
+    // =========================================================================
+    // PURE DOMAIN KNOWLEDGE BASE FOR VOID AI (38 DETAILED, EASY-TO-UNDERSTAND Q&As)
+    // =========================================================================
+    const AI_KNOWLEDGE_BASE = [
+        // --- 1. ARCHITECTURE & HARDWARE (1–7) ---
+        {
+            "id": 1,
+            "category": "Architecture & Hardware",
+            "question": "What is the RoadSense ADAS Neural Perception Platform and how does it work?",
+            "answer": "**RoadSense ADAS** is an Advanced Driver Assistance System that pairs deep learning object detection (**YOLO**) with physical road geometry, an **IEEE 5-Factor & Context Risk Engine**, and a **Dual-Geometry Consistency (DGC)** verification layer.\n\nInstead of trusting raw bounding boxes blindly, the engine verifies each object's 3D metric footprint on the road plane, filters out false rider detections, tracks closing velocities (TTC), and streams live warnings over bi-directional WebSockets."
+        },
+        {
+            "id": 2,
+            "category": "Architecture & Hardware",
+            "question": "What hardware profile is RoadSense optimized for, and how are the CPU and GPU configured?",
+            "answer": "RoadSense is tuned for edge workstations and gaming laptops such as the **HP Victus 15 (AMD Ryzen 7 + NVIDIA GeForce RTX 3050 6GB GPU)** as well as high-end desktops:\n• **GPU Acceleration:** Enables `cudnn.benchmark = True`, **TF32 Tensor Cores** (`allow_tf32 = True`), and zero-grad inference (`torch.set_grad_enabled(False)`).\n• **CPU Thread Control:** Locks `OMP_NUM_THREADS`, `OPENBLAS_NUM_THREADS`, `MKL_NUM_THREADS`, OpenCV, and PyTorch to **2 threads** so background tasks never starve the FastAPI event loop.\n• **Async Worker Pool:** Offloads frame decoding and perception math to a 3-worker `ThreadPoolExecutor` (`ADAS_Pool`)."
+        },
+        {
+            "id": 3,
+            "category": "Architecture & Hardware",
+            "question": "What software stack and library versions power the platform?",
+            "answer": "The platform runs on a high-throughput Python and WebGL stack:\n• **Backend & Streaming:** `fastapi==0.141.1`, `uvicorn[standard]==0.53.0`, `websockets==17.1`, `python-multipart==0.0.32`, and `Jinja2==3.1.6`.\n• **Computer Vision & AI:** `ultralytics==8.4.153`, `torch==2.6.0`, `torchvision==0.21.0`, `tensorrt==11.3.0.99`, `opencv-python==5.0.0.93` (with OpenCL enabled), and `numpy==2.5.3`."
+        },
+        {
+            "id": 4,
+            "category": "Architecture & Hardware",
+            "question": "What dataset was the YOLO model trained on and what classes does it detect?",
+            "answer": "The perception model was trained for **250 epochs on the Indian Driving Dataset (IDD)**, achieving **71.98% mAP@50** across unstructured traffic.\n\nUsing `classes.json`, the engine binds **8 authoritative road hazard classes**:\n• `0: auto_rickshaw`\n• `1: bus_truck`\n• `2: car`\n• `3: two_wheeler`\n• `4: pedestrian`\n• `5: stray_animal`\n• `6: pothole`\n• `7: speed_bump`"
+        },
+        {
+            "id": 5,
+            "category": "Architecture & Hardware",
+            "question": "How does automatic model weight selection and GPU warmup work on startup?",
+            "answer": "When `app.py` initializes, it probes the project directory and automatically binds the fastest hardware format available in this priority order:\n1. **`best.engine`** — NVIDIA TensorRT GPU Engine\n2. **`best.pt` (CUDA)** — PyTorch CUDA GPU\n3. **`best.onnx` (CUDA)** — ONNX Runtime GPU\n4. **`best_openvino_model`** — Intel/AMD OpenVINO CPU\n5. **`best.pt` / `yolov8n.pt`** — Standard CPU fallback\n\nDuring startup, it also passes a dummy `640×384` tensor through `model.predict()` to pre-compile CUDA kernels so Frame 0 has **0ms** of warmup lag."
+        },
+        {
+            "id": 6,
+            "category": "Architecture & Hardware",
+            "question": "How does Inference Striding (INFERENCE_STRIDE = 2) double the frame rate?",
+            "answer": "With `INFERENCE_STRIDE = 2`, the GPU executes a full YOLO forward pass (`imgsz = 640`, `conf = 0.28`, `iou = 0.45`, `max_det = 15`) on **even frames** (`raw_idx % 2 == 0`) and reuses the raw detections on **odd frames** while still updating EMA spatial smoothing, velocity histories, and HUD rendering (`<0.3ms`). This doubles throughput to **35–45+ FPS** on an RTX 3050."
+        },
+        {
+            "id": 7,
+            "category": "Architecture & Hardware",
+            "question": "Who engineered the RoadSense ADAS platform?",
+            "answer": "RoadSense ADAS was engineered by **Mitadru Karmakar (Void)** in collaboration with team members **Ritam Chatterjee**, **Syed Meraj Ahmed**, **Debankita**, and **Sourajita**."
+        },
+
+        // --- 2. DEPTH & GEOMETRY (8–11) ---
+        {
+            "id": 8,
+            "category": "Depth & Geometry",
+            "question": "How does Piecewise Dual-Regime Hybrid Depth Estimation calculate distance?",
+            "answer": "Single-method monocular depth struggles when a vehicle's bumper is clipped at close range or when distant objects approach the horizon. RoadSense computes **two independent distances simultaneously** and blends them dynamically:\n\n1. **Optical Apparent Scale (`z_optical`):** `(real_height * calibrated_focal) / box_height_px`\n2. **Flat-Ground Homography (`z_ground`):** `(calibrated_focal * 1.45) / Δy` (using camera height `1.45m` and horizon line `0.46 * img_h`).\n• **Near-Field Regime (`y2 > 60%` height or `box_h > 140px`):** Fuses **`85% z_optical + 15% z_ground`**.\n• **Far-Field Regime (`y2 <= 60%` height):** Fuses **`45% z_optical + 55% z_ground`** to stabilize distant horizon tracking."
+        },
+        {
+            "id": 9,
+            "category": "Depth & Geometry",
+            "question": "What real-world object heights and distance bounds are used in the depth model?",
+            "answer": "The optical depth estimator references calibrated physical heights (`CLASS_REAL_HEIGHTS`):\n• **Bus / Truck:** `2.90m` | **Auto-Rickshaw:** `1.75m`\n• **Pedestrian:** `1.70m` | **Two-Wheeler:** `1.55m`\n• **Car:** `1.50m` | **Stray Animal:** `0.85m`\n• **Pothole:** `0.20m` | **Speed Bump:** `0.15m`\n\nAll depth outputs (`z_optical`, `z_ground`, `z_fused`) are clamped to **`[1.8m, 55.0m]`** (`Z_MIN_M` to `Z_MAX_M`)."
+        },
+        {
+            "id": 10,
+            "category": "Depth & Geometry",
+            "question": "How does scale-invariant focal calibration work across different resolutions?",
+            "answer": "Anchored at `BASE_FOCAL_PX = 720.0`, the engine calculates `scale_factor = img_h / 720.0` and `calibrated_focal = 720.0 * scale_factor` on every frame. Proportional bilinear scaling (`cv2.INTER_LINEAR` with even-integer rounding) ensures metric distances remain identical across 4K dashcam logs, 720p webcams, and mobile streams."
+        },
+        {
+            "id": 11,
+            "category": "Depth & Geometry",
+            "question": "How is lateral lane offset (lateral_x) calculated?",
+            "answer": "Lateral offset measures how many meters left or right an object is from the camera's optical center (`cx = img_w * 0.5`): `raw_x = ((bbox_center_x - cx) * raw_z) / calibrated_focal`, clamped between `-12.0m` and `+12.0m`. The ego vehicle's travel corridor is `3.50m` wide (`EGO_HALF_CORRIDOR_M = 1.75m`)."
+        },
+
+        // --- 3. DGC & DGI CONSISTENCY (12–15) ---
+        {
+            "id": 12,
+            "category": "DGC & DGI Consistency",
+            "question": "What is the Dual-Geometry Consistency (DGC) module and how is DGI calculated?",
+            "answer": "The **Dual-Geometry Consistency-Aware Risk (DGC)** module evaluates how closely the two depth estimators (`z_optical` and `z_ground`) agree with each other:\n\n1. **Disagreement Index (`DGI`):** `|z_optical - z_ground| / (0.5 * (z_optical + z_ground) + 1e-6)`\n2. **Temporal EMA Smoothing:** `dgi_smooth = 0.40 * DGI_current + 0.60 * DGI_prev` (`DGC_BETA = 0.40`)\n3. **Geometric Confidence:** `clip(1.0 - (dgi_smooth / 0.35), 0.0, 1.0)` (`DGC_MAX_DGI = 0.35`)"
+        },
+        {
+            "id": 13,
+            "category": "DGC & DGI Consistency",
+            "question": "How does DGC compute consistency-aware risk and support ablation studies?",
+            "answer": "DGC computes a consistency factor `0.50 + 0.50 * geometric_confidence` (`DGC_ALPHA = 0.50`) and scales the IEEE risk score: `dgc_risk = r_final_ieee * consistency_factor`.\n\n• **`USE_DGC_RISK = False`:** Uses standard IEEE risk (`r_final_ieee`) for primary threat selection while still logging DGI telemetry.\n• **`USE_DGC_RISK = True`:** Switches lead-hazard ranking to consistency-attenuated `dgc_risk`."
+        },
+        {
+            "id": 14,
+            "category": "DGC & DGI Consistency",
+            "question": "What causes DGI to rise in real-world driving scenes?",
+            "answer": "When a vehicle is partially occluded (shrinking `box_h` and inflating `z_optical`) or when road pitch changes (shifting `y2` and altering `z_ground`), the two depth models diverge. That divergence raises `DGI` and lowers `geometric_confidence`, preventing false high-confidence alerts from distorted boxes."
+        },
+        {
+            "id": 15,
+            "category": "DGC & DGI Consistency",
+            "question": "How is DGC telemetry displayed on the HUD and cockpit sidebar?",
+            "answer": "When `DGC_ENABLED` and `SHOW_DGC_HUD` are active, every bounding box on the video stream displays its live disagreement index (`| DGI 0.XX`), while the Primary In-Lane Vehicle card displays `DGI`, `Overlap %`, and `ASR %`."
+        },
+
+        // --- 4. IEEE RISK & CONTEXT (16–19) ---
+        {
+            "id": 16,
+            "category": "IEEE Risk & Context",
+            "question": "How does the IEEE 5-Factor Base Risk equation work and what are all the weights?",
+            "answer": "Every hazard within `35.0m` is scored using the normalized 5-factor equation (`R_base ∈ [0, 1]`, weights summing to `1.00`):\n\n`R_base = 0.30*D_i + 0.25*T_i + 0.25*O_i + 0.10*V_i + 0.10*C_i`\n\n• **Distance Risk (`D_i`, 30%):** `1.0 - (z - 1.8) / (55.0 - 1.8)`\n• **Piecewise TTC Risk (`T_i`, 25%):** `1.0` for `TTC <= 1.8s`; linear decay `(6.0 - TTC) / (6.0 - 1.8)` between `1.8s` and `6.0s`; `0.0` for `TTC >= 6.0s`.\n• **Corridor Overlap (`O_i`, 25%):** Fractional 2D area overlap with the projected ego lane.\n• **Closing Velocity (`V_i`, 10%):** `clip(closing_speed / 12.0, 0.0, 1.0)`.\n• **Class Vulnerability (`C_i`, 10%):** `pedestrian: 1.00`, `bus_truck: 0.90`, `stray_animal: 0.88`, `two_wheeler: 0.82`, `auto_rickshaw: 0.75`, `pothole: 0.72`, `car: 0.68`, `speed_bump: 0.60`."
+        },
+        {
+            "id": 17,
+            "category": "IEEE Risk & Context",
+            "question": "How is Ego-Corridor Fractional Area Overlap (O_i) calculated?",
+            "answer": "`compute_corridor_overlap()` projects the ego vehicle's `1.75m` half-corridor into pixel space at the object's depth `z_m` (`corridor_half_px = (1.75 * calibrated_focal) / max(z_m, 1.2)`) and divides the 2D intersection area between the bounding box and the ego corridor by the total bounding box area: $O_i = \\frac{A(B_i \\cap C_{\\text{ego}})}{A(B_i) + \\epsilon} \\in [0, 1]$."
+        },
+        {
+            "id": 18,
+            "category": "IEEE Risk & Context",
+            "question": "How does Pairwise Hazard Interaction Context (I_ij and R_context) work?",
+            "answer": "Instead of evaluating objects in isolation, Step 2 computes pairwise interaction $I_{ij} = 0.45 S_{ij} + 0.30 X_{ij} + 0.25 E_{ij}$ between every hazard $i$ and neighbor $j$:\n\n• **Spatial Proximity (`S_ij`, α=0.45):** `1.0 - (dist_ij / 10.0)` within a 10m radius.\n• **Trajectory Conflict (`X_ij`, β=0.30):** Converging lateral and longitudinal relative velocities.\n• **Escape Blockage (`E_ij`, γ=0.25):** Neighboring vehicles in adjacent lanes (`1.0m <= dx <= 4.5m`, `dz < 7.5m`) that block evasive steering.\n\nThese compound into **`R_context = R_base + 0.22 * Σ(I_ij * R_base_j)`** (`CTX_LAMBDA = 0.22`)."
+        },
+        {
+            "id": 19,
+            "category": "IEEE Risk & Context",
+            "question": "What is Avoidance-Space Risk (ASR_i) and how is R_final computed?",
+            "answer": "**Avoidance-Space Risk (`ASR_i`)** measures how much of the `7.5m` total drivable road width is occupied by obstacles within a `±5.0m` depth band around hazard $i$ (using class widths of `2.4m` for buses/trucks, `1.8m` for cars, and `1.1m` for smaller targets):\n\n`ASR_i = 1.0 - (A_safe / 7.5)`\n\nIt is added to `R_context` with weight `ASR_ETA = 0.18` to yield **`R_final = clip(R_context + 0.18 * ASR_i, 0.0, 1.0)`**."
+        },
+
+        // --- 5. ARBITRATION & WARNINGS (20–23) ---
+        {
+            "id": 20,
+            "category": "Arbitration & Warnings",
+            "question": "What are the 4 driver warning tiers, their HUD colors, and braking deceleration values?",
+            "answer": "Every tracked object and the cockpit status banner classify `R_final` into **4 tiers** (IEEE Table 1):\n\n• **Low (`R < 0.35` / `<35%`):** `NO WARNING` — Cyan/Emerald HUD • **`0.0 m/s²`** braking force.\n• **Medium (`0.35 <= R < 0.65` / `35–64%`):** `CAUTION` — Amber HUD • **`-2.2 m/s²`** braking force.\n• **High (`0.65 <= R < 0.85` / `65–84%`):** `HAZARD AHEAD` — Orange HUD • **`-4.2 m/s²`** braking force.\n• **Critical (`R >= 0.85` / `>=85%`):** `IMMEDIATE WARNING` — Crimson Red HUD • **`-6.8 m/s²`** emergency braking force."
+        },
+        {
+            "id": 21,
+            "category": "Arbitration & Warnings",
+            "question": "How does the Algorithm 1 Arbitration State Machine select and lock the primary lead hazard?",
+            "answer": "To prevent the Primary In-Lane Vehicle display from flickering between two similar targets, Algorithm 1 maintains `self.active_lead_id` and enforces three rules:\n1. **Temporal Persistence (`P_i`):** Tracks an 8-frame sliding window (`ARB_WINDOW_LEN = 8`). A candidate must be observed in at least **35%** of frames (`ARB_PERSISTENCE_MIN = 0.35`).\n2. **Risk-Margin Switching (`δ = 0.06`):** A new candidate replaces the current lead only if `R_cand > R_prev + 0.06` AND `P_cand >= 0.35`.\n3. **Critical Override (`τ_override = 1.8s`):** Immediate preemption occurs if `TTC < 1.8s` or `distance <= 5.5m`."
+        },
+        {
+            "id": 22,
+            "category": "Arbitration & Warnings",
+            "question": "How does predictive lateral cut-in detection work?",
+            "answer": "If a vehicle outside the ego lane (`|x| > 1.75m`) enters the lateral transition zone (`|x| <= 2.85m`) with a negative lateral velocity product (`x * v_x < -0.20 m²/s`), `is_cutting_in` triggers—promoting it to an active in-path threat (`is_in_path = True`, minimum overlap `O_i >= 0.55`) before its wheels cross the lane line."
+        },
+        {
+            "id": 23,
+            "category": "Arbitration & Warnings",
+            "question": "How are object velocities (v_x, v_z) and Time-to-Collision (TTC) tracked across frames?",
+            "answer": "Each track stores a 6-frame history (`deque(maxlen=6)`) of `(t_now, smooth_x, smooth_z)`. Lateral velocity `v_x` (clamped to `±6.0 m/s`) and longitudinal closing speed `v_z` (clamped to `±15.0 m/s`) are smoothed with a `0.50` EMA filter. When closing speed exceeds `0.30 m/s`, `TTC = smooth_z / v_z`; otherwise `TTC` reports `STABLE`."
+        },
+
+        // --- 6. DISAMBIGUATION & PRUNING (24–26) ---
+        {
+            "id": 24,
+            "category": "Disambiguation & Pruning",
+            "question": "How does Inverse Projective Metric Footprint Disambiguation distinguish auto-rickshaws from trucks?",
+            "answer": "Auto-rickshaws (Class 0) and commercial mini-trucks (Class 1) share boxy rear shapes. Whenever YOLO outputs Class 1 (`bus_truck`), `disambiguate_class_1_to_0()` back-projects the pixel box onto the ground plane:\n\n`metric_w = (w_px * 1.45) / Δy`, `metric_h = (h_px * 1.45) / Δy`, `metric_area = metric_w * metric_h`\n\nIf **`(metric_w < 1.95m and metric_area < 4.8m²)`** OR **`(aspect_ratio < 0.88 and metric_w < 2.05m)`**, it is instantaneously reclassified as Class 0 (`auto_rickshaw`)."
+        },
+        {
+            "id": 25,
+            "category": "Disambiguation & Pruning",
+            "question": "How does Hierarchical Cross-Class Semantic Rider Pruning eliminate false pedestrian alerts?",
+            "answer": "Standard NMS only filters overlapping boxes of the *same* class, so a rider on a motorcycle is often detected as both a `two_wheeler` and a standalone `pedestrian`.\n\n`deduplicate_detections()` checks if any `pedestrian` horizontal center (`p_cx`) falls inside `[tw_x1 - 20px, tw_x2 + 20px]` of a `two_wheeler` or `auto_rickshaw` with vertical intersection or `IoU > 0.12`. Matching pedestrian boxes are pruned as onboard riders."
+        },
+        {
+            "id": 26,
+            "category": "Disambiguation & Pruning",
+            "question": "How does the perception engine filter out the ego vehicle's hood and duplicate boxes?",
+            "answer": "• **Ego Hood Filter (`is_ego_vehicle_part`):** Discards any box touching the bottom 7% of the frame (`y2 / img_h >= 0.93`) with width `> 40%` of the image.\n• **Cross-Track Deduplication:** Sorts detections by distance and box area, suppressing duplicates with `IoU > 0.35` (same class) or `IoU > 0.50` (any class)."
+        },
+
+        // --- 7. STREAMING & TUNNELS (27–31) ---
+        {
+            "id": 27,
+            "category": "Streaming & Tunnels",
+            "question": "How does Zero-Boundary Raw Binary Stream Ingest (/upload_live) process dashcam videos?",
+            "answer": "When you select a dashcam video, the browser immediately renders an instant `<1ms` local preview via `URL.createObjectURL(file)` while streaming raw binary bytes (`Content-Type: application/octet-stream`) directly to `/upload_live`. The server writes 4MB chunks straight from `request.stream()` to disk and streams annotated frames over `/ws/live/{job_id}`."
+        },
+        {
+            "id": 28,
+            "category": "Streaming & Tunnels",
+            "question": "How does the Phone Camera pipeline achieve full-bleed widescreen framing and zero network lag?",
+            "answer": "1. **1:1 Center-Cover Widescreen Framing:** `startMobilePipeline()` matches the capture canvas to the cockpit stage aspect ratio and performs a non-distorting center-cover crop (`sx, sy, sw, sh`) with `object-cover`, filling 100% of the viewport width.\n2. **Single-Slot Drop Queue (`asyncio.Queue(maxsize=1)`):** On the server, unread mobile frames are evicted if the GPU is busy so only the latest real-time frame is processed.\n3. **Agile Handheld Weights:** Uses responsive smoothing (`alpha_pos = 0.60`, `alpha_box = 0.75`) and `0.44` JPEG compression (~15KB/frame)."
+        },
+        {
+            "id": 29,
+            "category": "Streaming & Tunnels",
+            "question": "How does the PC Camera pipeline use Pipelined Pre-Encoding and Lockstep Handshaking?",
+            "answer": "In `startPcPipeline()`, `preEncodeNextFrame()` captures and JPEG-encodes Frame $N+1$ (`0.52` quality) *while* the GPU is still inferring Frame $N$, dispatching it in `<0.1ms` as soon as the WebSocket responds. A `180ms` lockstep watchdog automatically recovers if a packet drops, and `is_mirror = True` flips the webcam horizontally like a cabin mirror."
+        },
+        {
+            "id": 30,
+            "category": "Streaming & Tunnels",
+            "question": "How does the automated .bat launcher initialize FastAPI and the Cloudflare HTTP/2 tunnel?",
+            "answer": "The launcher script kills any stale `cloudflared.exe` processes, starts `python app.py`, and polls `curl -s -o nul http://127.0.0.1:8000` in a 1-second loop until Uvicorn and GPU warmup are 100% live. It then launches Cloudflared using explicit IPv4 (`127.0.0.1:8000`) and `--protocol http2` for rock-solid WebSocket streaming."
+        },
+        {
+            "id": 31,
+            "category": "Streaming & Tunnels",
+            "question": "How does session isolation and stream reset work when switching modes?",
+            "answer": "Every camera stream generates a unique cryptographic session ID (`cam_pc_mirror_<timestamp>_<rand>` or `cam_mobile_normal_<timestamp>_<rand>`), giving each connection its own isolated `SensitiveADASPerceptionEngine` instance. Calling `stopAllStreams()` detaches `ws.onmessage`, flushes the canvas with a 1×1 transparent GIF, and resets all telemetry readouts to zero."
+        },
+
+        // --- 8. COCKPIT UI & RADAR (32–34) ---
+        {
+            "id": 32,
+            "category": "Cockpit UI & Radar",
+            "question": "What is the Smoked-Optic Hardware Telemetry design system?",
+            "answer": "The cockpit uses a tactile, matte instrument-cluster aesthetic (`#12151c` primary surfaces, `#0d0f14` recessed data wells, `#232836` crisp borders, and `JetBrains Mono` `tabular-nums` numerals). All cards and lists have locked pixel heights (`240px` mobile stage, `86px` primary threat card, `116px` surrounding traffic well) so the UI never jumps during live detections."
+        },
+        {
+            "id": 33,
+            "category": "Cockpit UI & Radar",
+            "question": "How does the 30-meter top-down spatial radar work?",
+            "answer": "`renderRadarLoop()` renders a 60 FPS polar radar on `#radarCanvas` (`176×176`) with `10m`, `20m`, and `30m` range rings at a scale of **`4.8 pixels per meter`**. Every tracked object within `35m` is plotted at `(cx + x * 4.8, cy - z * 4.8)` and color-coded by warning tier (`#38bdf8` cyan, `#f59e0b` amber, `#f97316` orange, `#ef4444` critical red)."
+        },
+        {
+            "id": 34,
+            "category": "Cockpit UI & Radar",
+            "question": "How does the WebGL 2.0 Cosmic Warp shader & SeamlessTrackLooper work in the Deep Space Room?",
+            "answer": "• **8-Spectrum WebGL Shader:** Combines 5-octave 2D Fractal Brownian Motion (`fbm2D`) nebula clouds, 6 depth-buffered parallax star layers, and 3 polar logarithmic light-streak layers across 8 visible palettes (*Hyper Cyan, Solar Gold, Nebula Rose, Emerald, Supernova, UV Pulsar, Abyssal Ice,* and *Deep Void*).\n• **Dual-Deck Audio Looper:** Plays `space.mp3` using two HTML5 `<audio>` decks with an 8-second equal-power cosine/sine crossfade and automatic tab-visibility pause/resume."
+        },
+
+        // --- 9. EASTER EGGS (35–36) ---
+        {
+            "id": 35,
+            "category": "Easter Eggs",
+            "question": "What are all 3 Easter eggs in RoadSense ADAS and how do I unlock them?",
+            "answer": "RoadSense ADAS has **3 hidden Easter eggs** triggered from the main ADAS Cockpit:\n\n1. **🕳️ Easter Egg #1 — Black Hole Singularity (10 Clicks on `Online`):** In the main ADAS Cockpit header, click the green `Online` badge **10 times** to trigger a sub-bass gravitational implosion, violet screen ripple, and open the **`Black Hole Simulation`**.\n2. **🎬 Easter Egg #2 — Credits & RNG Redeem Portal (5 Clicks on `Session:`):** In the main ADAS Cockpit header, click the `Session:` timer badge **5 times** for a 3D mechanical slot-reel jitter, 4-note golden jackpot chime, and open **`Credits Page`**.\n3. **🌌 Easter Egg #3 — Deep Space Room & Void AI Suite (5 Clicks on `Beta Release` inside the Main Cockpit's `Field Note`):** Open `Field Note` in the main ADAS Cockpit and tap the **`Beta Release`** badge **5 times** to launch this **`Deep Space Room & Void AI Suite`**!"
+        },
+        {
+            "id": 36,
+            "category": "Easter Eggs",
+            "question": "How are the custom sound effects synthesized for the Black Hole and RNG Redeem Easter eggs?",
+            "answer": "Both Easter eggs use the browser's native **Web Audio API (`AudioContext`)** with zero external sound files:\n• **Black Hole Singularity:** Clicks 1–9 trigger a rising sine sub-bass pulse (`65Hz + step*12Hz`). Click 10 fires a dual-oscillator `190Hz → 16Hz` sawtooth gravitational collapse paired with a `980Hz → 140Hz` Hawking shimmer.\n• **Credits / RNG Jackpot:** Clicks 1–4 play a crisp mechanical triangle-wave slot tick (`520Hz + step*110Hz`). Click 5 plays an ascending 4-note golden chord arpeggio (`D5, F#5, A5, D6`)."
+        }
+    ];
+
+    // =========================================================================
+    // MODULE 1: 8-SPECTRUM WEBGL HYPERSPACE SHADER (LANDSCAPE-OPTIMIZED)
+    // =========================================================================
+    const vertexShaderSource = `
+        attribute vec2 a_position;
+        void main() {
+            gl_Position = vec4(a_position, 0.0, 1.0);
+        }
+    `;
+
+    const fragmentShaderSource = `
+        precision highp float;
+
+        uniform vec2 u_resolution;
+        uniform float u_time;
+        uniform float u_palette;
+        uniform float u_paramA;
+        uniform float u_paramB;
+        uniform float u_rotateLandscape;
+
+        float sstep(float a, float b, float x) {
+            float t = clamp((x - a) / (b - a), 0.0, 1.0);
+            return t * t * (3.0 - 2.0 * t);
+        }
+
+        float hash(float n) { return fract(sin(n) * 43758.5453123); }
+        float hash2(vec2 p) { return fract(sin(dot(p, vec2(127.1, 311.7))) * 43758.5453123); }
+        vec2 hash22(vec2 p) {
+            p = vec2(dot(p, vec2(127.1, 311.7)), dot(p, vec2(269.5, 183.3)));
+            return fract(sin(p) * 43758.5453123);
+        }
+
+        float noise2D(vec2 p) {
+            vec2 i = floor(p);
+            vec2 f = fract(p);
+            f = f * f * (3.0 - 2.0 * f);
+            float a = hash2(i);
+            float b = hash2(i + vec2(1.0, 0.0));
+            float c = hash2(i + vec2(0.0, 1.0));
+            float d = hash2(i + vec2(1.0, 1.0));
+            return mix(mix(a, b, f.x), mix(c, d, f.x), f.y);
+        }
+
+        float fbm2D(vec2 p) {
+            float v = 0.0;
+            float a = 0.5;
+            mat2 rot = mat2(0.8, 0.6, -0.6, 0.8);
+            for (int i = 0; i < 5; i++) {
+                v += a * noise2D(p);
+                p = rot * p * 2.03;
+                a *= 0.5;
+            }
+            return v;
+        }
+
+        vec3 renderSpaceScene(vec2 uv, float time) {
+            vec2 p = uv;
+            float roll = sin(time * 0.14) * 0.05;
+            float cr = cos(roll), sr = sin(roll);
+            p = mat2(cr, -sr, sr, cr) * p;
+
+            vec3 nebulaA, nebulaB, streakTintA, streakTintB;
+            if (u_palette < 0.5) {
+                nebulaA = vec3(0.02, 0.09, 0.24); nebulaB = vec3(0.14, 0.03, 0.26);
+                streakTintA = vec3(0.35, 0.88, 1.0); streakTintB = vec3(0.95, 0.98, 1.0);
+            } else if (u_palette < 1.5) {
+                nebulaA = vec3(0.24, 0.06, 0.01); nebulaB = vec3(0.20, 0.13, 0.02);
+                streakTintA = vec3(1.0, 0.68, 0.18); streakTintB = vec3(1.0, 0.96, 0.82);
+            } else if (u_palette < 2.5) {
+                nebulaA = vec3(0.24, 0.02, 0.18); nebulaB = vec3(0.06, 0.07, 0.28);
+                streakTintA = vec3(1.0, 0.36, 0.82); streakTintB = vec3(0.60, 0.90, 1.0);
+            } else if (u_palette < 3.5) {
+                nebulaA = vec3(0.01, 0.18, 0.09); nebulaB = vec3(0.02, 0.22, 0.18);
+                streakTintA = vec3(0.15, 0.98, 0.55); streakTintB = vec3(0.85, 1.0, 0.92);
+            } else if (u_palette < 4.5) {
+                nebulaA = vec3(0.26, 0.01, 0.03); nebulaB = vec3(0.16, 0.02, 0.12);
+                streakTintA = vec3(1.0, 0.22, 0.30); streakTintB = vec3(1.0, 0.85, 0.75);
+            } else if (u_palette < 5.5) {
+                nebulaA = vec3(0.12, 0.02, 0.28); nebulaB = vec3(0.22, 0.04, 0.32);
+                streakTintA = vec3(0.72, 0.42, 1.0); streakTintB = vec3(0.95, 0.88, 1.0);
+            } else if (u_palette < 6.5) {
+                nebulaA = vec3(0.01, 0.12, 0.22); nebulaB = vec3(0.02, 0.20, 0.26);
+                streakTintA = vec3(0.45, 0.95, 0.95); streakTintB = vec3(0.90, 1.0, 1.0);
+            } else {
+                nebulaA = vec3(0.0, 0.0, 0.0); nebulaB = vec3(0.015, 0.015, 0.018);
+                streakTintA = vec3(0.92, 0.94, 0.98); streakTintB = vec3(1.0, 1.0, 1.0);
+            }
+
+            float r = length(p);
+            float ang = atan(p.y, p.x);
+
+            vec2 nebUV = p * 1.4 + vec2(sin(time * 0.05), cos(time * 0.04));
+            float n1 = fbm2D(nebUV * 1.8 - time * 0.08);
+            float n2 = fbm2D(nebUV * 3.2 + time * 0.06);
+            vec3 col = nebulaA * n1 * 1.35 + nebulaB * pow(max(0.001, n2), 1.6) * 1.55;
+
+            if (u_palette < 6.5) {
+                col += mix(streakTintA, nebulaB, 0.5) * exp(-r * 3.2) * 0.42;
+            }
+
+            float warpSpeed = u_paramA;
+            for (int idx = 0; idx < 6; idx++) {
+                float fi = float(idx);
+                float zFract = fract(time * 0.28 * warpSpeed + fi * 0.1666);
+                float zDepth = mix(5.5, 0.18, zFract);
+                vec2 starUV = p * zDepth * 4.2 + vec2(fi * 19.3, fi * 31.7);
+                vec2 gridId = floor(starUV);
+                vec2 gridF = fract(starUV) - 0.5;
+                vec2 rnd = hash22(gridId + fi * 11.0);
+                vec2 starOffset = (rnd - 0.5) * 0.7;
+                float dist = length(gridF - starOffset);
+                float fade = sstep(0.0, 0.2, zFract) * sstep(1.0, 0.82, zFract);
+                float size = mix(0.025, 0.085, zFract) * (0.6 + 0.6 * rnd.x);
+                float starCore = sstep(size, 0.0, dist);
+                float starHalo = exp(-dist * 18.0 / max(0.2, zFract)) * 0.35;
+                vec3 sCol = mix(streakTintA, streakTintB, rnd.y);
+                col += sCol * (starCore * 2.3 + starHalo) * fade;
+            }
+
+            float radialFlow = log(max(0.015, r)) * 2.2 - time * 1.9 * warpSpeed;
+            float densityCutoff = mix(0.93, 0.84, clamp(u_paramB * 0.5, 0.0, 1.0));
+            for (int lIdx = 1; lIdx <= 3; lIdx++) {
+                float layer = float(lIdx);
+                float slices = 85.0 + layer * 45.0;
+                float aCoord = (ang / 6.2831853 + 0.5) * slices + layer * 23.7;
+                float aId = floor(aCoord);
+                float aFract = abs(fract(aCoord) - 0.5);
+                float rCoord = radialFlow * (0.85 + layer * 0.32) + hash(aId * 17.3 + layer) * 12.0;
+                float rId = floor(rCoord);
+                float rFract = fract(rCoord);
+                float chance = hash2(vec2(aId, rId + layer * 71.0));
+                if (chance > densityCutoff) {
+                    float beamWidth = sstep(0.22, 0.0, aFract);
+                    float streakShape = sstep(0.0, 0.78, rFract) * sstep(1.0, 0.80, rFract);
+                    float centerMask = sstep(0.04, 0.35, r);
+                    vec3 beamCol = mix(streakTintA, streakTintB, hash(chance * 43.0));
+                    col += beamCol * beamWidth * streakShape * centerMask * (1.45 + 0.7 * warpSpeed);
+                }
+            }
+            return col;
+        }
+
+        void main() {
+            vec2 centered = gl_FragCoord.xy - 0.5 * u_resolution.xy;
+            if (u_rotateLandscape > 0.5 && u_resolution.y > u_resolution.x) {
+                centered = vec2(centered.y, -centered.x);
+            }
+            float baseScale = min(u_resolution.x, u_resolution.y);
+            vec2 uv = (centered / max(1.0, baseScale)) * vec2(1.25, 0.95);
+
+            vec3 col = renderSpaceScene(uv, u_time);
+
+            col = max(col, vec3(0.0));
+            col = (col * (2.51 * col + 0.03)) / (col * (2.43 * col + 0.59) + 0.14);
+            col = pow(max(col, vec3(0.0001)), vec3(1.0 / 2.2));
+
+            gl_FragColor = vec4(col, 1.0);
+        }
+    `;
+
+    // =========================================================================
+    // MODULE 2: CONTINUOUS AUDIO LOOPER WITH PAGE VISIBILITY AUTO-PAUSE
+    // =========================================================================
+    class SeamlessTrackLooper {
+        constructor(srcList, crossfadeSeconds = 8.0, loopStartOffset = 2.0) {
+            this.srcList = srcList;
+            this.crossfadeSeconds = crossfadeSeconds;
+            this.loopStartOffset = loopStartOffset;
+            this.deckA = this.createDeck();
+            this.deckB = this.createDeck();
+            this.activeDeck = this.deckA;
+            this.standbyDeck = this.deckB;
+            this.isPlaying = false;
+            this.isMuted = false;
+            this.isCrossfading = false;
+            setInterval(() => this.tickLoopMonitor(), 60);
+        }
+
+        createDeck() {
+            const audio = new Audio();
+            audio.preload = 'auto';
+            let candidateIdx = 0;
+            audio.src = this.srcList[candidateIdx];
+            audio.addEventListener('error', () => {
+                candidateIdx++;
+                if (candidateIdx < this.srcList.length) {
+                    audio.src = this.srcList[candidateIdx];
+                    audio.load();
+                }
+            });
+            audio.addEventListener('ended', () => {
+                if (this.isPlaying && !this.isCrossfading) {
+                    audio.currentTime = this.loopStartOffset;
+                    audio.play().catch(() => {});
+                }
+            });
+            return audio;
+        }
+
+        play() {
+            this.isPlaying = true;
+            this.activeDeck.muted = this.isMuted;
+            this.standbyDeck.muted = this.isMuted;
+            if (!this.isCrossfading) this.activeDeck.volume = 1.0;
+            this.activeDeck.play().catch(() => {});
+            if (this.isCrossfading) this.standbyDeck.play().catch(() => {});
+        }
+
+        pause() {
+            this.isPlaying = false;
+            this.activeDeck.pause();
+            this.standbyDeck.pause();
+        }
+
+        setMuted(muted) {
+            this.isMuted = muted;
+            this.activeDeck.muted = muted;
+            this.standbyDeck.muted = muted;
+        }
+
+        getCurrentTime() {
+            return this.activeDeck.currentTime || 0;
+        }
+
+        tickLoopMonitor() {
+            if (!this.isPlaying) return;
+            const dur = this.activeDeck.duration;
+            const cur = this.activeDeck.currentTime;
+            if (!dur || !isFinite(dur) || dur <= this.crossfadeSeconds + 4) return;
+            const timeRemaining = dur - cur;
+
+            if (!this.isCrossfading && timeRemaining <= this.crossfadeSeconds) {
+                this.isCrossfading = true;
+                try { this.standbyDeck.currentTime = this.loopStartOffset; } catch (e) {}
+                this.standbyDeck.volume = 0.0;
+                this.standbyDeck.muted = this.isMuted;
+                this.standbyDeck.play().catch(() => {});
+            }
+
+            if (this.isCrossfading) {
+                const fadeRatio = Math.min(1.0, Math.max(0.0, 1.0 - (timeRemaining / this.crossfadeSeconds)));
+                this.activeDeck.volume = Math.cos(fadeRatio * 0.5 * Math.PI);
+                this.standbyDeck.volume = Math.sin(fadeRatio * 0.5 * Math.PI);
+
+                if (fadeRatio >= 0.99 || timeRemaining <= 0.15) {
+                    this.activeDeck.pause();
+                    this.activeDeck.volume = 0.0;
+                    this.standbyDeck.volume = 1.0;
+                    const temp = this.activeDeck;
+                    this.activeDeck = this.standbyDeck;
+                    this.standbyDeck = temp;
+                    this.isCrossfading = false;
+                }
+            }
+        }
+    }
+
+    const spaceLooper = new SeamlessTrackLooper(["space.mp3", "./space.mp3", "/media/space.mp3"], 9.0, 2.5);
+
+    let wasPlayingBeforeTabSwitch = false;
+    document.addEventListener('visibilitychange', () => {
+        if (document.hidden) {
+            if (spaceLooper.isPlaying) {
+                wasPlayingBeforeTabSwitch = true;
+                spaceLooper.pause();
+                updateEqBarsState(false);
+            }
+        } else {
+            if (wasPlayingBeforeTabSwitch && isExperienceActive && !isGlobalMuted) {
+                spaceLooper.play();
+                updateEqBarsState(true);
+                wasPlayingBeforeTabSwitch = false;
+            }
+        }
+    });
+
+    // =========================================================================
+    // MODULE 3: WEBGL CONTROLLER & 8 PALETTES
+    // =========================================================================
+    class DualWorldEngine {
+        constructor(canvasId) {
+            this.canvas = document.getElementById(canvasId);
+            this.gl = this.canvas.getContext('webgl', { antialias: false, powerPreference: 'high-performance' });
+            this.palette = 0.0;
+            this.rotateLandscape = 1.0;
+            this.spaceState = { palette: 0, warpIdx: 0, streakIdx: 0 };
+            this.isMobile = window.innerWidth < 768 || /Android|webOS|iPhone|iPad|iPod/i.test(navigator.userAgent);
+            this.init();
+            window.addEventListener('resize', () => this.resize());
+        }
+
+        compileShader(type, source) {
+            const shader = this.gl.createShader(type);
+            this.gl.shaderSource(shader, source);
+            this.gl.compileShader(shader);
+            return shader;
+        }
+
+        init() {
+            const vs = this.compileShader(this.gl.VERTEX_SHADER, vertexShaderSource);
+            const fs = this.compileShader(this.gl.FRAGMENT_SHADER, fragmentShaderSource);
+            this.program = this.gl.createProgram();
+            this.gl.attachShader(this.program, vs);
+            this.gl.attachShader(this.program, fs);
+            this.gl.linkProgram(this.program);
+            this.gl.useProgram(this.program);
+
+            this.positionBuffer = this.gl.createBuffer();
+            this.gl.bindBuffer(this.gl.ARRAY_BUFFER, this.positionBuffer);
+            this.gl.bufferData(this.gl.ARRAY_BUFFER, new Float32Array([
+                -1, -1,  1, -1, -1,  1,
+                -1,  1,  1, -1,  1,  1,
+            ]), this.gl.STATIC_DRAW);
+
+            const posAttr = this.gl.getAttribLocation(this.program, "a_position");
+            this.gl.enableVertexAttribArray(posAttr);
+            this.gl.vertexAttribPointer(posAttr, 2, this.gl.FLOAT, false, 0, 0);
+
+            this.uResolution = this.gl.getUniformLocation(this.program, "u_resolution");
+            this.uTime = this.gl.getUniformLocation(this.program, "u_time");
+            this.uPalette = this.gl.getUniformLocation(this.program, "u_palette");
+            this.uParamA = this.gl.getUniformLocation(this.program, "u_paramA");
+            this.uParamB = this.gl.getUniformLocation(this.program, "u_paramB");
+            this.uRotateLandscape = this.gl.getUniformLocation(this.program, "u_rotateLandscape");
+            this.resize();
+        }
+
+        resize() {
+            this.dpr = Math.min(window.devicePixelRatio || 1, this.isMobile ? 1.0 : 1.35);
+            this.canvas.width = Math.max(1, Math.floor(window.innerWidth * this.dpr));
+            this.canvas.height = Math.max(1, Math.floor(window.innerHeight * this.dpr));
+            this.gl.viewport(0, 0, this.canvas.width, this.canvas.height);
+        }
+
+        render(time) {
+            const paramA = WARP_SPEED_PRESETS[this.spaceState.warpIdx].val;
+            const paramB = STREAK_PRESETS[this.spaceState.streakIdx].val;
+
+            this.gl.uniform2f(this.uResolution, this.canvas.width, this.canvas.height);
+            this.gl.uniform1f(this.uTime, time * 0.001);
+            this.gl.uniform1f(this.uPalette, this.palette);
+            this.gl.uniform1f(this.uParamA, paramA);
+            this.gl.uniform1f(this.uParamB, paramB);
+            this.gl.uniform1f(this.uRotateLandscape, this.rotateLandscape);
+
+            this.gl.drawArrays(this.gl.TRIANGLES, 0, 6);
+            requestAnimationFrame((t) => this.render(t));
+        }
+    }
+
+    const WARP_SPEED_PRESETS = [
+        { val: 1.5, label: "⚡ WARP: 1.5x" },
+        { val: 2.8, label: "⚡ WARP: 2.8x" },
+        { val: 4.2, label: "⚡ WARP: MAX" },
+        { val: 0.35, label: "🌌 WARP: DRIFT" }
+    ];
+    const STREAK_PRESETS = [
+        { val: 1.2, label: "✨ STREAKS: HIGH" },
+        { val: 2.0, label: "✨ STREAKS: HYPER" },
+        { val: 0.2, label: "✨ STREAKS: LOW" }
+    ];
+    const PALETTE_LABELS = [
+        "🌌 Hyper Cyan",
+        "🔥 Solar Gold",
+        "🔮 Nebula Rose",
+        "🟢 Emerald",
+        "🔴 Supernova",
+        "⚡ UV Pulsar",
+        "🌊 Abyssal Ice",
+        "🔲 Deep Void"
+    ];
+
+    const engine = new DualWorldEngine('glcanvas');
+    requestAnimationFrame((t) => engine.render(t));
+
+    document.addEventListener('DOMContentLoaded', () => {
+        const total = AI_KNOWLEDGE_BASE.length;
+        const countAllEl = document.getElementById('countAll');
+        const sidebarTotalEl = document.getElementById('sidebarTotalCount');
+        const welcomeBadgeEl = document.getElementById('welcomeQuestionBadge');
+        if (countAllEl) countAllEl.innerText = total;
+        if (sidebarTotalEl) sidebarTotalEl.innerText = `${total} Q&As`;
+        if (welcomeBadgeEl) welcomeBadgeEl.innerText = `${total} Topics in Question Bank`;
+    });
+
+    // =========================================================================
+    // MODULE 4: CONTROLLERS, EXIT HANDLER & AUDIO SYNC
+    // =========================================================================
+    let isExperienceActive = false;
+    let isGlobalMuted = false;
+    let isHudHidden = false;
+    let audioCtx = null;
+    const sessionStartTimestamp = Date.now();
+
+    function getAudioCtx() {
+        if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        if (audioCtx.state === 'suspended') audioCtx.resume();
+        return audioCtx;
+    }
+
+    function updateEqBarsState(playing) {
+        document.querySelectorAll('.eq-bar').forEach(bar => {
+            if (playing && !isGlobalMuted) bar.classList.remove('eq-paused');
+            else bar.classList.add('eq-paused');
+        });
+    }
+
+    setInterval(() => {
+        const elapsedSession = Math.floor((Date.now() - sessionStartTimestamp) / 1000);
+        const sm = String(Math.floor(elapsedSession / 60)).padStart(2, '0');
+        const ss = String(elapsedSession % 60).padStart(2, '0');
+        const sessionTimerEl = document.getElementById('sessionTimer');
+        if (sessionTimerEl) sessionTimerEl.innerText = `${sm}:${ss}`;
+
+        if (!isExperienceActive) return;
+        const sec = Math.floor(spaceLooper.getCurrentTime());
+        const m = String(Math.floor(sec / 60)).padStart(2, '0');
+        const s = String(sec % 60).padStart(2, '0');
+        const clockEl = document.getElementById('audioClock');
+        if (clockEl) clockEl.innerText = `${m}:${s}`;
+    }, 250);
+
+    async function launchExperience() {
+        isExperienceActive = true;
+        const startOverlay = document.getElementById('startOverlay');
+        startOverlay.style.opacity = '0';
+        setTimeout(() => { startOverlay.style.display = 'none'; }, 500);
+
+        spaceLooper.play();
+        updateEqBarsState(true);
+    }
+
+    function exitSpaceRoom() {
+        spaceLooper.pause();
+        updateEqBarsState(false);
+
+        try {
+            const actx = getAudioCtx();
+            const osc = actx.createOscillator();
+            const gain = actx.createGain();
+            osc.type = 'sine';
+            osc.frequency.setValueAtTime(320, actx.currentTime);
+            osc.frequency.exponentialRampToValueAtTime(45, actx.currentTime + 0.35);
+            gain.gain.setValueAtTime(0.25, actx.currentTime);
+            gain.gain.exponentialRampToValueAtTime(0.001, actx.currentTime + 0.35);
+            osc.connect(gain);
+            gain.connect(actx.destination);
+            osc.start();
+            osc.stop(actx.currentTime + 0.35);
+        } catch (e) {}
+
+        setTimeout(() => {
+            try {
+                window.open('', '_self', '');
+                window.close();
+            } catch (e) {}
+
+            if (!window.closed) {
+                if (window.history.length > 1) {
+                    window.history.back();
+                } else {
+                    window.location.href = '/';
+                }
+            }
+        }, 180);
+    }
+
+    async function toggleMobileLandscapeSpace() {
+        engine.rotateLandscape = engine.rotateLandscape > 0.5 ? 0.0 : 1.0;
+        const btn = document.getElementById('landscapeBtn');
+        if (btn) {
+            btn.innerText = engine.rotateLandscape > 0.5 ? "🔄 Landscape: ON" : "🔄 Portrait Space";
+        }
+        try {
+            if (screen.orientation && screen.orientation.lock) {
+                await screen.orientation.lock('landscape');
+            }
+        } catch (e) {}
+    }
+
+    function switchView(target) {
+        if (target === 'space') {
+            document.getElementById('aiAgentModal').style.display = 'none';
+        } else if (target === 'ai') {
+            toggleAiAgentModal();
+        }
+    }
+
+    async function toggleAiAgentModal() {
+        const modal = document.getElementById('aiAgentModal');
+        const isHidden = modal.style.display === 'none';
+        modal.style.display = isHidden ? 'flex' : 'none';
+        if (isHidden) {
+            try {
+                if (screen.orientation && screen.orientation.unlock) {
+                    screen.orientation.unlock();
+                }
+            } catch (e) {}
+        }
+    }
+
+    // DYNAMIC FIELD NOTE RENDERED INSIDE VOID AI (BETA RELEASE BADGE IS INERT HERE)
+    function renderFieldNoteInAi() {
+        const chatStream = document.getElementById('aiChatStream');
+        if (!chatStream) return;
+
+        const noteCard = document.createElement('div');
+        noteCard.className = "hardware-panel p-4 rounded-2xl border border-amber-500/40 space-y-3 chat-bubble-anim shadow-xl";
+        noteCard.innerHTML = `
+            <div class="flex items-center justify-between border-b border-[#232836] pb-2.5">
+                <div class="flex items-center gap-2">
+                    <span class="px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider bg-amber-500/15 text-amber-400 border border-amber-500/30 rounded">
+                        Beta Release
+                    </span>
+                    <h3 class="text-xs sm:text-sm font-bold text-white">Engineer's Field Note // Deep Space &amp; Void AI</h3>
+                </div>
+                <span class="text-[10px] mono-num text-amber-300"></span>
+            </div>
+            <p class="text-xs text-gray-300 leading-relaxed">
+                You are inside the <strong class="text-white">RoadSense Deep Space Room &amp; Void AI Suite</strong> (unlocked by tapping <strong class="text-amber-300">Beta Release</strong> 5 times in the main ADAS Cockpit's Field Note).
+            </p>
+            <div class="recessed-well rounded-xl p-3 space-y-2 text-xs">
+                <div class="flex items-start gap-2">
+                    <span class="mono-num text-sky-400 font-bold">01</span>
+                    <span class="text-gray-300"><strong class="text-white">Void AI (ADAS Bot):</strong> Ask any question about RoadSense ADAS architecture, monocular depth fusion, DGC consistency, IEEE 5-Factor risk math, or camera pipelines.</span>
+                </div>
+                <div class="flex items-start gap-2">
+                    <span class="mono-num text-sky-400 font-bold">02</span>
+                    <span class="text-gray-300"><strong class="text-white">8-Spectrum Space Dock:</strong> All 8 cosmic palettes are visible on the bottom dock without scrolling, paired with widescreen landscape projection on mobile and PC.</span>
+                </div>
+                <div class="flex items-start gap-2">
+                    <span class="mono-num text-sky-400 font-bold">03</span>
+                    <span class="text-gray-300"><strong class="text-white">Space HUD Controls:</strong> Use the top bar to mute/unmute <code class="text-sky-300 mono-num">space.mp3</code>, hide the HUD, or exit back to the main cockpit.</span>
+                </div>
+            </div>
+        `;
+        chatStream.appendChild(noteCard);
+        chatStream.scrollTop = chatStream.scrollHeight;
+    }
+
+    function setColorPalette(idx) {
+        engine.palette = idx;
+        engine.spaceState.palette = idx;
+        refreshBottomDockLabels();
+    }
+
+    function cyclePrimaryParameter() {
+        engine.spaceState.warpIdx = (engine.spaceState.warpIdx + 1) % WARP_SPEED_PRESETS.length;
+        refreshBottomDockLabels();
+    }
+
+    function cycleSecondaryParameter() {
+        engine.spaceState.streakIdx = (engine.spaceState.streakIdx + 1) % STREAK_PRESETS.length;
+        refreshBottomDockLabels();
+    }
+
+    function refreshBottomDockLabels() {
+        const activePal = engine.spaceState.palette;
+        for (let i = 0; i < PALETTE_LABELS.length; i++) {
+            const btn = document.getElementById(`palBtn${i}`);
+            if (!btn) continue;
+            btn.innerText = PALETTE_LABELS[i];
+            btn.className = (i === activePal)
+                ? "px-1.5 py-1.5 rounded-lg text-[10px] sm:text-[11px] font-bold bg-sky-500 text-black shadow transition cursor-pointer truncate text-center"
+                : "px-1.5 py-1.5 rounded-lg text-[10px] sm:text-[11px] font-semibold text-gray-300 hover:text-white transition cursor-pointer truncate text-center";
+        }
+
+        document.getElementById('primaryActionBtn').innerText = WARP_SPEED_PRESETS[engine.spaceState.warpIdx].label;
+        document.getElementById('secondaryActionBtn').innerText = STREAK_PRESETS[engine.spaceState.streakIdx].label;
+    }
+
+    function resetSceneView() {
+        engine.spaceState = { palette: 0, warpIdx: 0, streakIdx: 0 };
+        engine.palette = 0;
+        refreshBottomDockLabels();
+    }
+
+    function toggleAudioMute() {
+        isGlobalMuted = !isGlobalMuted;
+        spaceLooper.setMuted(isGlobalMuted);
+        const btn = document.getElementById('muteBtn');
+        if (btn) btn.innerText = isGlobalMuted ? 'Unmute' : 'Mute';
+        updateEqBarsState(isExperienceActive);
+    }
+
+    function toggleHudVisibility() {
+        isHudHidden = !isHudHidden;
+        const topBar = document.getElementById('topHudBar');
+        const bottomBar = document.getElementById('bottomHudBar');
+        const restoreBtn = document.getElementById('restoreHudBtn');
+
+        if (isHudHidden) {
+            topBar.classList.add('hud-hidden-top');
+            bottomBar.classList.add('hud-hidden-bottom');
+            restoreBtn.classList.remove('hidden');
+        } else {
+            topBar.classList.remove('hud-hidden-top');
+            bottomBar.classList.remove('hud-hidden-bottom');
+            restoreBtn.classList.add('hidden');
+        }
+    }
+
+    // =========================================================================
+    // MODULE 5: VOID AI (ADAS BOT) SYNTHESIS ENGINE
+    // =========================================================================
+    let currentCategoryFilter = 'All';
+
+    class VoidAiEngine {
+        constructor(knowledgeBase) {
+            this.kb = knowledgeBase;
+            this.questionStarters = [
+                'what', 'how', 'why', 'where', 'when', 'who', 'which', 'can', 'does',
+                'is', 'are', 'will', 'do', 'explain', 'tell', 'show', 'describe',
+                'list', 'give', 'help', 'compare', 'calculate', 'define'
+            ];
+        }
+
+        isValidQuestionInput(rawText) {
+            const text = rawText.trim();
+            if (text.length < 3) return false;
+            const words = text.toLowerCase().replace(/[^\w\s?]/g, '').split(/\s+/).filter(Boolean);
+            if (words.length === 0) return false;
+
+            const hasQuestionMark = text.includes('?');
+            const startsWithInterrogative = this.questionStarters.includes(words[0]);
+            const containsInterrogative = words.some(w => this.questionStarters.includes(w));
+            const matchesKnownTopic = this.kb.some(item => this.scoreMatch(text, item) >= 4);
+
+            return hasQuestionMark || startsWithInterrogative || containsInterrogative || (words.length >= 2 && matchesKnownTopic);
+        }
+
+        scoreMatch(userQuery, item) {
+            const stopWords = new Set(['the', 'and', 'for', 'are', 'but', 'not', 'you', 'all', 'can', 'her', 'was', 'one', 'our', 'out', 'how', 'what', 'why', 'does', 'with', 'from', 'that', 'this']);
+            const queryWords = userQuery.toLowerCase().replace(/[^\w\s]/g, '').split(/\s+/).filter(w => w.length > 1 && !stopWords.has(w));
+            if (queryWords.length === 0) return 0;
+
+            const qText = item.question.toLowerCase();
+            const aText = item.answer.toLowerCase();
+            const cText = item.category.toLowerCase();
+
+            let score = 0;
+            queryWords.forEach(word => {
+                if (qText.includes(word)) score += 4.5;
+                if (cText.includes(word)) score += 2.5;
+                if (aText.includes(word)) score += 1.5;
+            });
+
+            if (qText.includes(userQuery.toLowerCase().replace(/\?/g, '').trim())) {
+                score += 18;
+            }
+            return score;
+        }
+
+        generateResponse(query) {
+            const cleanQuery = query.trim();
+            if (!cleanQuery) return null;
+
+            if (!this.isValidQuestionInput(cleanQuery)) {
+                return {
+                    category: "Question Format Required",
+                    answer: "Please enter a **question** (for example, starting with *What, How, Why, Where,* or ending with a `?`).\n\nTry asking **Void AI** something like:\n• *\"What are all 3 Easter eggs in RoadSense ADAS?\"*\n• *\"How does the IEEE 5-Factor Base Risk equation work?\"*\n• *\"How does Rider Pruning stop false pedestrian alerts?\"*",
+                    related: [this.kb[34], this.kb[15], this.kb[24]]
+                };
+            }
+
+            const scored = this.kb.map(item => ({
+                item,
+                score: this.scoreMatch(cleanQuery, item)
+            })).sort((a, b) => b.score - a.score);
+
+            const primary = scored[0];
+            const secondary = scored[1];
+
+            if (primary && primary.score >= 3.5) {
+                let synthesizedAnswer = primary.item.answer;
+                let categoryLabel = primary.item.category;
+
+                if (secondary && secondary.score >= primary.score * 0.78 && secondary.item.id !== primary.item.id) {
+                    synthesizedAnswer = `${primary.item.answer}\n\n---\n\n**Related Detail (${secondary.item.question}):**\n${secondary.item.answer}`;
+                    categoryLabel = `${primary.item.category} + Synthesis`;
+                }
+
+                return {
+                    category: categoryLabel,
+                    answer: synthesizedAnswer,
+                    related: scored.slice(1, 4).map(s => s.item).filter(s => s.score >= 2)
+                };
+            }
+
+            return {
+                category: "Out of Project Scope",
+                answer: "I am **Void AI (ADAS Bot)**, specialized in the **RoadSense ADAS** architecture, monocular depth geometry, DGC consistency, IEEE 5-Factor risk math, real-time camera streaming pipelines, and our 3 Easter eggs.\n\nPlease ask a question related to the project, or tap any topic in the Question Bank!",
+                related: [this.kb[0], this.kb[15], this.kb[34]]
+            };
+        }
+    }
+
+    const voidAi = new VoidAiEngine(AI_KNOWLEDGE_BASE);
+
+    function submitQuickPrompt(promptText) {
+        const input = document.getElementById('aiSearchInput');
+        if (input) {
+            input.value = promptText;
+            processVoidAiQuery(promptText);
+            input.value = '';
+        }
+    }
+
+    function handleChatSubmit(e) {
+        e.preventDefault();
+        const input = document.getElementById('aiSearchInput');
+        if (!input) return;
+        const query = input.value.trim();
+        if (!query) return;
+        processVoidAiQuery(query);
+        input.value = '';
+    }
+
+    function processVoidAiQuery(query) {
+        const chatStream = document.getElementById('aiChatStream');
+        if (!chatStream) return;
+
+        const userBubble = document.createElement('div');
+        userBubble.className = "flex justify-end chat-bubble-anim";
+        userBubble.innerHTML = `
+            <div class="max-w-xl bg-sky-600/20 border border-sky-500/40 text-sky-100 p-3 rounded-2xl text-xs space-y-1 shadow-md">
+                <div class="text-[10px] font-bold text-sky-400 mono-num uppercase">You Asked</div>
+                <div>${escapeHtml(query)}</div>
+            </div>`;
+        chatStream.appendChild(userBubble);
+        chatStream.scrollTop = chatStream.scrollHeight;
+
+        const t0 = performance.now();
+        const res = voidAi.generateResponse(query);
+        const dt = (performance.now() - t0).toFixed(2);
+
+        setTimeout(() => {
+            const aiBubble = document.createElement('div');
+            aiBubble.className = "flex justify-start chat-bubble-anim";
+            
+            let relatedChipsHtml = "";
+            if (res.related && res.related.length > 0) {
+                relatedChipsHtml = `
+                    <div class="pt-2.5 border-t border-[#1e2536] mt-2.5 space-y-1.5">
+                        <div class="text-[10px] font-bold text-gray-400 uppercase tracking-wider">Follow-Up Questions:</div>
+                        <div class="flex flex-wrap gap-1.5">
+                            ${res.related.map(r => `
+                                <button type="button" onclick="submitQuickPrompt('${escapeHtml(r.question)}')" class="px-2.5 py-1 bg-[#121622] hover:bg-sky-500/20 text-[10px] text-sky-300 border border-[#262d40] rounded-lg cursor-pointer transition text-left">
+                                    ${escapeHtml(r.question)}
+                                </button>
+                            `).join('')}
+                        </div>
+                    </div>`;
+            }
+
+            aiBubble.innerHTML = `
+                <div class="max-w-2xl hardware-panel p-4 rounded-2xl text-xs space-y-2 border border-[#2d364a] shadow-xl">
+                    <div class="flex items-center justify-between border-b border-[#1f2535] pb-2 gap-2">
+                        <div class="flex items-center gap-2 flex-wrap">
+                            <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+                            <span class="font-bold text-white uppercase text-[11px] tracking-wider">Void AI // ADAS Bot</span>
+                            <span class="px-2 py-0.5 rounded bg-sky-500/15 text-sky-300 border border-sky-500/30 text-[9px] mono-num font-bold">${escapeHtml(res.category)}</span>
+                        </div>
+                        <span class="text-[10px] text-gray-400 mono-num shrink-0">${dt}ms</span>
+                    </div>
+
+                    <div class="text-gray-200 leading-relaxed font-normal pt-1">
+                        ${formatMarkdown(res.answer)}
+                    </div>
+
+                    ${relatedChipsHtml}
+                </div>`;
+
+            chatStream.appendChild(aiBubble);
+            chatStream.scrollTop = chatStream.scrollHeight;
+        }, 35);
+    }
+
+    function filterCategory(catName) {
+        currentCategoryFilter = catName;
+        document.querySelectorAll('.cat-btn').forEach(btn => {
+            if (btn.innerText.includes(catName) || (catName === 'All' && btn.innerText.includes('All Questions'))) {
+                btn.className = "cat-btn active text-left px-2.5 py-1.5 rounded-lg text-[11px] font-semibold text-white bg-sky-500/20 border border-sky-500/40 transition truncate";
+            } else {
+                btn.className = "cat-btn text-left px-2.5 py-1.5 rounded-lg text-[11px] font-semibold text-gray-400 hover:text-white transition truncate";
+            }
+        });
+
+        const chatStream = document.getElementById('aiChatStream');
+        if (!chatStream) return;
+
+        let filtered = AI_KNOWLEDGE_BASE;
+        if (catName !== 'All') {
+            filtered = filtered.filter(item => item.category === catName);
+        }
+
+        chatStream.innerHTML = `
+            <div class="recessed-well p-3 rounded-xl border border-[#1d2332] text-xs text-gray-300 flex items-center justify-between">
+                <span>Topic Filter: <strong class="text-white">${escapeHtml(catName)}</strong> (${filtered.length} questions)</span>
+                <span class="text-[10px] text-sky-400 mono-num">Tap any question to ask Void AI</span>
+            </div>
+            ${filtered.map(item => `
+                <div onclick="submitQuickPrompt('${escapeHtml(item.question)}')" class="recessed-well p-3 rounded-xl space-y-1 border border-[#1d222f] hover:border-sky-500/40 transition cursor-pointer">
+                    <div class="flex items-center justify-between">
+                        <span class="px-2 py-0.5 text-[9px] mono-num font-bold uppercase bg-sky-500/15 text-sky-300 border border-sky-500/30 rounded">
+                            #${item.id} // ${escapeHtml(item.category)}
+                        </span>
+                        <span class="text-[10px] text-sky-400 font-semibold">Ask Void AI →</span>
+                    </div>
+                    <div class="text-xs font-bold text-white">${escapeHtml(item.question)}</div>
+                </div>
+            `).join('')}
+        `;
+    }
+
+    function clearChatStream() {
+        const chatStream = document.getElementById('aiChatStream');
+        if (chatStream) {
+            chatStream.innerHTML = `
+                <div class="recessed-well p-3.5 rounded-2xl space-y-1.5 border border-[#1e2433]">
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center gap-2">
+                            <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+                            <h3 class="text-xs font-bold text-white uppercase tracking-wider">Void AI // ADAS Bot Online</h3>
+                        </div>
+                        <span class="text-[10px] mono-num text-sky-400 font-semibold">${AI_KNOWLEDGE_BASE.length} Topics in Question Bank</span>
+                    </div>
+                    <p class="text-xs text-gray-300 leading-relaxed">
+                        Chat cleared. Ask me any question about RoadSense ADAS, our IEEE &amp; DGC risk math, camera streaming pipelines, or the 3 hidden Easter eggs!
+                    </p>
+                </div>`;
+        }
+    }
+
+    function escapeHtml(str) {
+        return str.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;");
+    }
+
+    window.addEventListener('keydown', e => {
+        if (e.key === 'Escape') {
+            document.getElementById('aiAgentModal').style.display = 'none';
+        } else if ((e.key === 'h' || e.key === 'H') && document.activeElement.id !== 'aiSearchInput') {
+            toggleHudVisibility();
+        }
+    });
+</script>
+</body>
+</html>
