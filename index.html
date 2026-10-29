@@ -323,7 +323,7 @@
                                 Void AI // ADAS Bot
                             </h2>
                             <span class="hidden md:inline-block px-2 py-0.5 text-[9px] mono-num font-bold uppercase bg-emerald-500/15 text-emerald-400 border border-emerald-500/30 rounded shrink-0">
-                                Neural Intelligence
+                                NEURAL INTELLIGENCE
                             </span>
                         </div>
                         <p class="text-[10px] text-gray-400 mono-num truncate">RoadSense Perception Intelligence</p>
@@ -347,54 +347,23 @@
             <!-- 2. MAIN WORKSPACE: 3-PANE STUDIO ON PC, UNIFIED SINGLE-SCREEN COCKPIT ON ANDROID -->
             <div class="flex-1 flex flex-col md:flex-row min-h-0 overflow-hidden relative">
 
-                <!-- PANE 1 (PC): LEFT CATEGORY SIDEBAR (ZERO SCROLLING, INSTANT BLUE SELECTION) -->
-                <div id="pcCategorySidebar" class="hidden md:flex md:w-52 bg-[#080a0e] border-r border-[#232836] p-2.5 shrink-0 flex-col justify-between">
+                <!-- PANE 1 (PC): LEFT CATEGORY SIDEBAR (DYNAMICALLY RENDERED WITH COUNTS) -->
+                <div id="pcCategorySidebar" class="hidden md:flex md:w-56 bg-[#080a0e] border-r border-[#232836] p-2.5 shrink-0 flex-col justify-between">
                     <div class="flex items-center justify-between px-1 pb-1.5 mb-1 border-b border-[#1b202b] shrink-0">
                         <span class="text-[10px] font-bold text-gray-400 uppercase tracking-wider">1. Topic Domains</span>
-                        <span class="px-1.5 py-0.5 text-[9px] mono-num font-bold bg-sky-500/15 text-sky-300 border border-sky-500/30 rounded">10</span>
+                        <span id="pcDomainTotalBadge" class="px-1.5 py-0.5 text-[9px] mono-num font-bold bg-sky-500/15 text-sky-300 border border-sky-500/30 rounded">10</span>
                     </div>
-                    <div class="flex-1 flex flex-col justify-between gap-1">
-                        <button type="button" data-cat="All" onclick="filterCategory('All')" class="cat-btn active text-left px-2.5 py-1.5 rounded-lg text-[11px] font-bold bg-sky-500 text-black shadow transition truncate cursor-pointer">
-                            🌐 All Questions (<span id="countAll">36</span>)
-                        </button>
-                        <button type="button" data-cat="Architecture & Hardware" onclick="filterCategory('Architecture & Hardware')" class="cat-btn text-left px-2.5 py-1.5 rounded-lg text-[11px] font-semibold text-gray-400 hover:text-white hover:bg-[#131722] transition truncate cursor-pointer">
-                            ⚙️ Core &amp; Hardware (7)
-                        </button>
-                        <button type="button" data-cat="Depth & Geometry" onclick="filterCategory('Depth & Geometry')" class="cat-btn text-left px-2.5 py-1.5 rounded-lg text-[11px] font-semibold text-gray-400 hover:text-white hover:bg-[#131722] transition truncate cursor-pointer">
-                            📐 Depth &amp; Geometry (4)
-                        </button>
-                        <button type="button" data-cat="DGC & DGI Consistency" onclick="filterCategory('DGC & DGI Consistency')" class="cat-btn text-left px-2.5 py-1.5 rounded-lg text-[11px] font-semibold text-gray-400 hover:text-white hover:bg-[#131722] transition truncate cursor-pointer">
-                            🔬 DGC &amp; DGI Math (4)
-                        </button>
-                        <button type="button" data-cat="IEEE Risk & Context" onclick="filterCategory('IEEE Risk & Context')" class="cat-btn text-left px-2.5 py-1.5 rounded-lg text-[11px] font-semibold text-gray-400 hover:text-white hover:bg-[#131722] transition truncate cursor-pointer">
-                            ⚡ IEEE Risk &amp; ASR (4)
-                        </button>
-                        <button type="button" data-cat="Arbitration & Warnings" onclick="filterCategory('Arbitration & Warnings')" class="cat-btn text-left px-2.5 py-1.5 rounded-lg text-[11px] font-semibold text-gray-400 hover:text-white hover:bg-[#131722] transition truncate cursor-pointer">
-                            🚨 Arbitration &amp; Alerts (4)
-                        </button>
-                        <button type="button" data-cat="Disambiguation & Pruning" onclick="filterCategory('Disambiguation & Pruning')" class="cat-btn text-left px-2.5 py-1.5 rounded-lg text-[11px] font-semibold text-gray-400 hover:text-white hover:bg-[#131722] transition truncate cursor-pointer">
-                            🛺 Rickshaw &amp; Riders (3)
-                        </button>
-                        <button type="button" data-cat="Streaming & Tunnels" onclick="filterCategory('Streaming & Tunnels')" class="cat-btn text-left px-2.5 py-1.5 rounded-lg text-[11px] font-semibold text-gray-400 hover:text-white hover:bg-[#131722] transition truncate cursor-pointer">
-                            📡 Streaming &amp; Tunnels (5)
-                        </button>
-                        <button type="button" data-cat="Cockpit UI & Radar" onclick="filterCategory('Cockpit UI & Radar')" class="cat-btn text-left px-2.5 py-1.5 rounded-lg text-[11px] font-semibold text-gray-400 hover:text-white hover:bg-[#131722] transition truncate cursor-pointer">
-                            📡 Cockpit UI &amp; Radar (3)
-                        </button>
-                        <button type="button" data-cat="Easter Eggs" onclick="filterCategory('Easter Eggs')" class="cat-btn text-left px-2.5 py-1.5 rounded-lg text-[11px] font-semibold text-gray-400 hover:text-white hover:bg-[#131722] transition truncate cursor-pointer">
-                            🕳️ 3 Easter Eggs (2)
-                        </button>
-                    </div>
+                    <div id="pcCategoryButtonsContainer" class="flex-1 flex flex-col justify-between gap-1"></div>
                 </div>
 
-                <!-- PANE 2 (PC): DEDICATED TOPIC QUESTIONS LIST (NEVER PUSHES CHAT DOWN) -->
+                <!-- PANE 2 (PC): DEDICATED TOPIC QUESTIONS LIST -->
                 <div class="hidden md:flex md:w-80 bg-[#0b0d13] border-r border-[#232836] flex-col min-h-0 shrink-0">
                     <div class="p-2.5 bg-[#0e1118] border-b border-[#232836] space-y-2 shrink-0">
                         <div class="flex items-center justify-between px-0.5">
                             <span id="pcExplorerHeaderTitle" class="text-[11px] font-bold text-white truncate">2. All Questions</span>
                             <span id="pcExplorerCountBadge" class="px-1.5 py-0.5 text-[9px] mono-num font-bold bg-sky-500/15 text-sky-300 border border-sky-500/30 rounded shrink-0">36</span>
                         </div>
-                        <input type="text" id="pcBankSearchInput" oninput="renderPcTopicExplorer(currentCategoryFilter)" placeholder="🔍 Filter questions by keyword..." class="w-full bg-[#07090d] border border-[#222838] focus:border-sky-500 rounded-lg px-2.5 py-1.5 text-[11px] text-white focus:outline-none selectable-text">
+                        <input type="text" id="pcBankSearchInput" oninput="renderPcTopicExplorer(currentCategoryFilter)" placeholder="🔍 Filter prebuilt questions..." class="w-full bg-[#07090d] border border-[#222838] focus:border-sky-500 rounded-lg px-2.5 py-1.5 text-[11px] text-white focus:outline-none selectable-text">
                     </div>
                     <!-- Independent Scrollable Question Cards for PC -->
                     <div id="pcQuestionListScroll" class="flex-1 p-2 overflow-y-auto space-y-1.5"></div>
@@ -406,7 +375,7 @@
                     <!-- A. Pinned Quick Starter Chips Bar (Single-Line Swipe on Android, Wrapped on PC) -->
                     <div id="pinnedQuickStartersBar" class="px-3 py-2 bg-[#0f131c] border-b border-[#232836] shrink-0">
                         <div class="flex items-center justify-between mb-1">
-                            <span class="text-[10px] font-bold text-gray-400 uppercase tracking-wider">⚡ Quick Starters (Tap to Ask):</span>
+                            <span class="text-[10px] font-bold text-gray-400 uppercase tracking-wider">⚡ Prebuilt Quick Starters (Tap to Ask):</span>
                             <span id="chatTurnCounter" class="text-[10px] mono-num text-sky-400 font-semibold">Ready</span>
                         </div>
                         <div class="flex md:flex-wrap items-center gap-1.5 overflow-x-auto no-scrollbar pb-0.5">
@@ -419,63 +388,43 @@
                             <button type="button" onclick="submitQuickPrompt('What is the Dual-Geometry Consistency (DGC) module and how is DGI calculated?')" class="px-2.5 py-1 bg-[#161b28] hover:bg-sky-500/20 border border-[#262f45] text-[#bae6fd] rounded-md text-[10px] font-medium transition cursor-pointer shrink-0 whitespace-nowrap">
                                 🔬 DGC &amp; DGI Explained
                             </button>
-                            <button type="button" onclick="submitQuickPrompt('How does the Phone Camera pipeline achieve full-bleed framing and zero lag?')" class="px-2.5 py-1 bg-[#161b28] hover:bg-sky-500/20 border border-[#262f45] text-[#bae6fd] rounded-md text-[10px] font-medium transition cursor-pointer shrink-0 whitespace-nowrap">
+                            <button type="button" onclick="submitQuickPrompt('How does the Phone Camera pipeline achieve full-bleed widescreen framing and zero lag?')" class="px-2.5 py-1 bg-[#161b28] hover:bg-sky-500/20 border border-[#262f45] text-[#bae6fd] rounded-md text-[10px] font-medium transition cursor-pointer shrink-0 whitespace-nowrap">
                                 📱 Phone Camera Engine
                             </button>
-                            <button type="button" onclick="submitQuickPrompt('How does Rider Pruning stop people on motorcycles from triggering false pedestrian alerts?')" class="px-2.5 py-1 bg-[#161b28] hover:bg-sky-500/20 border border-[#262f45] text-[#bae6fd] rounded-md text-[10px] font-medium transition cursor-pointer shrink-0 whitespace-nowrap">
+                            <button type="button" onclick="submitQuickPrompt('How does Hierarchical Cross-Class Semantic Rider Pruning eliminate false pedestrian alerts?')" class="px-2.5 py-1 bg-[#161b28] hover:bg-sky-500/20 border border-[#262f45] text-[#bae6fd] rounded-md text-[10px] font-medium transition cursor-pointer shrink-0 whitespace-nowrap">
                                 🏍️ Rider Pruning
                             </button>
                         </div>
                     </div>
 
-                    <!-- B. ANDROID UNIFIED SINGLE-SCREEN QUESTION BANK DECK (ALL 10 CATEGORIES + INLINE SHELF ON SAME SCREEN) -->
+                    <!-- B. ANDROID UNIFIED SINGLE-SCREEN TOPIC DOMAINS & QUESTION DECK (DYNAMIC COUNTS, ZERO TRUNCATION) -->
                     <div class="md:hidden bg-[#090b10] border-b border-[#232836] px-2.5 py-2 space-y-1.5 shrink-0">
-                        <!-- 10 Topic Pills in a Compact 5x2 Grid -->
-                        <div class="grid grid-cols-5 gap-1">
-                            <button type="button" data-cat="All" onclick="selectMobileCategoryInline('All')" class="mob-cat-btn active px-1 py-1 rounded text-[9.5px] font-bold bg-sky-500 text-black text-center truncate cursor-pointer shadow">
-                                🌐 All (36)
-                            </button>
-                            <button type="button" data-cat="Architecture & Hardware" onclick="selectMobileCategoryInline('Architecture & Hardware')" class="mob-cat-btn px-1 py-1 rounded text-[9.5px] font-semibold text-gray-300 bg-[#131722] border border-[#232836] text-center truncate cursor-pointer">
-                                ⚙️ Core (7)
-                            </button>
-                            <button type="button" data-cat="Depth & Geometry" onclick="selectMobileCategoryInline('Depth & Geometry')" class="mob-cat-btn px-1 py-1 rounded text-[9.5px] font-semibold text-gray-300 bg-[#131722] border border-[#232836] text-center truncate cursor-pointer">
-                                📐 Depth (4)
-                            </button>
-                            <button type="button" data-cat="DGC & DGI Consistency" onclick="selectMobileCategoryInline('DGC & DGI Consistency')" class="mob-cat-btn px-1 py-1 rounded text-[9.5px] font-semibold text-gray-300 bg-[#131722] border border-[#232836] text-center truncate cursor-pointer">
-                                🔬 DGC (4)
-                            </button>
-                            <button type="button" data-cat="IEEE Risk & Context" onclick="selectMobileCategoryInline('IEEE Risk & Context')" class="mob-cat-btn px-1 py-1 rounded text-[9.5px] font-semibold text-gray-300 bg-[#131722] border border-[#232836] text-center truncate cursor-pointer">
-                                ⚡ IEEE (4)
-                            </button>
-                            <button type="button" data-cat="Arbitration & Warnings" onclick="selectMobileCategoryInline('Arbitration & Warnings')" class="mob-cat-btn px-1 py-1 rounded text-[9.5px] font-semibold text-gray-300 bg-[#131722] border border-[#232836] text-center truncate cursor-pointer">
-                                🚨 Alerts (4)
-                            </button>
-                            <button type="button" data-cat="Disambiguation & Pruning" onclick="selectMobileCategoryInline('Disambiguation & Pruning')" class="mob-cat-btn px-1 py-1 rounded text-[9.5px] font-semibold text-gray-300 bg-[#131722] border border-[#232836] text-center truncate cursor-pointer">
-                                🛺 Riders (3)
-                            </button>
-                            <button type="button" data-cat="Streaming & Tunnels" onclick="selectMobileCategoryInline('Streaming & Tunnels')" class="mob-cat-btn px-1 py-1 rounded text-[9.5px] font-semibold text-gray-300 bg-[#131722] border border-[#232836] text-center truncate cursor-pointer">
-                                📡 Stream (5)
-                            </button>
-                            <button type="button" data-cat="Cockpit UI & Radar" onclick="selectMobileCategoryInline('Cockpit UI & Radar')" class="mob-cat-btn px-1 py-1 rounded text-[9.5px] font-semibold text-gray-300 bg-[#131722] border border-[#232836] text-center truncate cursor-pointer">
-                                📡 Radar (3)
-                            </button>
-                            <button type="button" data-cat="Easter Eggs" onclick="selectMobileCategoryInline('Easter Eggs')" class="mob-cat-btn px-1 py-1 rounded text-[9.5px] font-semibold text-gray-300 bg-[#131722] border border-[#232836] text-center truncate cursor-pointer">
-                                🕳️ Eggs (2)
+                        <!-- Mobile Topic Domains Header Bar (Matches PC's 1. Topic Domains + Count Badge) -->
+                        <div class="flex items-center justify-between px-0.5 pb-1 border-b border-[#191e2b]">
+                            <div class="flex items-center gap-1.5">
+                                <span class="text-[10px] font-bold text-gray-400 uppercase tracking-wider">1. Topic Domains</span>
+                                <span id="mobDomainCountBadge" class="px-1.5 py-0.5 text-[9px] mono-num font-bold bg-sky-500/15 text-sky-300 border border-sky-500/30 rounded">
+                                    10 Domains &bull; 36 Q&amp;As
+                                </span>
+                            </div>
+                            <button type="button" id="mobShelfToggleBtn" onclick="toggleMobileQuestionShelf()" class="px-2 py-0.5 rounded bg-[#151a26] text-[10px] font-semibold text-sky-300 border border-[#262f45] cursor-pointer">
+                                ▲ Hide List
                             </button>
                         </div>
 
-                        <!-- Inline Collapsible Question Shelf Header -->
-                        <div class="flex items-center justify-between px-1 pt-0.5">
+                        <!-- Dynamic 5x2 Modular Grid Where Every Category Name AND Number Badge Is 100% Visible -->
+                        <div id="mobileCategoryButtonsContainer" class="grid grid-cols-5 gap-1"></div>
+
+                        <!-- Active Category Subheader -->
+                        <div class="flex items-center justify-between px-0.5 pt-0.5">
                             <span id="mobInlineCatTitle" class="text-[10px] font-bold text-sky-300 uppercase tracking-wider truncate">
-                                📚 Topic Questions: All (36)
+                                📚 2. All Questions (36)
                             </span>
-                            <button type="button" id="mobShelfToggleBtn" onclick="toggleMobileQuestionShelf()" class="px-2 py-0.5 rounded bg-[#151a26] text-[10px] font-semibold text-gray-200 border border-[#262f45] cursor-pointer">
-                                ▲ Hide Questions
-                            </button>
+                            <span class="text-[9px] mono-num text-gray-400">Tap any question to ask</span>
                         </div>
 
                         <!-- Inline Question List (Same Screen, Auto-Tucks When Answering) -->
-                        <div id="mobileBankList" class="max-h-[124px] overflow-y-auto space-y-1 pr-0.5"></div>
+                        <div id="mobileBankList" class="max-h-[118px] overflow-y-auto space-y-1 pr-0.5"></div>
                     </div>
 
                     <!-- C. Pure Multi-Question Conversation Stream (Zero Top Clipping) -->
@@ -487,14 +436,14 @@
                     <!-- D. Question Input Bar + Subtle Disclaimer -->
                     <div class="px-3 pt-2 pb-2.5 bg-[#11141c] border-t border-[#232836] shrink-0">
                         <form onsubmit="handleChatSubmit(event)" class="flex items-center gap-2">
-                            <input type="text" id="aiSearchInput" placeholder="Ask Void AI any question..." class="flex-1 bg-[#08090d] border border-[#252b3b] focus:border-sky-500 rounded-xl px-3.5 py-2 text-xs text-white focus:outline-none font-medium selectable-text">
+                            <input type="text" id="aiSearchInput" placeholder="Select or type a prebuilt ADAS question..." class="flex-1 bg-[#08090d] border border-[#252b3b] focus:border-sky-500 rounded-xl px-3.5 py-2 text-xs text-white focus:outline-none font-medium selectable-text">
                             <button type="submit" class="px-4 py-2 bg-sky-500 hover:bg-sky-400 text-black font-bold text-xs rounded-xl transition cursor-pointer flex items-center gap-1 shrink-0 shadow-md">
                                 <span>Ask</span> 🤖
                             </button>
                         </form>
                         <div class="text-center pt-1 px-1">
                             <p class="text-[10px] text-gray-500 tracking-tight leading-snug">
-                                Void AI can make mistakes. Always verify critical ADAS telemetry and kinematic thresholds.
+                                Void AI answers strictly from the 36 verified RoadSense ADAS prebuilt telemetry questions.
                             </p>
                         </div>
                     </div>
@@ -519,7 +468,23 @@
     }
 
     // =========================================================================
-    // PURE DOMAIN KNOWLEDGE BASE FOR VOID AI (36 DETAILED, EASY-TO-UNDERSTAND Q&As)
+    // MODULAR TOPIC DOMAINS CONFIGURATION (USED DYNAMICALLY BY PC & MOBILE)
+    // =========================================================================
+    const TOPIC_DOMAINS = [
+        { key: "All", icon: "🌐", pcLabel: "All Questions", mobLabel: "All" },
+        { key: "Architecture & Hardware", icon: "⚙️", pcLabel: "Core & Hardware", mobLabel: "Core" },
+        { key: "Depth & Geometry", icon: "📐", pcLabel: "Depth & Geometry", mobLabel: "Depth" },
+        { key: "DGC & DGI Consistency", icon: "🔬", pcLabel: "DGC & DGI Math", mobLabel: "DGC" },
+        { key: "IEEE Risk & Context", icon: "⚡", pcLabel: "IEEE Risk & ASR", mobLabel: "IEEE" },
+        { key: "Arbitration & Warnings", icon: "🚨", pcLabel: "Arbitration & Alerts", mobLabel: "Alerts" },
+        { key: "Disambiguation & Pruning", icon: "🛺", pcLabel: "Rickshaw & Riders", mobLabel: "Riders" },
+        { key: "Streaming & Tunnels", icon: "📡", pcLabel: "Streaming & Tunnels", mobLabel: "Stream" },
+        { key: "Cockpit UI & Radar", icon: "📡", pcLabel: "Cockpit UI & Radar", mobLabel: "Radar" },
+        { key: "Easter Eggs", icon: "🕳️", pcLabel: "3 Easter Eggs", mobLabel: "Eggs" }
+    ];
+
+    // =========================================================================
+    // PURE DOMAIN KNOWLEDGE BASE FOR VOID AI (36 PREBUILT Q&As)
     // =========================================================================
     const AI_KNOWLEDGE_BASE = [
         // --- 1. ARCHITECTURE & HARDWARE (1–7) ---
@@ -1260,9 +1225,53 @@
     }
 
     // =========================================================================
-    // UNIFIED SINGLE-SCREEN ANDROID & PC CATEGORY + SHELF CONTROLLERS
+    // DYNAMIC MODULAR TOPIC DOMAIN BUILDER (PC & MOBILE WITH VISIBLE COUNTS)
     // =========================================================================
     let isMobileShelfVisible = true;
+
+    function getCategoryQuestionCount(catKey) {
+        if (catKey === 'All') return AI_KNOWLEDGE_BASE.length;
+        return AI_KNOWLEDGE_BASE.filter(item => item.category === catKey).length;
+    }
+
+    function buildDynamicDomainButtons() {
+        const pcContainer = document.getElementById('pcCategoryButtonsContainer');
+        const mobContainer = document.getElementById('mobileCategoryButtonsContainer');
+        const pcDomainBadge = document.getElementById('pcDomainTotalBadge');
+        const mobDomainBadge = document.getElementById('mobDomainCountBadge');
+
+        const domainCount = TOPIC_DOMAINS.length;
+        const totalQuestions = AI_KNOWLEDGE_BASE.length;
+
+        if (pcDomainBadge) pcDomainBadge.innerText = `${domainCount} Domains`;
+        if (mobDomainBadge) mobDomainBadge.innerText = `${domainCount} Domains • ${totalQuestions} Q&As`;
+
+        if (pcContainer) {
+            pcContainer.innerHTML = TOPIC_DOMAINS.map(dom => {
+                const count = getCategoryQuestionCount(dom.key);
+                return `
+                    <button type="button" data-cat="${escapeHtml(dom.key)}" onclick="filterCategory('${escapeHtml(dom.key)}')" class="cat-btn flex items-center justify-between gap-1.5 px-2.5 py-1.5 rounded-lg text-[11px] transition cursor-pointer w-full">
+                        <span class="truncate">${dom.icon} ${escapeHtml(dom.pcLabel)}</span>
+                        <span class="cat-count-pill px-1.5 py-0.5 text-[9px] mono-num font-bold rounded shrink-0">${count}</span>
+                    </button>
+                `;
+            }).join('');
+        }
+
+        if (mobContainer) {
+            mobContainer.innerHTML = TOPIC_DOMAINS.map(dom => {
+                const count = getCategoryQuestionCount(dom.key);
+                return `
+                    <button type="button" data-cat="${escapeHtml(dom.key)}" onclick="selectMobileCategoryInline('${escapeHtml(dom.key)}')" class="mob-cat-btn flex items-center justify-between gap-0.5 px-1.5 py-1 rounded-md text-[9.5px] transition cursor-pointer w-full overflow-hidden">
+                        <span class="truncate font-semibold">${dom.icon}${escapeHtml(dom.mobLabel)}</span>
+                        <span class="mob-count-pill px-1 py-0.2 text-[8.5px] mono-num font-bold rounded shrink-0">${count}</span>
+                    </button>
+                `;
+            }).join('');
+        }
+
+        updateCategoryHighlightButtons(currentCategoryFilter);
+    }
 
     function setMobileShelfVisibility(visible) {
         isMobileShelfVisible = visible;
@@ -1272,10 +1281,10 @@
 
         if (visible) {
             listEl.classList.remove('hidden');
-            toggleBtn.innerText = '▲ Hide Questions';
+            toggleBtn.innerText = '▲ Hide List';
         } else {
             listEl.classList.add('hidden');
-            toggleBtn.innerText = '▼ Show Questions';
+            toggleBtn.innerText = '▼ Show List';
         }
     }
 
@@ -1284,24 +1293,30 @@
     }
 
     function selectMobileCategoryInline(catName) {
-        filterMobileBankCategory(catName);
+        filterCategory(catName);
         setMobileShelfVisibility(true);
     }
 
     function updateCategoryHighlightButtons(catName) {
         document.querySelectorAll('.cat-btn').forEach(btn => {
+            const countPill = btn.querySelector('.cat-count-pill');
             if (btn.dataset.cat === catName) {
-                btn.className = "cat-btn active text-left px-2.5 py-1.5 rounded-lg text-[11px] font-bold bg-sky-500 text-black shadow transition truncate cursor-pointer";
+                btn.className = "cat-btn active flex items-center justify-between gap-1.5 px-2.5 py-1.5 rounded-lg text-[11px] font-bold bg-sky-500 text-black shadow transition cursor-pointer w-full";
+                if (countPill) countPill.className = "cat-count-pill px-1.5 py-0.5 text-[9px] mono-num font-extrabold bg-black/25 text-black rounded shrink-0";
             } else {
-                btn.className = "cat-btn text-left px-2.5 py-1.5 rounded-lg text-[11px] font-semibold text-gray-400 hover:text-white hover:bg-[#131722] transition truncate cursor-pointer";
+                btn.className = "cat-btn flex items-center justify-between gap-1.5 px-2.5 py-1.5 rounded-lg text-[11px] font-semibold text-gray-400 hover:text-white hover:bg-[#131722] transition cursor-pointer w-full";
+                if (countPill) countPill.className = "cat-count-pill px-1.5 py-0.5 text-[9px] mono-num font-bold bg-[#151a26] text-sky-300 border border-[#262f45] rounded shrink-0";
             }
         });
 
         document.querySelectorAll('.mob-cat-btn').forEach(btn => {
+            const countPill = btn.querySelector('.mob-count-pill');
             if (btn.dataset.cat === catName) {
-                btn.className = "mob-cat-btn active px-1 py-1 rounded text-[9.5px] font-bold bg-sky-500 text-black text-center truncate cursor-pointer shadow";
+                btn.className = "mob-cat-btn active flex items-center justify-between gap-0.5 px-1.5 py-1 rounded-md text-[9.5px] font-bold bg-sky-500 text-black shadow transition cursor-pointer w-full overflow-hidden";
+                if (countPill) countPill.className = "mob-count-pill px-1 text-[8.5px] mono-num font-extrabold bg-black/25 text-black rounded shrink-0";
             } else {
-                btn.className = "mob-cat-btn px-1 py-1 rounded text-[9.5px] font-semibold text-gray-300 bg-[#131722] border border-[#232836] text-center truncate cursor-pointer";
+                btn.className = "mob-cat-btn flex items-center justify-between gap-0.5 px-1.5 py-1 rounded-md text-[9.5px] font-semibold text-gray-300 bg-[#131722] border border-[#232836] transition cursor-pointer w-full overflow-hidden";
+                if (countPill) countPill.className = "mob-count-pill px-1 text-[8.5px] mono-num font-bold bg-sky-500/15 text-sky-300 rounded shrink-0";
             }
         });
     }
@@ -1321,7 +1336,7 @@
 
         if (titleEl) {
             const label = (catName === 'All') ? 'All Questions' : catName;
-            titleEl.innerText = `📚 ${label} (${filtered.length})`;
+            titleEl.innerText = `📚 2. ${label} (${filtered.length})`;
         }
 
         listEl.innerHTML = filtered.map(item => `
@@ -1387,7 +1402,7 @@
             <div class="recessed-well rounded-xl p-3 space-y-1.5 text-xs">
                 <div class="flex items-start gap-2">
                     <span class="mono-num text-sky-400 font-bold">01</span>
-                    <span class="text-gray-300"><strong class="text-white">Void AI (ADAS Bot):</strong> Ask multiple questions continuously from any category or via the Quick Starters bar above.</span>
+                    <span class="text-gray-300"><strong class="text-white">Strict Prebuilt ADAS Intelligence:</strong> Void AI answers exclusively from the 36 verified RoadSense ADAS engineering questions.</span>
                 </div>
                 <div class="flex items-start gap-2">
                     <span class="mono-num text-sky-400 font-bold">02</span>
@@ -1466,97 +1481,155 @@
     }
 
     // =========================================================================
-    // MODULE 5: VOID AI (ADAS BOT) SYNTHESIS ENGINE & MULTI-QUESTION STREAM
+    // MODULE 5: STRICT PREBUILT-ONLY VOID AI ENGINE + 6 RNG REJECTION MESSAGES
     // =========================================================================
     let currentCategoryFilter = 'All';
     let questionsAskedCount = 0;
+    let lastRejectionRngIndex = -1;
+
+    // 6 Distinct RNG Rejection Responses for Non-Prebuilt / Random Questions
+    const STRICT_REJECTION_POOL = [
+        {
+            badge: "Prebuilt Query Only",
+            text: "⚠️ **Unindexed Query Detected.** Void AI operates strictly on the **36 prebuilt RoadSense ADAS telemetry questions**. Free-form or off-topic prompts are disabled—please tap any question from **1. Topic Domains** or select one below:"
+        },
+        {
+            badge: "Telemetry Lock // 36 Q&As",
+            text: "🛰️ **Out of ADAS Neural Scope.** My perception weights are locked exclusively to our **36 built-in RoadSense ADAS engineering questions**. Pick a prebuilt question from the Question Bank or tap one below:"
+        },
+        {
+            badge: "Strict ADAS Protocol",
+            text: "🛑 **Unrecognized Prompt Signature.** Void AI only answers **prebuilt RoadSense ADAS questions** (covering YOLO perception, DGC depth math, IEEE risk, and Easter eggs). Tap a prebuilt question chip below to continue:"
+        },
+        {
+            badge: "Prebuilt Bank Required",
+            text: "🔬 **Query Rejected by Arbitrator.** Custom trivia and non-prebuilt inputs are blocked on this terminal. Please choose one of the **36 prebuilt questions** from the Topic Explorer or tap a verified question below:"
+        },
+        {
+            badge: "Corridor Filter Active",
+            text: "⚡ **Non-Prebuilt Input Pruned.** Just like Rider Pruning filters out false detections, Void AI filters out non-prebuilt prompts! Only the **36 built-in project questions** are accepted—tap any prebuilt topic below:"
+        },
+        {
+            badge: "ADAS Vault Restricted",
+            text: "🤖 **Restricted to Prebuilt Questions.** I am programmed to respond **strictly to the 36 official RoadSense ADAS questions**. Select a category under **1. Topic Domains (10)** or tap one of these prebuilt questions:"
+        }
+    ];
 
     class VoidAiEngine {
         constructor(knowledgeBase) {
             this.kb = knowledgeBase;
-            this.questionStarters = [
+            this.genericWords = new Set([
                 'what', 'how', 'why', 'where', 'when', 'who', 'which', 'can', 'does',
-                'is', 'are', 'will', 'do', 'explain', 'tell', 'show', 'describe',
-                'list', 'give', 'help', 'compare', 'calculate', 'define'
-            ];
+                'is', 'are', 'will', 'do', 'the', 'and', 'for', 'but', 'not', 'you',
+                'all', 'was', 'one', 'our', 'out', 'with', 'from', 'that', 'this',
+                'work', 'works', 'used', 'in', 'on', 'to', 'of', 'a', 'an', 'it', 'by', 'or', 'as', 'at', 'be'
+            ]);
         }
 
-        isValidQuestionInput(rawText) {
-            const text = rawText.trim();
-            if (text.length < 3) return false;
-            const words = text.toLowerCase().replace(/[^\w\s?]/g, '').split(/\s+/).filter(Boolean);
-            if (words.length === 0) return false;
-
-            const hasQuestionMark = text.includes('?');
-            const startsWithInterrogative = this.questionStarters.includes(words[0]);
-            const containsInterrogative = words.some(w => this.questionStarters.includes(w));
-            const matchesKnownTopic = this.kb.some(item => this.scoreMatch(text, item) >= 4);
-
-            return hasQuestionMark || startsWithInterrogative || containsInterrogative || (words.length >= 2 && matchesKnownTopic);
+        normalizeText(str) {
+            return str
+                .toLowerCase()
+                .replace(/[^a-z0-9\s]/g, ' ')
+                .replace(/\s+/g, ' ')
+                .trim();
         }
 
-        scoreMatch(userQuery, item) {
-            const stopWords = new Set(['the', 'and', 'for', 'are', 'but', 'not', 'you', 'all', 'can', 'her', 'was', 'one', 'our', 'out', 'how', 'what', 'why', 'does', 'with', 'from', 'that', 'this']);
-            const queryWords = userQuery.toLowerCase().replace(/[^\w\s]/g, '').split(/\s+/).filter(w => w.length > 1 && !stopWords.has(w));
-            if (queryWords.length === 0) return 0;
+        getDomainTokens(str) {
+            return this.normalizeText(str)
+                .split(' ')
+                .filter(w => w.length > 1 && !this.genericWords.has(w));
+        }
 
-            const qText = item.question.toLowerCase();
-            const aText = item.answer.toLowerCase();
-            const cText = item.category.toLowerCase();
+        findStrictPrebuiltMatch(rawQuery) {
+            const trimmed = rawQuery.trim();
+            const normQuery = this.normalizeText(trimmed);
+            if (!normQuery) return null;
 
-            let score = 0;
-            queryWords.forEach(word => {
-                if (qText.includes(word)) score += 4.5;
-                if (cText.includes(word)) score += 2.5;
-                if (aText.includes(word)) score += 1.5;
-            });
-
-            if (qText.includes(userQuery.toLowerCase().replace(/\?/g, '').trim())) {
-                score += 18;
+            // 1. Check direct #ID shorthand (e.g. "#1", "#35", "35")
+            const idMatch = trimmed.match(/^#?(\d{1,2})$/);
+            if (idMatch) {
+                const num = parseInt(idMatch[1], 10);
+                const byId = this.kb.find(item => item.id === num);
+                if (byId) return byId;
             }
-            return score;
+
+            // 2. Exact normalized match against the 36 prebuilt questions
+            for (const item of this.kb) {
+                if (this.normalizeText(item.question) === normQuery) {
+                    return item;
+                }
+            }
+
+            // 3. Strict prebuilt token verification:
+            //    Requires at least 3 domain-specific tokens, 100% of user's domain tokens must exist in the prebuilt question,
+            //    AND at least 75% of the prebuilt question's domain tokens must be present in the user's input.
+            const queryTokens = this.getDomainTokens(trimmed);
+            if (queryTokens.length < 3) return null;
+
+            let bestItem = null;
+            let bestCoverage = 0;
+
+            for (const item of this.kb) {
+                const itemTokens = this.getDomainTokens(item.question);
+                if (itemTokens.length === 0) continue;
+
+                const itemTokenSet = new Set(itemTokens);
+                const allUserTokensInQuestion = queryTokens.every(t => itemTokenSet.has(t));
+                if (!allUserTokensInQuestion) continue;
+
+                const matchedCount = itemTokens.filter(t => queryTokens.includes(t)).length;
+                const coverage = matchedCount / itemTokens.length;
+
+                if (coverage >= 0.75 && coverage > bestCoverage) {
+                    bestCoverage = coverage;
+                    bestItem = item;
+                }
+            }
+
+            return bestItem;
+        }
+
+        getRandomSampleQuestions(count = 3, excludeId = null) {
+            const pool = this.kb.filter(item => item.id !== excludeId);
+            const shuffled = [...pool].sort(() => 0.5 - Math.random());
+            return shuffled.slice(0, count);
+        }
+
+        getRngRejectionResponse() {
+            let rngIdx = Math.floor(Math.random() * STRICT_REJECTION_POOL.length);
+            if (STRICT_REJECTION_POOL.length > 1 && rngIdx === lastRejectionRngIndex) {
+                rngIdx = (rngIdx + 1) % STRICT_REJECTION_POOL.length;
+            }
+            lastRejectionRngIndex = rngIdx;
+
+            const chosen = STRICT_REJECTION_POOL[rngIdx];
+            return {
+                isRejected: true,
+                category: chosen.badge,
+                answer: chosen.text,
+                related: this.getRandomSampleQuestions(3)
+            };
         }
 
         generateResponse(query) {
-            const cleanQuery = query.trim();
-            if (!cleanQuery) return null;
+            const matchedItem = this.findStrictPrebuiltMatch(query);
 
-            if (!this.isValidQuestionInput(cleanQuery)) {
-                return {
-                    category: "Question Format Required",
-                    answer: "Please enter a **question** (for example, starting with *What, How, Why, Where,* or ending with a `?`).\n\nTry asking **Void AI** something like:\n• *\"What are all 3 Easter eggs in RoadSense ADAS?\"*\n• *\"How does the IEEE 5-Factor Base Risk equation work?\"*\n• *\"How does Rider Pruning stop false pedestrian alerts?\"*",
-                    related: [this.kb[34], this.kb[15], this.kb[24]]
-                };
+            if (!matchedItem) {
+                return this.getRngRejectionResponse();
             }
 
-            const scored = this.kb.map(item => ({
-                item,
-                score: this.scoreMatch(cleanQuery, item)
-            })).sort((a, b) => b.score - a.score);
-
-            const primary = scored[0];
-            const secondary = scored[1];
-
-            if (primary && primary.score >= 3.5) {
-                let synthesizedAnswer = primary.item.answer;
-                let categoryLabel = primary.item.category;
-
-                if (secondary && secondary.score >= primary.score * 0.78 && secondary.item.id !== primary.item.id) {
-                    synthesizedAnswer = `${primary.item.answer}\n\n---\n\n**Related Detail (${secondary.item.question}):**\n${secondary.item.answer}`;
-                    categoryLabel = `${primary.item.category} + Synthesis`;
-                }
-
-                return {
-                    category: categoryLabel,
-                    answer: synthesizedAnswer,
-                    related: scored.slice(1, 4).map(s => s.item).filter(s => s.score >= 2)
-                };
-            }
+            const sameCategoryOthers = this.kb.filter(
+                item => item.category === matchedItem.category && item.id !== matchedItem.id
+            );
+            const relatedList = sameCategoryOthers.length >= 2
+                ? sameCategoryOthers.slice(0, 3)
+                : [...sameCategoryOthers, ...this.getRandomSampleQuestions(3 - sameCategoryOthers.length, matchedItem.id)];
 
             return {
-                category: "Out of Project Scope",
-                answer: "I am **Void AI (ADAS Bot)**, specialized in the **RoadSense ADAS** architecture, monocular depth geometry, DGC consistency, IEEE 5-Factor risk math, real-time camera streaming pipelines, and our 3 Easter eggs.\n\nPlease ask a question related to the project, or select any topic in the Question Bank!",
-                related: [this.kb[0], this.kb[15], this.kb[34]]
+                isRejected: false,
+                category: `#${matchedItem.id} // ${matchedItem.category}`,
+                answer: matchedItem.answer,
+                related: relatedList.slice(0, 3)
             };
         }
     }
@@ -1570,12 +1643,12 @@
                 <div class="flex items-center justify-between gap-2">
                     <div class="flex items-center gap-2">
                         <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse shrink-0"></span>
-                        <h3 class="text-xs font-bold text-white uppercase tracking-wider">Void AI // ADAS Bot Ready</h3>
+                        <h3 class="text-xs font-bold text-white uppercase tracking-wider">Void AI // ADAS BOT</h3>
                     </div>
-                    <span class="text-[10px] mono-num text-sky-400 font-semibold">${total} Q&amp;As Indexed</span>
+                    <span class="text-[10px] mono-num text-sky-400 font-semibold">${TOPIC_DOMAINS.length} Domains &bull; ${total} Q&amp;As</span>
                 </div>
                 <p class="text-xs text-gray-300 leading-relaxed">
-                    Select any topic domain, tap any question card, use a <strong class="text-sky-300">Quick Starter</strong> above, or type below. You can ask multiple questions in a row!
+                    Select any topic domain from <strong class="text-white">1. Topic Domains</strong>, tap any prebuilt question card, or use a <strong class="text-sky-300">Quick Starter</strong> above. Void AI answers <strong class="text-amber-300">exclusively</strong> from our 36 prebuilt ADAS questions!
                 </p>
             </div>`;
     }
@@ -1597,7 +1670,7 @@
             filtered = filtered.filter(item =>
                 item.question.toLowerCase().includes(keyword) ||
                 item.category.toLowerCase().includes(keyword) ||
-                item.answer.toLowerCase().includes(keyword)
+                String(item.id) === keyword.replace('#', '')
             );
         }
 
@@ -1607,7 +1680,7 @@
         if (filtered.length === 0) {
             listEl.innerHTML = `
                 <div class="recessed-well p-3 rounded-xl text-center text-xs text-gray-400">
-                    No matching questions found.
+                    No matching prebuilt questions found.
                 </div>`;
             return;
         }
@@ -1624,9 +1697,7 @@
     }
 
     document.addEventListener('DOMContentLoaded', () => {
-        const total = AI_KNOWLEDGE_BASE.length;
-        const countAllEl = document.getElementById('countAll');
-        if (countAllEl) countAllEl.innerText = total;
+        buildDynamicDomainButtons();
 
         const welcomeSection = document.getElementById('welcomeStarterSection');
         if (welcomeSection) welcomeSection.innerHTML = getWelcomeStarterHtml();
@@ -1679,15 +1750,22 @@
         const res = voidAi.generateResponse(query);
         const dt = (performance.now() - t0).toFixed(2);
 
+        const badgeColorClass = res.isRejected
+            ? "bg-amber-500/15 text-amber-300 border-amber-500/40"
+            : "bg-sky-500/15 text-sky-300 border-sky-500/30";
+        const dotColorClass = res.isRejected ? "bg-amber-400" : "bg-emerald-400";
+        const panelBorderClass = res.isRejected ? "border-amber-500/35" : "border-[#2d364a]";
+        const followUpLabel = res.isRejected ? "Try One of These Prebuilt Questions:" : "Follow-Up Prebuilt Questions:";
+
         let relatedChipsHtml = "";
         if (res.related && res.related.length > 0) {
             relatedChipsHtml = `
                 <div class="pt-2 border-t border-[#1e2536] mt-2 space-y-1">
-                    <div class="text-[9px] font-bold text-gray-400 uppercase tracking-wider">Follow-Up Questions:</div>
+                    <div class="text-[9px] font-bold text-gray-400 uppercase tracking-wider">${followUpLabel}</div>
                     <div class="flex flex-wrap gap-1">
                         ${res.related.map(r => `
                             <button type="button" onclick="submitQuickPrompt('${escapeHtml(r.question)}')" class="px-2 py-1 bg-[#121622] hover:bg-sky-500/20 text-[10px] text-sky-300 border border-[#262d40] rounded-lg cursor-pointer transition text-left">
-                                ${escapeHtml(r.question)}
+                                #${r.id} ${escapeHtml(r.question)}
                             </button>
                         `).join('')}
                     </div>
@@ -1702,12 +1780,12 @@
                 </div>
             </div>
             <div class="flex justify-start">
-                <div class="w-full hardware-panel p-3.5 rounded-2xl text-xs space-y-1.5 border border-[#2d364a] shadow-xl">
+                <div class="w-full hardware-panel p-3.5 rounded-2xl text-xs space-y-1.5 border ${panelBorderClass} shadow-xl">
                     <div class="flex items-center justify-between border-b border-[#1f2535] pb-1.5 gap-2">
                         <div class="flex items-center gap-2 flex-wrap">
-                            <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+                            <span class="w-2 h-2 rounded-full ${dotColorClass} animate-pulse"></span>
                             <span class="font-bold text-white uppercase text-[11px] tracking-wider">Void AI // ADAS Bot</span>
-                            <span class="px-2 py-0.5 rounded bg-sky-500/15 text-sky-300 border border-sky-500/30 text-[9px] mono-num font-bold">${escapeHtml(res.category)}</span>
+                            <span class="px-2 py-0.5 rounded border text-[9px] mono-num font-bold ${badgeColorClass}">${escapeHtml(res.category)}</span>
                         </div>
                         <span class="text-[10px] text-gray-400 mono-num shrink-0">${dt}ms</span>
                     </div>
