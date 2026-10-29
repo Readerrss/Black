@@ -306,14 +306,14 @@
     </div>
 
     <!-- =========================================================================
-         VOID AI (ADAS BOT) MODAL — 3-PANE PC STUDIO & ZERO-SCROLL MOBILE SUITE
+         VOID AI (ADAS BOT) MODAL — 3-PANE PC STUDIO & UNIFIED SINGLE-SCREEN ANDROID
          ========================================================================= -->
     <div id="aiAgentModal" style="display: none;" class="fixed inset-0 bg-black/90 z-40 flex items-center justify-center p-2 sm:p-4 backdrop-blur-md">
-        <div class="hardware-panel w-full max-w-[460px] md:max-w-6xl h-[93dvh] max-h-[93dvh] md:h-[82dvh] md:max-h-[680px] rounded-2xl flex flex-col overflow-hidden border border-[#2d364a] shadow-2xl">
+        <div class="hardware-panel w-full max-w-[460px] md:max-w-6xl h-[94dvh] max-h-[94dvh] md:h-[82dvh] md:max-h-[680px] rounded-2xl flex flex-col overflow-hidden border border-[#2d364a] shadow-2xl">
             
-            <!-- 1. TOP HEADER BAR -->
-            <div class="px-3.5 py-2.5 bg-[#0d0f14] border-b border-[#232836] flex items-center justify-between gap-2 shrink-0">
-                <div class="flex items-center gap-2.5 min-w-0">
+            <!-- 1. TOP HEADER BAR (UNIFIED FOR ANDROID & PC — ZERO OVERLAP) -->
+            <div class="px-3 py-2.5 bg-[#0d0f14] border-b border-[#232836] flex items-center justify-between gap-2 shrink-0">
+                <div class="flex items-center gap-2 min-w-0">
                     <div class="w-8 h-8 rounded-xl bg-gradient-to-tr from-sky-500 to-indigo-500 border border-sky-400/40 flex items-center justify-center text-white font-bold text-sm shrink-0 shadow-[0_0_15px_rgba(56,189,248,0.35)]">
                         🤖
                     </div>
@@ -330,34 +330,21 @@
                     </div>
                 </div>
 
-                <!-- Right Action Buttons -->
+                <!-- Right Action Buttons (Field Note, Reset, Close on Both Android & PC) -->
                 <div class="flex items-center gap-1.5 shrink-0">
-                    <button type="button" onclick="openFieldNoteView()" class="hidden md:inline-flex px-2.5 py-1.5 bg-[#1b202c] hover:bg-[#252c3d] text-amber-300 border border-amber-500/30 rounded-lg text-[11px] font-semibold transition cursor-pointer">
-                        📋 Field Note
+                    <button type="button" onclick="renderFieldNoteInAi()" class="px-2.5 py-1.5 bg-[#1b202c] hover:bg-[#252c3d] text-amber-300 border border-amber-500/30 rounded-lg text-[11px] font-semibold transition cursor-pointer whitespace-nowrap">
+                        📋 <span class="hidden sm:inline">Field </span>Note
                     </button>
-                    <button type="button" onclick="clearChatStream()" class="px-2.5 py-1.5 bg-[#171b26] hover:bg-[#202636] text-gray-300 hover:text-white rounded-lg text-[11px] font-semibold transition border border-[#2d364a] cursor-pointer" title="Reset Chat & Select All Questions">
+                    <button type="button" onclick="clearChatStream()" class="px-2.5 py-1.5 bg-[#171b26] hover:bg-[#202636] text-gray-300 hover:text-white rounded-lg text-[11px] font-semibold transition border border-[#2d364a] cursor-pointer whitespace-nowrap" title="Reset Chat & Select All Questions">
                         ↺ Reset
                     </button>
-                    <button type="button" onclick="toggleAiAgentModal()" class="px-3 py-1.5 bg-red-600 hover:bg-red-500 text-white rounded-lg text-[11px] font-bold transition cursor-pointer shadow-sm">
+                    <button type="button" onclick="toggleAiAgentModal()" class="px-2.5 sm:px-3 py-1.5 bg-red-600 hover:bg-red-500 text-white rounded-lg text-[11px] font-bold transition cursor-pointer shadow-sm whitespace-nowrap">
                         ✕ Close
                     </button>
                 </div>
             </div>
 
-            <!-- 2. MOBILE 3-TAB SEGMENTED BAR (ONLY ON PHONES < md) -->
-            <div class="md:hidden px-2.5 py-1.5 bg-[#090b0f] border-b border-[#232836] grid grid-cols-3 gap-1.5 shrink-0">
-                <button type="button" id="mobTabChat" onclick="switchMobileAiTab('chat')" class="py-1.5 px-2 rounded-lg text-[11px] font-bold bg-sky-500 text-black text-center transition cursor-pointer shadow">
-                    💬 AI Chat
-                </button>
-                <button type="button" id="mobTabBank" onclick="switchMobileAiTab('bank')" class="py-1.5 px-2 rounded-lg text-[11px] font-semibold bg-[#131722] text-gray-300 border border-[#232836] text-center transition cursor-pointer">
-                    📚 Questions (<span id="mobCountAll">36</span>)
-                </button>
-                <button type="button" id="mobTabNote" onclick="switchMobileAiTab('note')" class="py-1.5 px-2 rounded-lg text-[11px] font-semibold bg-[#131722] text-amber-300 border border-amber-500/25 text-center transition cursor-pointer">
-                    📋 Field Note
-                </button>
-            </div>
-
-            <!-- 3. MAIN WORKSPACE: 3-PANE STUDIO ON PC, ULTRA-COMPACT TABS ON MOBILE -->
+            <!-- 2. MAIN WORKSPACE: 3-PANE STUDIO ON PC, UNIFIED SINGLE-SCREEN COCKPIT ON ANDROID -->
             <div class="flex-1 flex flex-col md:flex-row min-h-0 overflow-hidden relative">
 
                 <!-- PANE 1 (PC): LEFT CATEGORY SIDEBAR (ZERO SCROLLING, INSTANT BLUE SELECTION) -->
@@ -413,81 +400,91 @@
                     <div id="pcQuestionListScroll" class="flex-1 p-2 overflow-y-auto space-y-1.5"></div>
                 </div>
 
-                <!-- MOBILE DEDICATED QUESTION BANK VIEW (ULTRA-COMPACT = ZERO SCROLL FOR ANY CATEGORY) -->
-                <div id="mobileBankView" class="hidden md:hidden flex-1 flex flex-col min-h-0 bg-[#0b0d13] overflow-hidden">
-                    <div class="p-2 bg-[#0e1118] border-b border-[#232836] shrink-0">
-                        <div class="grid grid-cols-2 gap-1">
-                            <button type="button" data-cat="All" onclick="filterMobileBankCategory('All')" class="mob-cat-btn active text-left px-2 py-1 rounded-md text-[10px] font-bold bg-sky-500 text-black truncate cursor-pointer">
-                                🌐 All Topics (36)
-                            </button>
-                            <button type="button" data-cat="Architecture & Hardware" onclick="filterMobileBankCategory('Architecture & Hardware')" class="mob-cat-btn text-left px-2 py-1 rounded-md text-[10px] font-semibold text-gray-300 bg-[#131722] border border-[#232836] truncate cursor-pointer">
-                                ⚙️ Core &amp; Hardware (7)
-                            </button>
-                            <button type="button" data-cat="Depth & Geometry" onclick="filterMobileBankCategory('Depth & Geometry')" class="mob-cat-btn text-left px-2 py-1 rounded-md text-[10px] font-semibold text-gray-300 bg-[#131722] border border-[#232836] truncate cursor-pointer">
-                                📐 Depth &amp; Geometry (4)
-                            </button>
-                            <button type="button" data-cat="DGC & DGI Consistency" onclick="filterMobileBankCategory('DGC & DGI Consistency')" class="mob-cat-btn text-left px-2 py-1 rounded-md text-[10px] font-semibold text-gray-300 bg-[#131722] border border-[#232836] truncate cursor-pointer">
-                                🔬 DGC &amp; DGI Math (4)
-                            </button>
-                            <button type="button" data-cat="IEEE Risk & Context" onclick="filterMobileBankCategory('IEEE Risk & Context')" class="mob-cat-btn text-left px-2 py-1 rounded-md text-[10px] font-semibold text-gray-300 bg-[#131722] border border-[#232836] truncate cursor-pointer">
-                                ⚡ IEEE Risk &amp; ASR (4)
-                            </button>
-                            <button type="button" data-cat="Arbitration & Warnings" onclick="filterMobileBankCategory('Arbitration & Warnings')" class="mob-cat-btn text-left px-2 py-1 rounded-md text-[10px] font-semibold text-gray-300 bg-[#131722] border border-[#232836] truncate cursor-pointer">
-                                🚨 Arbitration &amp; Alerts (4)
-                            </button>
-                            <button type="button" data-cat="Disambiguation & Pruning" onclick="filterMobileBankCategory('Disambiguation & Pruning')" class="mob-cat-btn text-left px-2 py-1 rounded-md text-[10px] font-semibold text-gray-300 bg-[#131722] border border-[#232836] truncate cursor-pointer">
-                                🛺 Rickshaw &amp; Riders (3)
-                            </button>
-                            <button type="button" data-cat="Streaming & Tunnels" onclick="filterMobileBankCategory('Streaming & Tunnels')" class="mob-cat-btn text-left px-2 py-1 rounded-md text-[10px] font-semibold text-gray-300 bg-[#131722] border border-[#232836] truncate cursor-pointer">
-                                📡 Streaming &amp; Tunnels (5)
-                            </button>
-                            <button type="button" data-cat="Cockpit UI & Radar" onclick="filterMobileBankCategory('Cockpit UI & Radar')" class="mob-cat-btn text-left px-2 py-1 rounded-md text-[10px] font-semibold text-gray-300 bg-[#131722] border border-[#232836] truncate cursor-pointer">
-                                📡 Cockpit UI &amp; Radar (3)
-                            </button>
-                            <button type="button" data-cat="Easter Eggs" onclick="filterMobileBankCategory('Easter Eggs')" class="mob-cat-btn text-left px-2 py-1 rounded-md text-[10px] font-semibold text-gray-300 bg-[#131722] border border-[#232836] truncate cursor-pointer">
-                                🕳️ 3 Easter Eggs (2)
-                            </button>
-                        </div>
-                    </div>
-                    <!-- Compact Questions List for Mobile -->
-                    <div id="mobileBankList" class="flex-1 p-2 overflow-y-auto space-y-1.5"></div>
-                </div>
-
-                <!-- PANE 3 (PC & MOBILE): DEDICATED MULTI-QUESTION AI CONVERSATION STREAM -->
+                <!-- PANE 3 (PC & UNIFIED ANDROID SINGLE-SCREEN COCKPIT) -->
                 <div id="mainChatColumn" class="flex-1 flex flex-col min-h-0 bg-[#0c0e14]">
 
-                    <!-- Pinned Quick Starter Chips Bar (Always Accessible at Top of Chat Without Scrolling) -->
+                    <!-- A. Pinned Quick Starter Chips Bar (Single-Line Swipe on Android, Wrapped on PC) -->
                     <div id="pinnedQuickStartersBar" class="px-3 py-2 bg-[#0f131c] border-b border-[#232836] shrink-0">
                         <div class="flex items-center justify-between mb-1">
-                            <span class="text-[10px] font-bold text-gray-400 uppercase tracking-wider">⚡ Quick Starter Questions (Tap to Ask):</span>
+                            <span class="text-[10px] font-bold text-gray-400 uppercase tracking-wider">⚡ Quick Starters (Tap to Ask):</span>
                             <span id="chatTurnCounter" class="text-[10px] mono-num text-sky-400 font-semibold">Ready</span>
                         </div>
-                        <div class="flex flex-wrap gap-1">
-                            <button type="button" onclick="submitQuickPrompt('What are all 3 Easter eggs in RoadSense ADAS and how do I unlock them?')" class="px-2 py-1 bg-[#161b28] hover:bg-sky-500/20 border border-[#262f45] text-[#bae6fd] rounded-md text-[10px] font-medium transition cursor-pointer">
+                        <div class="flex md:flex-wrap items-center gap-1.5 overflow-x-auto no-scrollbar pb-0.5">
+                            <button type="button" onclick="submitQuickPrompt('What are all 3 Easter eggs in RoadSense ADAS and how do I unlock them?')" class="px-2.5 py-1 bg-[#161b28] hover:bg-sky-500/20 border border-[#262f45] text-[#bae6fd] rounded-md text-[10px] font-medium transition cursor-pointer shrink-0 whitespace-nowrap">
                                 🕳️ All 3 Easter Eggs
                             </button>
-                            <button type="button" onclick="submitQuickPrompt('How does the IEEE 5-Factor Base Risk equation work and what are all the weights?')" class="px-2 py-1 bg-[#161b28] hover:bg-sky-500/20 border border-[#262f45] text-[#bae6fd] rounded-md text-[10px] font-medium transition cursor-pointer">
+                            <button type="button" onclick="submitQuickPrompt('How does the IEEE 5-Factor Base Risk equation work and what are all the weights?')" class="px-2.5 py-1 bg-[#161b28] hover:bg-sky-500/20 border border-[#262f45] text-[#bae6fd] rounded-md text-[10px] font-medium transition cursor-pointer shrink-0 whitespace-nowrap">
                                 ⚡ IEEE 5-Factor Math
                             </button>
-                            <button type="button" onclick="submitQuickPrompt('What is the Dual-Geometry Consistency (DGC) module and how is DGI calculated?')" class="px-2 py-1 bg-[#161b28] hover:bg-sky-500/20 border border-[#262f45] text-[#bae6fd] rounded-md text-[10px] font-medium transition cursor-pointer">
+                            <button type="button" onclick="submitQuickPrompt('What is the Dual-Geometry Consistency (DGC) module and how is DGI calculated?')" class="px-2.5 py-1 bg-[#161b28] hover:bg-sky-500/20 border border-[#262f45] text-[#bae6fd] rounded-md text-[10px] font-medium transition cursor-pointer shrink-0 whitespace-nowrap">
                                 🔬 DGC &amp; DGI Explained
                             </button>
-                            <button type="button" onclick="submitQuickPrompt('How does the Phone Camera pipeline achieve full-bleed framing and zero lag?')" class="px-2 py-1 bg-[#161b28] hover:bg-sky-500/20 border border-[#262f45] text-[#bae6fd] rounded-md text-[10px] font-medium transition cursor-pointer">
+                            <button type="button" onclick="submitQuickPrompt('How does the Phone Camera pipeline achieve full-bleed framing and zero lag?')" class="px-2.5 py-1 bg-[#161b28] hover:bg-sky-500/20 border border-[#262f45] text-[#bae6fd] rounded-md text-[10px] font-medium transition cursor-pointer shrink-0 whitespace-nowrap">
                                 📱 Phone Camera Engine
                             </button>
-                            <button type="button" onclick="submitQuickPrompt('How does Rider Pruning stop people on motorcycles from triggering false pedestrian alerts?')" class="px-2 py-1 bg-[#161b28] hover:bg-sky-500/20 border border-[#262f45] text-[#bae6fd] rounded-md text-[10px] font-medium transition cursor-pointer">
+                            <button type="button" onclick="submitQuickPrompt('How does Rider Pruning stop people on motorcycles from triggering false pedestrian alerts?')" class="px-2.5 py-1 bg-[#161b28] hover:bg-sky-500/20 border border-[#262f45] text-[#bae6fd] rounded-md text-[10px] font-medium transition cursor-pointer shrink-0 whitespace-nowrap">
                                 🏍️ Rider Pruning
                             </button>
                         </div>
                     </div>
 
-                    <!-- Pure Multi-Question Conversation Stream (Zero Clutter) -->
-                    <div id="aiChatStream" class="flex-1 p-3 sm:p-3.5 overflow-y-auto space-y-3 font-normal selectable-text">
+                    <!-- B. ANDROID UNIFIED SINGLE-SCREEN QUESTION BANK DECK (ALL 10 CATEGORIES + INLINE SHELF ON SAME SCREEN) -->
+                    <div class="md:hidden bg-[#090b10] border-b border-[#232836] px-2.5 py-2 space-y-1.5 shrink-0">
+                        <!-- 10 Topic Pills in a Compact 5x2 Grid -->
+                        <div class="grid grid-cols-5 gap-1">
+                            <button type="button" data-cat="All" onclick="selectMobileCategoryInline('All')" class="mob-cat-btn active px-1 py-1 rounded text-[9.5px] font-bold bg-sky-500 text-black text-center truncate cursor-pointer shadow">
+                                🌐 All (36)
+                            </button>
+                            <button type="button" data-cat="Architecture & Hardware" onclick="selectMobileCategoryInline('Architecture & Hardware')" class="mob-cat-btn px-1 py-1 rounded text-[9.5px] font-semibold text-gray-300 bg-[#131722] border border-[#232836] text-center truncate cursor-pointer">
+                                ⚙️ Core (7)
+                            </button>
+                            <button type="button" data-cat="Depth & Geometry" onclick="selectMobileCategoryInline('Depth & Geometry')" class="mob-cat-btn px-1 py-1 rounded text-[9.5px] font-semibold text-gray-300 bg-[#131722] border border-[#232836] text-center truncate cursor-pointer">
+                                📐 Depth (4)
+                            </button>
+                            <button type="button" data-cat="DGC & DGI Consistency" onclick="selectMobileCategoryInline('DGC & DGI Consistency')" class="mob-cat-btn px-1 py-1 rounded text-[9.5px] font-semibold text-gray-300 bg-[#131722] border border-[#232836] text-center truncate cursor-pointer">
+                                🔬 DGC (4)
+                            </button>
+                            <button type="button" data-cat="IEEE Risk & Context" onclick="selectMobileCategoryInline('IEEE Risk & Context')" class="mob-cat-btn px-1 py-1 rounded text-[9.5px] font-semibold text-gray-300 bg-[#131722] border border-[#232836] text-center truncate cursor-pointer">
+                                ⚡ IEEE (4)
+                            </button>
+                            <button type="button" data-cat="Arbitration & Warnings" onclick="selectMobileCategoryInline('Arbitration & Warnings')" class="mob-cat-btn px-1 py-1 rounded text-[9.5px] font-semibold text-gray-300 bg-[#131722] border border-[#232836] text-center truncate cursor-pointer">
+                                🚨 Alerts (4)
+                            </button>
+                            <button type="button" data-cat="Disambiguation & Pruning" onclick="selectMobileCategoryInline('Disambiguation & Pruning')" class="mob-cat-btn px-1 py-1 rounded text-[9.5px] font-semibold text-gray-300 bg-[#131722] border border-[#232836] text-center truncate cursor-pointer">
+                                🛺 Riders (3)
+                            </button>
+                            <button type="button" data-cat="Streaming & Tunnels" onclick="selectMobileCategoryInline('Streaming & Tunnels')" class="mob-cat-btn px-1 py-1 rounded text-[9.5px] font-semibold text-gray-300 bg-[#131722] border border-[#232836] text-center truncate cursor-pointer">
+                                📡 Stream (5)
+                            </button>
+                            <button type="button" data-cat="Cockpit UI & Radar" onclick="selectMobileCategoryInline('Cockpit UI & Radar')" class="mob-cat-btn px-1 py-1 rounded text-[9.5px] font-semibold text-gray-300 bg-[#131722] border border-[#232836] text-center truncate cursor-pointer">
+                                📡 Radar (3)
+                            </button>
+                            <button type="button" data-cat="Easter Eggs" onclick="selectMobileCategoryInline('Easter Eggs')" class="mob-cat-btn px-1 py-1 rounded text-[9.5px] font-semibold text-gray-300 bg-[#131722] border border-[#232836] text-center truncate cursor-pointer">
+                                🕳️ Eggs (2)
+                            </button>
+                        </div>
+
+                        <!-- Inline Collapsible Question Shelf Header -->
+                        <div class="flex items-center justify-between px-1 pt-0.5">
+                            <span id="mobInlineCatTitle" class="text-[10px] font-bold text-sky-300 uppercase tracking-wider truncate">
+                                📚 Topic Questions: All (36)
+                            </span>
+                            <button type="button" id="mobShelfToggleBtn" onclick="toggleMobileQuestionShelf()" class="px-2 py-0.5 rounded bg-[#151a26] text-[10px] font-semibold text-gray-200 border border-[#262f45] cursor-pointer">
+                                ▲ Hide Questions
+                            </button>
+                        </div>
+
+                        <!-- Inline Question List (Same Screen, Auto-Tucks When Answering) -->
+                        <div id="mobileBankList" class="max-h-[124px] overflow-y-auto space-y-1 pr-0.5"></div>
+                    </div>
+
+                    <!-- C. Pure Multi-Question Conversation Stream (Zero Top Clipping) -->
+                    <div id="aiChatStream" class="flex-1 p-3 sm:p-3.5 overflow-y-auto font-normal selectable-text">
                         <div id="welcomeStarterSection"></div>
                         <div id="chatConversationStream" class="space-y-3"></div>
                     </div>
 
-                    <!-- Question Input Bar + Subtle Disclaimer -->
+                    <!-- D. Question Input Bar + Subtle Disclaimer -->
                     <div class="px-3 pt-2 pb-2.5 bg-[#11141c] border-t border-[#232836] shrink-0">
                         <form onsubmit="handleChatSubmit(event)" class="flex items-center gap-2">
                             <input type="text" id="aiSearchInput" placeholder="Ask Void AI any question..." class="flex-1 bg-[#08090d] border border-[#252b3b] focus:border-sky-500 rounded-xl px-3.5 py-2 text-xs text-white focus:outline-none font-medium selectable-text">
@@ -1257,61 +1254,38 @@
         modal.style.display = isHidden ? 'flex' : 'none';
         if (isHidden) {
             await enforceAiPortraitMode();
-            switchMobileAiTab('chat');
         } else {
             await enforceSpaceLandscapeMode();
         }
     }
 
     // =========================================================================
-    // MOBILE 3-TAB CONTROLLER (CHAT | QUESTION BANK | FIELD NOTE)
+    // UNIFIED SINGLE-SCREEN ANDROID & PC CATEGORY + SHELF CONTROLLERS
     // =========================================================================
-    function switchMobileAiTab(tabName) {
-        const mobTabChat = document.getElementById('mobTabChat');
-        const mobTabBank = document.getElementById('mobTabBank');
-        const mobTabNote = document.getElementById('mobTabNote');
-        const mobileBankView = document.getElementById('mobileBankView');
-        const mainChatColumn = document.getElementById('mainChatColumn');
+    let isMobileShelfVisible = true;
 
-        const activeClass = "py-1.5 px-2 rounded-lg text-[11px] font-bold bg-sky-500 text-black text-center transition cursor-pointer shadow";
-        const inactiveClass = "py-1.5 px-2 rounded-lg text-[11px] font-semibold bg-[#131722] text-gray-300 border border-[#232836] text-center transition cursor-pointer";
-        const noteInactiveClass = "py-1.5 px-2 rounded-lg text-[11px] font-semibold bg-[#131722] text-amber-300 border border-amber-500/25 text-center transition cursor-pointer";
+    function setMobileShelfVisibility(visible) {
+        isMobileShelfVisible = visible;
+        const listEl = document.getElementById('mobileBankList');
+        const toggleBtn = document.getElementById('mobShelfToggleBtn');
+        if (!listEl || !toggleBtn) return;
 
-        if (tabName === 'bank') {
-            if (mobTabChat) mobTabChat.className = inactiveClass;
-            if (mobTabBank) mobTabBank.className = activeClass;
-            if (mobTabNote) mobTabNote.className = noteInactiveClass;
-
-            mobileBankView?.classList.remove('hidden');
-            mobileBankView?.classList.add('flex');
-            mainChatColumn?.classList.add('hidden');
-            mainChatColumn?.classList.remove('flex');
-            filterMobileBankCategory(currentCategoryFilter || 'All');
-        } else if (tabName === 'note') {
-            if (mobTabChat) mobTabChat.className = inactiveClass;
-            if (mobTabBank) mobTabBank.className = inactiveClass;
-            if (mobTabNote) mobTabNote.className = "py-1.5 px-2 rounded-lg text-[11px] font-bold bg-amber-400 text-black text-center transition cursor-pointer shadow";
-
-            mobileBankView?.classList.add('hidden');
-            mobileBankView?.classList.remove('flex');
-            mainChatColumn?.classList.remove('hidden');
-            mainChatColumn?.classList.add('flex');
-            renderFieldNoteInAi();
+        if (visible) {
+            listEl.classList.remove('hidden');
+            toggleBtn.innerText = '▲ Hide Questions';
         } else {
-            // Default: 'chat'
-            if (mobTabChat) mobTabChat.className = activeClass;
-            if (mobTabBank) mobTabBank.className = inactiveClass;
-            if (mobTabNote) mobTabNote.className = noteInactiveClass;
-
-            mobileBankView?.classList.add('hidden');
-            mobileBankView?.classList.remove('flex');
-            mainChatColumn?.classList.remove('hidden');
-            mainChatColumn?.classList.add('flex');
+            listEl.classList.add('hidden');
+            toggleBtn.innerText = '▼ Show Questions';
         }
     }
 
-    function openFieldNoteView() {
-        switchMobileAiTab('note');
+    function toggleMobileQuestionShelf() {
+        setMobileShelfVisibility(!isMobileShelfVisible);
+    }
+
+    function selectMobileCategoryInline(catName) {
+        filterMobileBankCategory(catName);
+        setMobileShelfVisibility(true);
     }
 
     function updateCategoryHighlightButtons(catName) {
@@ -1325,9 +1299,9 @@
 
         document.querySelectorAll('.mob-cat-btn').forEach(btn => {
             if (btn.dataset.cat === catName) {
-                btn.className = "mob-cat-btn active text-left px-2 py-1 rounded-md text-[10px] font-bold bg-sky-500 text-black truncate cursor-pointer";
+                btn.className = "mob-cat-btn active px-1 py-1 rounded text-[9.5px] font-bold bg-sky-500 text-black text-center truncate cursor-pointer shadow";
             } else {
-                btn.className = "mob-cat-btn text-left px-2 py-1 rounded-md text-[10px] font-semibold text-gray-300 bg-[#131722] border border-[#232836] truncate cursor-pointer";
+                btn.className = "mob-cat-btn px-1 py-1 rounded text-[9.5px] font-semibold text-gray-300 bg-[#131722] border border-[#232836] text-center truncate cursor-pointer";
             }
         });
     }
@@ -1337,6 +1311,7 @@
         updateCategoryHighlightButtons(catName);
 
         const listEl = document.getElementById('mobileBankList');
+        const titleEl = document.getElementById('mobInlineCatTitle');
         if (!listEl) return;
 
         let filtered = AI_KNOWLEDGE_BASE;
@@ -1344,10 +1319,15 @@
             filtered = filtered.filter(item => item.category === catName);
         }
 
+        if (titleEl) {
+            const label = (catName === 'All') ? 'All Questions' : catName;
+            titleEl.innerText = `📚 ${label} (${filtered.length})`;
+        }
+
         listEl.innerHTML = filtered.map(item => `
-            <div onclick="selectQuestionFromMobileBank('${escapeHtml(item.question)}')" class="recessed-well px-2.5 py-2 rounded-xl border border-[#1d222f] active:border-sky-400 transition cursor-pointer flex items-center justify-between gap-2">
+            <div onclick="selectQuestionFromMobileBank('${escapeHtml(item.question)}')" class="recessed-well px-2.5 py-1.5 rounded-lg border border-[#1d222f] active:border-sky-400 transition cursor-pointer flex items-center justify-between gap-2">
                 <div class="min-w-0">
-                    <span class="text-[9px] mono-num font-bold text-sky-400 mr-1.5">#${item.id}</span>
+                    <span class="text-[9px] mono-num font-bold text-sky-400 mr-1">#${item.id}</span>
                     <span class="text-[11px] font-semibold text-white leading-snug">${escapeHtml(item.question)}</span>
                 </div>
                 <span class="text-[10px] text-sky-400 font-bold shrink-0">Ask →</span>
@@ -1357,8 +1337,23 @@
     }
 
     function selectQuestionFromMobileBank(qText) {
-        switchMobileAiTab('chat');
         submitQuickPrompt(qText);
+    }
+
+    // SCROLL HELPER: PREVENTS Q1 OR RESET FROM EVER OVERLAPPING THE TOP BORDER
+    function scrollChatToElementWithPadding(targetEl, isFirstTurn = false) {
+        const chatStream = document.getElementById('aiChatStream');
+        if (!chatStream || !targetEl) return;
+
+        if (isFirstTurn) {
+            chatStream.scrollTop = 0;
+            requestAnimationFrame(() => { chatStream.scrollTop = 0; });
+        } else {
+            requestAnimationFrame(() => {
+                const topOffset = Math.max(0, targetEl.offsetTop - 14);
+                chatStream.scrollTo({ top: topOffset, behavior: 'smooth' });
+            });
+        }
     }
 
     // DYNAMIC FIELD NOTE RENDERED INSIDE VOID AI CONVERSATION STREAM
@@ -1366,8 +1361,14 @@
         const convStream = document.getElementById('chatConversationStream');
         if (!convStream) return;
 
+        if (window.innerWidth < 768) {
+            setMobileShelfVisibility(false);
+        }
+
         const welcomeSection = document.getElementById('welcomeStarterSection');
         if (welcomeSection) welcomeSection.classList.add('hidden');
+
+        const isFirst = convStream.children.length === 0;
 
         const noteCard = document.createElement('div');
         noteCard.className = "hardware-panel p-3.5 rounded-2xl border border-amber-500/40 space-y-2.5 chat-bubble-anim shadow-xl";
@@ -1386,7 +1387,7 @@
             <div class="recessed-well rounded-xl p-3 space-y-1.5 text-xs">
                 <div class="flex items-start gap-2">
                     <span class="mono-num text-sky-400 font-bold">01</span>
-                    <span class="text-gray-300"><strong class="text-white">Void AI (ADAS Bot):</strong> Ask multiple questions continuously from any category or via the Quick Starter bar above.</span>
+                    <span class="text-gray-300"><strong class="text-white">Void AI (ADAS Bot):</strong> Ask multiple questions continuously from any category or via the Quick Starters bar above.</span>
                 </div>
                 <div class="flex items-start gap-2">
                     <span class="mono-num text-sky-400 font-bold">02</span>
@@ -1399,9 +1400,7 @@
             </div>
         `;
         convStream.appendChild(noteCard);
-        setTimeout(() => {
-            noteCard.scrollIntoView({ behavior: 'smooth', block: 'start' });
-        }, 25);
+        scrollChatToElementWithPadding(noteCard, isFirst);
     }
 
     function setColorPalette(idx) {
@@ -1576,7 +1575,7 @@
                     <span class="text-[10px] mono-num text-sky-400 font-semibold">${total} Q&amp;As Indexed</span>
                 </div>
                 <p class="text-xs text-gray-300 leading-relaxed">
-                    Select any topic on the left, click any question card, tap a <strong class="text-sky-300">Quick Starter</strong> above, or type below. You can ask multiple questions in a row!
+                    Select any topic domain, tap any question card, use a <strong class="text-sky-300">Quick Starter</strong> above, or type below. You can ask multiple questions in a row!
                 </p>
             </div>`;
     }
@@ -1627,9 +1626,7 @@
     document.addEventListener('DOMContentLoaded', () => {
         const total = AI_KNOWLEDGE_BASE.length;
         const countAllEl = document.getElementById('countAll');
-        const mobCountAllEl = document.getElementById('mobCountAll');
         if (countAllEl) countAllEl.innerText = total;
-        if (mobCountAllEl) mobCountAllEl.innerText = total;
 
         const welcomeSection = document.getElementById('welcomeStarterSection');
         if (welcomeSection) welcomeSection.innerHTML = getWelcomeStarterHtml();
@@ -1639,7 +1636,6 @@
     });
 
     function submitQuickPrompt(promptText) {
-        switchMobileAiTab('chat');
         const input = document.getElementById('aiSearchInput');
         if (input) {
             input.value = promptText;
@@ -1662,10 +1658,16 @@
         const convStream = document.getElementById('chatConversationStream');
         if (!convStream) return;
 
-        // Auto-hide the intro card once the first question is asked so the chat has maximum vertical room
+        // Auto-tuck mobile question shelf when answering so the chat stream gets maximum screen height
+        if (window.innerWidth < 768) {
+            setMobileShelfVisibility(false);
+        }
+
+        // Hide the welcome card once the first question is asked
         const welcomeSection = document.getElementById('welcomeStarterSection');
         if (welcomeSection) welcomeSection.classList.add('hidden');
 
+        const isFirstTurn = convStream.children.length === 0;
         questionsAskedCount++;
         const counterEl = document.getElementById('chatTurnCounter');
         if (counterEl) counterEl.innerText = `${questionsAskedCount} Asked`;
@@ -1719,10 +1721,8 @@
 
         convStream.appendChild(turnWrapper);
 
-        // Scroll smoothly so the top of the newly asked question & answer is immediately in view
-        setTimeout(() => {
-            turnWrapper.scrollIntoView({ behavior: 'smooth', block: 'start' });
-        }, 25);
+        // Scroll with preserved top padding so Q1 or post-reset never overlaps the top border
+        scrollChatToElementWithPadding(turnWrapper, isFirstTurn);
     }
 
     function filterCategory(catName) {
@@ -1733,6 +1733,7 @@
         if (searchInput) searchInput.value = '';
 
         renderPcTopicExplorer(catName);
+        filterMobileBankCategory(catName);
 
         const pcListEl = document.getElementById('pcQuestionListScroll');
         if (pcListEl) pcListEl.scrollTop = 0;
@@ -1750,7 +1751,7 @@
         if (searchInput) searchInput.value = '';
 
         updateCategoryHighlightButtons('All');
-        switchMobileAiTab('chat');
+        setMobileShelfVisibility(true);
 
         const welcomeSection = document.getElementById('welcomeStarterSection');
         if (welcomeSection) {
