@@ -2087,7 +2087,7 @@
         if (!convStream) return;
 
         // INTERCEPT SECRET 4TH EASTER EGG KEYWORD: "VOID"
-        const normalizedTrigger = query.trim().replace(/[^a-zA-Z]/g, '').toUpperCase();
+        const normalizedTrigger = query.trim()
         if (normalizedTrigger === 'VOID') {
             triggerVoidAnomalySequence(query.trim());
             return;
