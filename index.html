@@ -154,6 +154,93 @@
             user-select: text;
             -webkit-user-select: text;
         }
+
+        /* =========================================================
+           SECRET 4TH EASTER EGG ("VOID") GLITCH & SHIMMER ANIMATIONS
+           ========================================================= */
+        @keyframes voidChromaticGlitch {
+            0%, 100% {
+                transform: translate(0, 0) skewX(0deg);
+                text-shadow: -2px 0 #ff0055, 2px 0 #00f0ff;
+                filter: hue-rotate(0deg) contrast(1.15);
+            }
+            20% {
+                transform: translate(-2px, 1px) skewX(-3deg);
+                text-shadow: 3px 0 #ff0055, -3px 0 #00f0ff, 0 0 12px rgba(168, 85, 247, 0.8);
+            }
+            40% {
+                transform: translate(2px, -1px) skewX(4deg);
+                text-shadow: -3px -1px #00f0ff, 3px 1px #ff0055;
+                filter: hue-rotate(45deg) contrast(1.4);
+            }
+            60% {
+                transform: translate(-1px, -1px) skewX(-2deg);
+                text-shadow: 2px 1px #c084fc, -2px -1px #38bdf8;
+            }
+            80% {
+                transform: translate(1px, 2px) skewX(2deg);
+                text-shadow: -3px 0 #ff0055, 3px 0 #00f0ff;
+                filter: hue-rotate(-35deg) contrast(1.25);
+            }
+        }
+
+        @keyframes voidHoloShimmer {
+            0% { background-position: -200% 0; }
+            100% { background-position: 200% 0; }
+        }
+
+        @keyframes voidVaporizeOut {
+            0% {
+                opacity: 1;
+                transform: scale(1) skewX(0deg);
+                filter: brightness(1.4) blur(0px) hue-rotate(0deg);
+            }
+            35% {
+                opacity: 0.9;
+                transform: scale(1.03, 0.92) skewX(-8deg);
+                filter: brightness(2.6) blur(2px) hue-rotate(90deg);
+                box-shadow: 0 0 45px rgba(56, 189, 248, 0.95), 0 0 80px rgba(236, 72, 153, 0.8);
+            }
+            100% {
+                opacity: 0;
+                transform: scale(0.75, 0.05) translateY(-18px) skewX(18deg);
+                filter: brightness(3) blur(14px) hue-rotate(210deg);
+            }
+        }
+
+        .void-glitch-card {
+            background: linear-gradient(115deg, #090414 20%, #1e0b36 42%, #0c2d48 50%, #1e0b36 58%, #090414 80%) !important;
+            background-size: 240% 100% !important;
+            border: 1px solid rgba(192, 132, 252, 0.65) !important;
+            box-shadow: 0 0 28px rgba(168, 85, 247, 0.35), inset 0 0 18px rgba(56, 189, 248, 0.2) !important;
+            animation: voidHoloShimmer 1.6s linear infinite;
+        }
+
+        .void-glitch-text {
+            animation: voidChromaticGlitch 0.28s steps(2, end) infinite;
+        }
+
+        .void-vaporize-out {
+            animation: voidVaporizeOut 0.62s cubic-bezier(0.16, 1, 0.3, 1) forwards !important;
+            pointer-events: none !important;
+        }
+
+        @keyframes voidScreenFlash {
+            0% { opacity: 0; transform: scale(0.96); }
+            25% { opacity: 0.95; transform: scale(1.01); }
+            55% { opacity: 0.4; transform: scale(0.99); }
+            100% { opacity: 0; transform: scale(1.04); }
+        }
+        .void-screen-anomaly {
+            position: fixed;
+            inset: 0;
+            z-index: 9999;
+            pointer-events: none;
+            background: radial-gradient(circle at center, rgba(56, 189, 248, 0.25) 0%, rgba(168, 85, 247, 0.22) 45%, rgba(236, 72, 153, 0.12) 75%, transparent 100%);
+            border: 2px solid rgba(192, 132, 252, 0.75);
+            box-shadow: inset 0 0 80px rgba(56, 189, 248, 0.5);
+            animation: voidScreenFlash 0.85s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
     </style>
 </head>
 <body class="mode-space">
@@ -712,7 +799,7 @@
             "id": 35,
             "category": "Easter Eggs",
             "question": "What are all 3 Easter eggs in RoadSense ADAS and how do I unlock them?",
-            "answer": "RoadSense ADAS has **3 hidden Easter eggs** triggered from the main ADAS Cockpit:\n\n1. **🕳️ Easter Egg #1 — Black Hole Singularity (10 Clicks on `Online`):** In the main ADAS Cockpit header, click the green `Online` badge **10 times** to trigger a sub-bass gravitational implosion, violet screen ripple, and open the **`Black Hole Simulation`**.\n2. **🎬 Easter Egg #2 — Credits & RNG Redeem Portal (5 Clicks on `Session:`):** In the main ADAS Cockpit header, click the `Session:` timer badge **5 times** for a 3D mechanical slot-reel jitter, 4-note golden jackpot chime, and open **`Credits Page`**.\n3. **🌌 Easter Egg #3 — Deep Space Room & Void AI Suite (5 Clicks on `Beta Release` inside the Main Cockpit's `Field Note`):** Open `Field Note` in the main ADAS Cockpit and tap the **`Beta Release`** badge **5 times** to launch this **`Deep Space Room & Void AI Suite`**!"
+            "answer": "RoadSense ADAS has **3 official Easter eggs** triggered from the main ADAS Cockpit:\n\n1. **🕳️ Easter Egg #1 — Black Hole Singularity (10 Clicks on `Online`):** In the main ADAS Cockpit header, click the green `Online` badge **10 times** to trigger a sub-bass gravitational implosion, violet screen ripple, and open the **`Black Hole Simulation`**.\n2. **🎬 Easter Egg #2 — Credits & RNG Redeem Portal (5 Clicks on `Session:`):** In the main ADAS Cockpit header, click the `Session:` timer badge **5 times** for a 3D mechanical slot-reel jitter, 4-note golden jackpot chime, and open **`Credits Page`**.\n3. **🌌 Easter Egg #3 — Deep Space Room & Void AI Suite (5 Clicks on `Beta Release` inside the Main Cockpit's `Field Note`):** Open `Field Note` in the main ADAS Cockpit and tap the **`Beta Release`** badge **5 times** to launch this **`Deep Space Room & Void AI Suite`**!\n\n📡 **CLASSIFIED ANOMALY NOTE [SECTOR 0x00]:** * Deep within the neural weights lies a mysterious, unindexed **4th hidden protocol**—a high-velocity **deep-space racing simulation** that officially does not exist. No button or menu will ever reveal it. If you dare to breach the event horizon, type the Architect's true moniker—`VOID`—directly into this AI terminal...*"
         },
         {
             "id": 36,
@@ -1481,7 +1568,198 @@
     }
 
     // =========================================================================
-    // MODULE 5: STRICT PREBUILT-ONLY VOID AI ENGINE + 6 RNG REJECTION MESSAGES
+    // MODULE 5: SECRET 4TH EASTER EGG ("VOID") — GLITCH TRANSMISSION & AUDIO FX
+    // =========================================================================
+    const SECRET_VOID_URL = "https://readerrss.github.io/Galaxy-Racer/";
+
+    // Sound 1: Cyberpunk Dimensional Breach & Glitch Arpeggio (Played on Redirect)
+    function playVoidRedirectSound() {
+        try {
+            const actx = getAudioCtx();
+            const now = actx.currentTime;
+
+            // Sub-bass dimensional tear
+            const subOsc = actx.createOscillator();
+            const subGain = actx.createGain();
+            subOsc.type = 'sawtooth';
+            subOsc.frequency.setValueAtTime(95, now);
+            subOsc.frequency.exponentialRampToValueAtTime(1480, now + 0.55);
+            subOsc.frequency.exponentialRampToValueAtTime(48, now + 0.9);
+            subGain.gain.setValueAtTime(0.32, now);
+            subGain.gain.exponentialRampToValueAtTime(0.001, now + 0.92);
+            subOsc.connect(subGain);
+            subGain.connect(actx.destination);
+            subOsc.start(now);
+            subOsc.stop(now + 0.92);
+
+            // Rapid cybernetic glitch telemetry pulses
+            const glitchFreqs = [340, 880, 520, 1640, 690, 2120, 1280, 2600];
+            glitchFreqs.forEach((freq, idx) => {
+                const osc = actx.createOscillator();
+                const gain = actx.createGain();
+                const st = now + idx * 0.065;
+                osc.type = idx % 2 === 0 ? 'square' : 'sawtooth';
+                osc.frequency.setValueAtTime(freq, st);
+                gain.gain.setValueAtTime(0.14, st);
+                gain.gain.exponentialRampToValueAtTime(0.001, st + 0.06);
+                osc.connect(gain);
+                gain.connect(actx.destination);
+                osc.start(st);
+                osc.stop(st + 0.062);
+            });
+        } catch (e) {}
+    }
+
+    // Sound 2: Quantum Shimmer De-Materialization Chime (Played ONLY if user is in AI tab when disappearing)
+    function playVoidVanishSound() {
+        try {
+            const modal = document.getElementById('aiAgentModal');
+            const isAiTabActiveAndVisible = !document.hidden && modal && modal.style.display !== 'none';
+            if (!isAiTabActiveAndVisible) return;
+
+            const actx = getAudioCtx();
+            const now = actx.currentTime;
+
+            // Descending crystalline phase-out chord
+            const vanishNotes = [1760, 1318.5, 987.77, 659.25, 329.63];
+            vanishNotes.forEach((freq, idx) => {
+                const osc = actx.createOscillator();
+                const gain = actx.createGain();
+                const st = now + idx * 0.055;
+                osc.type = 'sine';
+                osc.frequency.setValueAtTime(freq, st);
+                osc.frequency.exponentialRampToValueAtTime(freq * 0.72, st + 0.35);
+                gain.gain.setValueAtTime(0.18, st);
+                gain.gain.exponentialRampToValueAtTime(0.001, st + 0.36);
+                osc.connect(gain);
+                gain.connect(actx.destination);
+                osc.start(st);
+                osc.stop(st + 0.38);
+            });
+        } catch (e) {}
+    }
+
+    function generateCorruptedVoidMatrixString() {
+        const glyphs = "▓▒░█▄▀■□▪▫▲▼◆◇○●◎★☆⚡⟁⌬⧗⧖⟠₡₢₣₤₥₦₧₨₩₪₫€₭₮₯₰₱₲₳₴₵₶₷₸₹₺₻₼₽₾₿0123456789ABCDEF";
+        const zalgo = ["̸", "̡", "̢", "̧", "̨", "̛", "̠", "̡", "̢", "̣", "̤", "̥", "̦", "̩", "̪", "̫", "̬", "̭", "̮", "̯", "̰", "̱", "̲", "̳", "̴", "̵", "̶", "̷", "̸", "̹", "̺", "̻", "̼", "̽", "̾", "̿", "̀", "́", "̂", "̃", "̄", "̅", "̆", "̇", "̈"];
+        const fragments = [
+            "0x7F_V01D_SINGULARITY_BREACH",
+            "ERR_NEURAL_HORIZON_OVERFLOW",
+            "SYS_TELEMETRY_CORRUPTED_//_SECTOR_00",
+            "RELATIVISTIC_VECTOR_UNLOCKED",
+            "BYPASSING_ADAS_ARBITRATOR_CORE"
+        ];
+
+        let lines = [];
+        for (let lineIdx = 0; lineIdx < 3; lineIdx++) {
+            let segment = "";
+            for (let i = 0; i < 28; i++) {
+                const g = glyphs.charAt(Math.floor(Math.random() * glyphs.length));
+                const z = zalgo[Math.floor(Math.random() * zalgo.length)];
+                segment += (i % 3 === 0) ? (g + z) : g;
+            }
+            const tag = fragments[(lineIdx + Math.floor(Math.random() * fragments.length)) % fragments.length];
+            lines.push(`[0x0${lineIdx * 4}F] ${segment.slice(0, 14)} // ${tag} // ${segment.slice(14)}`);
+        }
+        return lines.join("<br>");
+    }
+
+    function triggerVoidAnomalySequence(rawInput) {
+        const convStream = document.getElementById('chatConversationStream');
+        if (!convStream) return;
+
+        if (window.innerWidth < 768) {
+            setMobileShelfVisibility(false);
+        }
+
+        const welcomeSection = document.getElementById('welcomeStarterSection');
+        if (welcomeSection) welcomeSection.classList.add('hidden');
+
+        const isFirstTurn = convStream.children.length === 0;
+        questionsAskedCount++;
+        const counterEl = document.getElementById('chatTurnCounter');
+        if (counterEl) counterEl.innerText = `${questionsAskedCount} Asked`;
+
+        // Spawn full-screen anomaly flash
+        const flashEl = document.createElement('div');
+        flashEl.className = 'void-screen-anomaly';
+        document.body.appendChild(flashEl);
+        setTimeout(() => flashEl.remove(), 900);
+
+        const turnWrapper = document.createElement('div');
+        turnWrapper.className = "space-y-2.5 chat-bubble-anim";
+
+        const glitchTextId = `voidGlitchMatrix_${Date.now()}`;
+
+        // Render glitched, unintelligible response with ZERO buttons
+        turnWrapper.innerHTML = `
+            <div class="flex justify-end">
+                <div class="max-w-xl bg-purple-600/25 border border-purple-400/50 text-purple-100 px-3 py-2 rounded-2xl text-xs shadow-md void-glitch-text">
+                    <span class="text-[9px] font-bold text-purple-300 mono-num uppercase mr-1.5">0x00:</span>
+                    <span class="font-bold tracking-widest">${escapeHtml(rawInput)}</span>
+                </div>
+            </div>
+            <div class="flex justify-start">
+                <div class="w-full hardware-panel void-glitch-card p-3.5 rounded-2xl text-xs space-y-2 shadow-2xl">
+                    <div class="flex items-center justify-between border-b border-purple-400/30 pb-1.5 gap-2">
+                        <div class="flex items-center gap-2 flex-wrap">
+                            <span class="w-2 h-2 rounded-full bg-fuchsia-400 animate-ping"></span>
+                            <span class="font-bold text-white uppercase text-[11px] tracking-wider void-glitch-text">V̷O̸I̵D̴ ̷A̵N̶O̸M̷A̵L̶Y̸ // 0x7F_BREACH</span>
+                            <span class="px-2 py-0.5 rounded border border-fuchsia-400/50 bg-fuchsia-500/20 text-fuchsia-200 text-[9px] mono-num font-bold">SIGNAL_CORRUPTED</span>
+                        </div>
+                        <span class="text-[10px] text-cyan-300 mono-num shrink-0">ERR_NaN_ms</span>
+                    </div>
+                    <div id="${glitchTextId}" class="mono-num text-[11px] text-cyan-200 leading-relaxed break-all void-glitch-text py-1">
+                        ${generateCorruptedVoidMatrixString()}
+                    </div>
+                </div>
+            </div>
+        `;
+
+        convStream.appendChild(turnWrapper);
+        scrollChatToElementWithPadding(turnWrapper, isFirstTurn);
+
+        // Live 60ms glyph scrambler so the text is actively glitching and unreadable
+        const scrambleTimer = setInterval(() => {
+            const matrixEl = document.getElementById(glitchTextId);
+            if (matrixEl) {
+                matrixEl.innerHTML = generateCorruptedVoidMatrixString();
+            }
+        }, 75);
+
+        // Play redirect sound & launch secret URL
+        playVoidRedirectSound();
+
+        setTimeout(() => {
+            const win = window.open(SECRET_VOID_URL, '_blank');
+            if (!win) {
+                window.location.href = SECRET_VOID_URL;
+            }
+
+            // 3 seconds AFTER redirecting: shimmer, play vanish sound (if still on AI tab), and erase message
+            setTimeout(() => {
+                clearInterval(scrambleTimer);
+                playVoidVanishSound();
+                turnWrapper.classList.add('void-vaporize-out');
+
+                setTimeout(() => {
+                    turnWrapper.remove();
+                    questionsAskedCount = Math.max(0, questionsAskedCount - 1);
+                    const cEl = document.getElementById('chatTurnCounter');
+                    if (cEl) {
+                        cEl.innerText = questionsAskedCount > 0 ? `${questionsAskedCount} Asked` : 'Ready';
+                    }
+                    if (convStream.children.length === 0) {
+                        const wSec = document.getElementById('welcomeStarterSection');
+                        if (wSec) wSec.classList.remove('hidden');
+                    }
+                }, 620);
+            }, 3000);
+        }, 650);
+    }
+
+    // =========================================================================
+    // MODULE 6: STRICT PREBUILT-ONLY VOID AI ENGINE + 6 RNG REJECTION MESSAGES
     // =========================================================================
     let currentCategoryFilter = 'All';
     let questionsAskedCount = 0;
@@ -1728,6 +2006,13 @@
     function processVoidAiQuery(query) {
         const convStream = document.getElementById('chatConversationStream');
         if (!convStream) return;
+
+        // INTERCEPT SECRET 4TH EASTER EGG KEYWORD: "VOID"
+        const normalizedTrigger = query.trim().replace(/[^a-zA-Z]/g, '').toUpperCase();
+        if (normalizedTrigger === 'VOID') {
+            triggerVoidAnomalySequence(query.trim());
+            return;
+        }
 
         // Auto-tuck mobile question shelf when answering so the chat stream gets maximum screen height
         if (window.innerWidth < 768) {
