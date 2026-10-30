@@ -161,26 +161,26 @@
         @keyframes voidChromaticGlitch {
             0%, 100% {
                 transform: translate(0, 0) skewX(0deg);
-                text-shadow: -2px 0 #ff0055, 2px 0 #00f0ff;
-                filter: hue-rotate(0deg) contrast(1.15);
+                text-shadow: -1.5px 0 #ff0055, 1.5px 0 #00f0ff;
+                filter: hue-rotate(0deg) contrast(1.12);
             }
             20% {
-                transform: translate(-2px, 1px) skewX(-3deg);
-                text-shadow: 3px 0 #ff0055, -3px 0 #00f0ff, 0 0 12px rgba(168, 85, 247, 0.8);
+                transform: translate(-1.5px, 0.5px) skewX(-2.5deg);
+                text-shadow: 2.5px 0 #ff0055, -2.5px 0 #00f0ff, 0 0 10px rgba(168, 85, 247, 0.75);
             }
             40% {
-                transform: translate(2px, -1px) skewX(4deg);
-                text-shadow: -3px -1px #00f0ff, 3px 1px #ff0055;
-                filter: hue-rotate(45deg) contrast(1.4);
+                transform: translate(1.5px, -0.5px) skewX(3deg);
+                text-shadow: -2.5px -1px #00f0ff, 2.5px 1px #ff0055;
+                filter: hue-rotate(35deg) contrast(1.3);
             }
             60% {
-                transform: translate(-1px, -1px) skewX(-2deg);
-                text-shadow: 2px 1px #c084fc, -2px -1px #38bdf8;
+                transform: translate(-1px, -0.5px) skewX(-1.5deg);
+                text-shadow: 1.5px 1px #c084fc, -1.5px -1px #38bdf8;
             }
             80% {
-                transform: translate(1px, 2px) skewX(2deg);
-                text-shadow: -3px 0 #ff0055, 3px 0 #00f0ff;
-                filter: hue-rotate(-35deg) contrast(1.25);
+                transform: translate(1px, 1px) skewX(1.5deg);
+                text-shadow: -2px 0 #ff0055, 2px 0 #00f0ff;
+                filter: hue-rotate(-30deg) contrast(1.2);
             }
         }
 
@@ -217,7 +217,7 @@
         }
 
         .void-glitch-text {
-            animation: voidChromaticGlitch 0.28s steps(2, end) infinite;
+            animation: voidChromaticGlitch 0.32s steps(2, end) infinite;
         }
 
         .void-vaporize-out {
@@ -542,16 +542,35 @@
 
 <script>
     // =========================================================================
-    // HELPER: MARKDOWN & CODE PARSER FOR VOID AI RESPONSES
+    // HELPER: MARKDOWN & ENDLESS GLITCH NOTE PARSER FOR VOID AI RESPONSES
     // =========================================================================
     function formatMarkdown(str) {
         if (!str) return '';
-        return str
+        let formatted = str
             .replace(/`([^`]+)`/g, '<code class="px-1.5 py-0.5 bg-[#080a0f] text-sky-300 border border-[#1f2637] rounded mono-num text-[11px]">$1</code>')
             .replace(/\*\*(.*?)\*\*/g, '<strong class="text-white font-semibold">$1</strong>')
             .replace(/\*(.*?)\*/g, '<em class="text-sky-200">$1</em>')
             .replace(/\n\n/g, '<br><br>')
             .replace(/\n/g, '<br>');
+
+        // Replace placeholder with the endless alternating glitch-to-reveal anomaly note box
+        if (formatted.includes('[[VOID_ENDLESS_ANOMALY_NOTE]]')) {
+            const endlessBoxHtml = `
+                <div class="void-glitch-card mt-3 p-3 rounded-xl border border-fuchsia-500/60 space-y-1.5 shadow-lg">
+                    <div class="flex items-center justify-between border-b border-purple-400/30 pb-1 gap-2">
+                        <span class="text-[10px] mono-num font-extrabold uppercase text-fuchsia-300 void-glitch-text tracking-wider">
+                            📡 CLASSIFIED ANOMALY NOTE [SECTOR 0x00]
+                        </span>
+                        <span class="void-endless-note-badge px-1.5 py-0.5 text-[8.5px] mono-num font-bold rounded bg-fuchsia-500/20 text-cyan-200 border border-fuchsia-400/40 shrink-0">
+                            0x7F_GLITCH_LOOP
+                        </span>
+                    </div>
+                    <div class="void-endless-note-body mono-num text-[11px] leading-relaxed text-cyan-200 void-glitch-text min-h-[54px] break-words"></div>
+                </div>
+            `;
+            formatted = formatted.replace('[[VOID_ENDLESS_ANOMALY_NOTE]]', endlessBoxHtml);
+        }
+        return formatted;
     }
 
     // =========================================================================
@@ -799,7 +818,7 @@
             "id": 35,
             "category": "Easter Eggs",
             "question": "What are all 3 Easter eggs in RoadSense ADAS and how do I unlock them?",
-            "answer": "RoadSense ADAS has **3 official Easter eggs** triggered from the main ADAS Cockpit:\n\n1. **🕳️ Easter Egg #1 — Black Hole Singularity (10 Clicks on `Online`):** In the main ADAS Cockpit header, click the green `Online` badge **10 times** to trigger a sub-bass gravitational implosion, violet screen ripple, and open the **`Black Hole Simulation`**.\n2. **🎬 Easter Egg #2 — Credits & RNG Redeem Portal (5 Clicks on `Session:`):** In the main ADAS Cockpit header, click the `Session:` timer badge **5 times** for a 3D mechanical slot-reel jitter, 4-note golden jackpot chime, and open **`Credits Page`**.\n3. **🌌 Easter Egg #3 — Deep Space Room & Void AI Suite (5 Clicks on `Beta Release` inside the Main Cockpit's `Field Note`):** Open `Field Note` in the main ADAS Cockpit and tap the **`Beta Release`** badge **5 times** to launch this **`Deep Space Room & Void AI Suite`**!\n\n📡 **CLASSIFIED ANOMALY NOTE [SECTOR 0x00]:** * Deep within the neural weights lies a mysterious, unindexed **4th hidden protocol**—a high-velocity **deep-space racing simulation** that officially does not exist. No button or menu will ever reveal it. If you dare to breach the event horizon, type the Architect's true moniker—`VOID`—directly into this AI terminal...*"
+            "answer": "RoadSense ADAS has **3 official Easter eggs** triggered from the main ADAS Cockpit:\n\n1. **🕳️ Easter Egg #1 — Black Hole Singularity (10 Clicks on `Online`):** In the main ADAS Cockpit header, click the green `Online` badge **10 times** to trigger a sub-bass gravitational implosion, violet screen ripple, and open the **`Black Hole Simulation`**.\n2. **🎬 Easter Egg #2 — Credits & RNG Redeem Portal (5 Clicks on `Session:`):** In the main ADAS Cockpit header, click the `Session:` timer badge **5 times** for a 3D mechanical slot-reel jitter, 4-note golden jackpot chime, and open **`Credits Page`**.\n3. **🌌 Easter Egg #3 — Deep Space Room & Void AI Suite (5 Clicks on `Beta Release` inside the Main Cockpit's `Field Note`):** Open `Field Note` in the main ADAS Cockpit and tap the **`Beta Release`** badge **5 times** to launch this **`Deep Space Room & Void AI Suite`**![[VOID_ENDLESS_ANOMALY_NOTE]]"
         },
         {
             "id": 36,
@@ -1568,9 +1587,69 @@
     }
 
     // =========================================================================
-    // MODULE 5: SECRET 4TH EASTER EGG ("VOID") — GLITCH TRANSMISSION & AUDIO FX
+    // MODULE 5: SECRET 4TH EASTER EGG ("VOID") & ENDLESS GLITCH NOTE ENGINE
     // =========================================================================
     const SECRET_VOID_URL = "https://readerrss.github.io/Galaxy-Racer/";
+    const ANOMALY_PLAIN_NOTE = "Deep within the neural weights lies a mysterious, unindexed 4th hidden protocol—a high-velocity deep-space racing simulation that officially does not exist. No button or menu will ever reveal it. If you dare to breach the event horizon, type the Architect's true moniker—VOID—directly into this AI terminal...";
+
+    // Endless Alternating Glitch <-> Decryption Loop for Question #35's Anomaly Note
+    function buildGlitchedRevealNoteHtml(corruptionRate = 0.08) {
+        const glyphs = "▓▒░█▄▀■□▲▼◆◇⚡⟁⌬⧗0123456789ABCDEF";
+        const zalgo = ["̸", "̡", "̢", "̧", "̨", "̴", "̵", "̶", "̷", "̹", "̺"];
+
+        const words = ANOMALY_PLAIN_NOTE.split(' ');
+        const glitchedWords = words.map(w => {
+            if (w.includes('VOID')) {
+                return `<code class="px-1.5 py-0.5 bg-fuchsia-950/90 text-fuchsia-300 border border-fuchsia-400/60 rounded mono-num font-extrabold">VOID</code>`;
+            }
+            if (Math.random() < corruptionRate) {
+                let s = "";
+                for (let i = 0; i < w.length; i++) {
+                    if (Math.random() < 0.45) {
+                        s += glyphs.charAt(Math.floor(Math.random() * glyphs.length));
+                    } else {
+                        const z = Math.random() < 0.35 ? zalgo[Math.floor(Math.random() * zalgo.length)] : "";
+                        s += w[i] + z;
+                    }
+                }
+                return `<span class="text-fuchsia-300">${s}</span>`;
+            }
+            return escapeHtml(w);
+        });
+
+        return `<span class="text-sky-100">${glitchedWords.join(' ')}</span>`;
+    }
+
+    setInterval(() => {
+        const bodies = document.querySelectorAll('.void-endless-note-body');
+        if (!bodies.length) return;
+
+        // 5.2-second endless cycle:
+        // 0.0s - 1.5s: Pure Glitch Matrix Scramble
+        // 1.5s - 2.0s: Heavy Decrypting Transition
+        // 2.0s - 4.5s: Readable Glitchy Anomaly Description (with live subtle glitching)
+        // 4.5s - 5.2s: Re-Encrypting Collapse back into Glitch Matrix
+        const cycleTime = (performance.now() % 5200) / 1000;
+
+        bodies.forEach(bodyEl => {
+            const cardEl = bodyEl.closest('.void-glitch-card');
+            const badgeEl = cardEl ? cardEl.querySelector('.void-endless-note-badge') : null;
+
+            if (cycleTime < 1.5) {
+                bodyEl.innerHTML = generateCorruptedVoidMatrixString();
+                if (badgeEl) badgeEl.innerText = "0x7F_SIGNAL_JAMMED";
+            } else if (cycleTime < 2.0) {
+                bodyEl.innerHTML = buildGlitchedRevealNoteHtml(0.55);
+                if (badgeEl) badgeEl.innerText = "DECRYPTING_0x00...";
+            } else if (cycleTime < 4.5) {
+                bodyEl.innerHTML = buildGlitchedRevealNoteHtml(0.10);
+                if (badgeEl) badgeEl.innerText = "SIGNAL_DECRYPTED";
+            } else {
+                bodyEl.innerHTML = buildGlitchedRevealNoteHtml(0.65);
+                if (badgeEl) badgeEl.innerText = "RE_ENCRYPTING...";
+            }
+        });
+    }, 95);
 
     // Sound 1: Cyberpunk Dimensional Breach & Glitch Arpeggio (Played on Redirect)
     function playVoidRedirectSound() {
@@ -2083,6 +2162,10 @@
         `;
 
         convStream.appendChild(turnWrapper);
+
+        // Immediately populate the endless glitch note if Question #35 was just rendered
+        const noteBodies = turnWrapper.querySelectorAll('.void-endless-note-body');
+        noteBodies.forEach(b => { b.innerHTML = generateCorruptedVoidMatrixString(); });
 
         // Scroll with preserved top padding so Q1 or post-reset never overlaps the top border
         scrollChatToElementWithPadding(turnWrapper, isFirstTurn);
